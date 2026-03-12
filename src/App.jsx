@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Footer from './components/Footer';
 import ScrollProgress from './components/ScrollProgress';
 import CustomCursor from './components/CustomCursor';
+import BackToTop from './components/BackToTop';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <div className="relative min-h-screen font-sans selection:bg-blue-500/30">
         <CustomCursor />
         <ScrollProgress />
+        <BackToTop />
         <Navbar />
         <main>
           <Routes>

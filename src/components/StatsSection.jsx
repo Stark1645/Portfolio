@@ -44,10 +44,10 @@ const StatsSection = () => {
             {stat.icon}
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl md:text-4xl font-black text-white">{stat.value}</span>
-            <span className="text-sm font-bold text-gray-400 capitalize">{stat.suffix}</span>
+            <span className="text-3xl md:text-4xl font-black text-heading">{stat.value}</span>
+            <span className="text-sm font-bold text-secondary capitalize">{stat.suffix}</span>
           </div>
-          <span className="text-xs font-bold text-gray-500 mt-2 uppercase tracking-widest">{stat.label}</span>
+          <span className="text-xs font-bold text-secondary mt-2 uppercase tracking-widest">{stat.label}</span>
         </motion.div>
       ))}
     </div>

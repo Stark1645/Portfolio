@@ -17,10 +17,10 @@ const EventsGallery = () => {
         <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-400 text-sm font-bold mb-6 border border-blue-500/20">
           <Camera size={16} /> Moments & Memories
         </span>
-        <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
           Events & <span className="gradient-text">Hackathons</span>
         </h2>
-        <p className="text-gray-400 max-w-2xl mx-auto">
+        <p className="text-secondary max-w-2xl mx-auto">
           Life beyond code. Exploring my journey through competitions, collaborations, and great times with my friends.
         </p>
       </motion.div>

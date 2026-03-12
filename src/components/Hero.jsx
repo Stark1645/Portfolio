@@ -59,14 +59,14 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-xl md:text-2xl text-gray-400 font-medium mb-8 max-w-3xl leading-relaxed"
+          className="text-xl md:text-2xl text-secondary font-medium mb-8 max-w-3xl leading-relaxed"
         >
-          <span className="text-white">Full Stack Developer</span> <span className="mx-2 opacity-50">|</span> 
+          <span className="text-heading">Full Stack Developer</span> <span className="mx-2 opacity-30">|</span> 
           <span>B.Tech Information Technology Student</span>
           
-          <div className="mt-4 text-lg text-gray-500 typing-effect-container h-[1.5em] overflow-hidden flex justify-center">
+          <div className="mt-4 text-lg text-secondary typing-effect-container h-[1.5em] overflow-hidden flex justify-center">
             {/* Simple CSS typing effect equivalent or simple fade for Tagline */}
-            <p className="typing-text border-r-2 border-blue-500 pr-1 animate-pulse font-mono text-base md:text-lg">
+            <p className="typing-text border-r-2 border-primary pr-1 animate-pulse font-mono text-base md:text-lg">
               Building scalable software systems, APIs, & intelligent applications.
             </p>
           </div>

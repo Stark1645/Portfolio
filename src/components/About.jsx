@@ -13,8 +13,8 @@ const About = () => {
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px]" />
         
-        <h2 className="text-3xl md:text-5xl font-bold mb-8 text-white flex items-center gap-4">
-          <BookOpen className="text-blue-500" size={36} /> About Me
+        <h2 className="text-3xl md:text-5xl font-bold mb-8 text-heading flex items-center gap-4">
+          <BookOpen className="text-primary" size={36} /> About Me
         </h2>
         
         <div className="flex flex-col md:flex-row gap-12">
@@ -31,11 +31,11 @@ const About = () => {
                 />
               </div>
               <p className="pt-2 text-center sm:text-left">
-                Hi, I'm <strong className="text-white">Ruthragurubaran</strong>, a B.Tech Information Technology student at Sri Krishna College of Technology with a strong passion for building scalable software systems and intelligent applications.
+                Hi, I'm <strong className="text-heading">Ruthragurubaran</strong>, a B.Tech Information Technology student at Sri Krishna College of Technology with a strong passion for building scalable software systems and intelligent applications.
               </p>
             </div>
             <p>
-              My expertise lies in <span className="text-blue-400 font-medium">backend development</span>, <span className="text-purple-400 font-medium">full stack systems</span>, and building <span className="text-emerald-400 font-medium">REST APIs</span>.
+              My expertise lies in <span className="text-primary font-medium">backend development</span>, <span className="text-purple-400 font-medium">full stack systems</span>, and building <span className="text-emerald-400 font-medium">REST APIs</span>.
             </p>
             <p>
               I thrive on architecting complex systems using robust technologies like Java, Spring Boot, Python, React, and MySQL. I love tackling challenging problems and transforming ideas into functional, clean, and efficient digital products.
@@ -47,8 +47,9 @@ const About = () => {
               <GraduationCap className="text-white" size={24} />
             </div>
             
-            <h3 className="text-2xl font-bold text-white mb-6">Education</h3>
-            
+            <h3 className="text-2xl font-bold text-heading mb-6 tracking-wide border-b border-white/5 pb-3">
+              Education
+            </h3>
             <div className="space-y-4 relative before:absolute before:inset-0 before:ml-1 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-blue-500 before:to-transparent pl-6 md:pl-0 pt-2">
               <div className="relative flex items-start justify-between md:justify-normal md:odd:flex-row-reverse group">
                 <div className="absolute left-0 mt-1 md:left-1/2 -translate-x-[5px] md:-translate-x-1/2 w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(88,166,255,0.8)] border border-gray-900 group-hover:scale-150 transition-transform"></div>

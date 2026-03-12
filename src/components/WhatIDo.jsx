@@ -32,10 +32,10 @@ const WhatIDo = () => {
   return (
     <section className="py-24 px-6 relative w-full max-w-7xl mx-auto">
       <div className="text-center mb-16">
-        <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
           What <span className="gradient-text">I Do</span>
         </h2>
-        <p className="text-gray-400 max-w-2xl mx-auto">
+        <p className="text-secondary max-w-2xl mx-auto">
           Combining technical expertise with creative problem-solving to build comprehensive software solutions.
         </p>
       </div>
@@ -48,19 +48,19 @@ const WhatIDo = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
-            className="glass p-8 rounded-3xl border border-white/5 hover:border-blue-500/30 transition-all duration-500 group relative overflow-hidden"
+            className="glass p-8 rounded-3xl border border-white/5 hover:border-primary/30 transition-all duration-500 group relative overflow-hidden"
           >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-transparent rounded-bl-full translate-x-8 -translate-y-8 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-500" />
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full translate-x-8 -translate-y-8 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-500" />
             
-            <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
               {service.icon}
             </div>
             
-            <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+            <h3 className="text-xl font-bold text-heading mb-3 group-hover:text-primary transition-colors">
               {service.title}
             </h3>
             
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-secondary text-sm leading-relaxed">
               {service.description}
             </p>
           </motion.div>

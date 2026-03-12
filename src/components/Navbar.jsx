@@ -70,10 +70,10 @@ const Navbar = () => {
               key={link.name}
               href={link.href}
               onClick={(e) => handleSmoothScroll(e, link.href)}
-              className="text-sm font-medium text-gray-300 hover:text-white transition-colors relative group"
+              className="text-sm font-medium text-secondary hover:text-heading transition-colors relative group"
             >
               {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
             </a>
           ))}
           <a
@@ -106,7 +106,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass border-t border-gray-800"
+            className="md:hidden glass border-t border-white/10"
           >
             <div className="flex flex-col items-center py-6 space-y-4">
               {navLinks.map((link) => (
@@ -114,7 +114,7 @@ const Navbar = () => {
                   key={link.name}
                   href={link.href}
                   onClick={(e) => handleSmoothScroll(e, link.href)}
-                  className="text-lg font-medium text-gray-300 hover:text-white transition-colors w-full text-center py-2"
+                  className="text-lg font-medium text-secondary hover:text-heading transition-colors w-full text-center py-2"
                 >
                   {link.name}
                 </a>

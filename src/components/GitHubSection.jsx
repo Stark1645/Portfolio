@@ -33,11 +33,11 @@ const GitHubSection = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 flex items-center justify-center gap-4">
-          <Github className="text-white w-10 h-10" /> 
+        <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4 flex items-center justify-center gap-4">
+          <Github className="text-heading w-10 h-10" /> 
           Latest on <span className="gradient-text">GitHub</span>
         </h2>
-        <p className="text-gray-400 max-w-2xl mx-auto">
+        <p className="text-secondary max-w-2xl mx-auto">
           Here is what I've been working on recently. Fetched dynamically using the GitHub API.
         </p>
       </motion.div>

@@ -23,6 +23,8 @@
   --color-surface: var(--color-surface);
   --color-primary: var(--color-primary);
   --color-secondary: var(--color-secondary);
+  --color-heading: var(--color-heading);
+  --color-text: var(--color-text);
   
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -64,6 +66,13 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  display: inline-block;
+}
+
+.light .gradient-text {
+  background: linear-gradient(to right, #2563eb, #7c3aed);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .bg-gradient-hover {

@@ -12,10 +12,10 @@ const Certifications = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
           Professional <span className="gradient-text">Certifications</span>
         </h2>
-        <p className="text-gray-400 max-w-2xl mx-auto">
+        <p className="text-secondary max-w-2xl mx-auto">
           Validated skills and knowledge through industry-recognized certifications from top organizations.
         </p>
       </motion.div>
@@ -41,10 +41,10 @@ const Certifications = () => {
             </div>
             
             <div className="flex-1">
-              <h3 className="text-lg font-bold text-white mb-1 group-hover:text-blue-400 transition-colors">
+              <h3 className="text-lg font-bold text-heading mb-1 group-hover:text-primary transition-colors">
                 {cert.title}
               </h3>
-              <p className="text-gray-400 text-sm font-medium">{cert.issuer}</p>
+              <p className="text-secondary text-sm font-medium">{cert.issuer}</p>
             </div>
             
             {cert.link && cert.link !== '#' && (

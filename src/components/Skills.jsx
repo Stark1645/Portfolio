@@ -24,10 +24,10 @@ const Skills = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
           My <span className="gradient-text">Skills</span>
         </h2>
-        <p className="text-gray-400 max-w-2xl mx-auto">
+        <p className="text-secondary max-w-2xl mx-auto">
           Here is a collection of my technical skills and core competencies that I have acquired over my journey as a student and full stack developer.
         </p>
       </motion.div>
@@ -40,9 +40,9 @@ const Skills = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ delay: index * 0.2, duration: 0.6 }}
-            className="glass p-8 rounded-2xl hover:border-blue-500/50 transition-colors"
+            className="glass p-8 rounded-2xl hover:border-primary/50 transition-colors"
           >
-            <h3 className="text-2xl font-bold text-white mb-6 tracking-wide border-b border-gray-700 pb-3">
+            <h3 className="text-2xl font-bold text-heading mb-6 tracking-wide border-b border-white/10 pb-3">
               {category}
             </h3>
             
@@ -57,8 +57,8 @@ const Skills = () => {
                 <motion.span
                   key={skill}
                   variants={item}
-                  whileHover={{ scale: 1.1, backgroundColor: '#3b82f6', color: '#fff' }}
-                  className="px-4 py-2 bg-gray-800/80 text-blue-200 border border-blue-500/20 rounded-lg text-sm font-semibold cursor-default transition-colors shadow-sm"
+                  whileHover={{ scale: 1.1, backgroundColor: 'var(--color-primary)', color: '#fff' }}
+                  className="px-4 py-2 bg-surface text-primary border border-primary/20 rounded-lg text-sm font-semibold cursor-default transition-colors shadow-sm"
                 >
                   {skill}
                 </motion.span>
