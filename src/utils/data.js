@@ -56,31 +56,59 @@ export const certsData = [
 export const projectsData = [
   {
     title: "ExplainFirst",
-    description: "AI learning evaluation platform that evaluates student explanations using Gemini API. Developed backend REST APIs using Spring Boot and React interface.",
-    technologies: ["React", "Spring Boot", "Gemini API", "REST API"],
+    description: "AI learning evaluation platform that evaluates student explanations using Gemini API.",
+    longDescription: "ExplainFirst is an innovative educational tool designed to test high-level understanding. Instead of multiple-choice questions, it asks students to explain concepts in their own words. The system uses Google's Gemini AI to analyze these explanations, identify gaps in knowledge, and provide personalized feedback.",
+    features: [
+      "AI-driven explanation analysis using Gemini Pro",
+      "Dynamic follow-up questions to probe deeper understanding",
+      "Teacher dashboard for monitoring student progress",
+      "Real-time feedback and knowledge gap identification"
+    ],
+    technologies: ["React", "Spring Boot", "Gemini API", "REST API", "Tailwind CSS"],
     githubUrl: "https://github.com/Stark1645/explainfirstuh-working",
     liveUrl: "#",
     image: "/projects/explainfirst.jpg"
   },
   {
     title: "HomeFlame",
-    description: "Full-stack web application with backend services and database integration. Implemented REST APIs and application logic for user interaction.",
-    technologies: ["React", "Spring Boot", "MySQL", "Full-Stack"],
+    description: "Full-stack web application for a premium chef-led cloud kitchen service.",
+    longDescription: "HomeFlame is a comprehensive platform for a Cloud Kitchen business. It streamlines the process of ordering gourmet meals prepared by professional chefs. The application handles menu management, secure order processing, and real-time delivery tracking, ensuring a premium culinary experience from kitchen to table.",
+    features: [
+      "Dynamic menu management for chefs",
+      "Secure user authentication and profile management",
+      "Order tracking and status updates",
+      "Integrated payment gateway simulation"
+    ],
+    technologies: ["React", "Spring Boot", "MySQL", "Full-Stack", "JWT"],
     githubUrl: "https://github.com/Stark1645/HomeFlameuh-Final",
     liveUrl: "#",
     image: "/projects/homeflame.jpg"
   },
   {
-    title: "Asset Lifecycle Tracking API",
-    description: "REST APIs developed using Spring Boot and MySQL for tracking organizational assets. Implemented JWT authentication and role-based access control.",
-    technologies: ["Spring Boot", "MySQL", "JWT", "REST API"],
+    title: "Asset Tracking API",
+    description: "Enterprise-grade REST APIs for tracking organizational assets and their lifecycle.",
+    longDescription: "A specialized backend solution for large organizations to track the procurement, assignment, and maintenance of hardware and software assets. Built with security in mind, it provides a centralized system for IT administrators to manage inventory and ensure accountability.",
+    features: [
+      "Comprehensive CRUD operations for asset management",
+      "Role-based access control (RBAC)",
+      "Automated maintenance alerts and logs",
+      "JWT-based secure API endpoints"
+    ],
+    technologies: ["Spring Boot", "MySQL", "JWT", "REST API", "Hibernate"],
     githubUrl: "#",
     liveUrl: "#"
   },
   {
     title: "SHIELD",
-    description: "Authentication-based web application with login functionality and secure access control. Implemented backend services and secure user management.",
-    technologies: ["React", "Spring Boot", "Security", "Full-Stack"],
+    description: "Advanced authentication and threat defense system for web applications.",
+    longDescription: "SHIELD is a security-focused application layer that provides automated threat defense for modern web apps. It implements multi-factor authentication, session monitoring, and real-time security logging to protect user data against common vulnerabilities like XSS and Brute Force attacks.",
+    features: [
+      "Advanced JWT authentication layer",
+      "Real-time security threat monitoring",
+      "Automated session invalidation on suspicious activity",
+      "Comprehensive security event logging"
+    ],
+    technologies: ["React", "Spring Boot", "Security", "Full-Stack", "Docker"],
     githubUrl: "https://github.com/Stark1645/S.H.I.E.L.D.",
     liveUrl: "#",
     image: "/projects/shield.png"
