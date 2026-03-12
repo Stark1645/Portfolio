@@ -34,9 +34,9 @@ const LoadingScreen = ({ onComplete }) => {
             opacity: [0.5, 1, 0.5],
           }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          className="text-4xl md:text-5xl font-bold gradient-text mb-8 tracking-tighter"
+          className="text-4xl md:text-5xl font-bold gradient-text mb-8 tracking-tighter text-center"
         >
-          R. Developer
+          Ruthragurubaran
         </motion.div>
 
         <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden border border-gray-700 p-[1px] shadow-lg">
