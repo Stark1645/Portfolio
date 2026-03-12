@@ -7,12 +7,17 @@ import GitHubSection from '../components/GitHubSection';
 import Certifications from '../components/Certifications';
 import EventsGallery from '../components/EventsGallery';
 import Contact from '../components/Contact';
+import StatsSection from '../components/StatsSection';
+import WhatIDo from '../components/WhatIDo';
+import BackToTop from '../components/BackToTop';
 
 const Home = () => {
   return (
     <div className="flex flex-col gap-24 pb-24 overflow-hidden">
       <Hero />
+      <StatsSection />
       <About />
+      <WhatIDo />
       <Experience />
       <Skills />
       <Projects />
@@ -20,6 +25,7 @@ const Home = () => {
       <EventsGallery />
       <GitHubSection />
       <Contact />
+      <BackToTop />
     </div>
   );
 };

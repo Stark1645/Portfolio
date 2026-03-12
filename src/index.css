@@ -118,3 +118,47 @@ body::-webkit-scrollbar-thumb:hover {
   pointer-events: none;
   z-index: 9999;
 }
+/* Mobile-First Adaptive Utilities */
+.container-adaptive {
+  @apply w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12;
+}
+
+/* Fluid Typography */
+@layer base {
+  html {
+    font-size: 16px;
+    @screen sm { font-size: 17px; }
+    @screen lg { font-size: 18px; }
+  }
+}
+
+/* Scroll Snap for Sections (Optional but feels premium) */
+/* .snap-wrapper { @apply h-screen overflow-y-scroll snap-y snap-mandatory; } */
+/* .snap-section { @apply snap-start; } */
+
+/* Fix for mobile Safari height */
+.min-h-screen-safe {
+  min-height: -webkit-fill-available;
+  min-height: 100vh;
+}
+
+/* Interactive Card Effects for Mobile */
+@media (hover: none) {
+  .glass:active {
+    transform: scale(0.98);
+    border-color: rgba(88, 166, 255, 0.4);
+  }
+}
+
+/* Better Scroll Progress for Mobile */
+.scroll-indicator {
+  @apply fixed bottom-8 left-8 flex flex-col items-center gap-2 z-50;
+}
+
+.scroll-indicator-dot {
+  @apply w-1.5 h-1.5 rounded-full bg-blue-500/20 transition-all duration-300;
+}
+
+.scroll-indicator-dot.active {
+  @apply h-8 bg-blue-500;
+}
