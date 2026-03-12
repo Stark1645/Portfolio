@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+:root {
+  --color-background: #0d1117;
+  --color-surface: #161b22;
+  --color-primary: #58a6ff;
+  --color-secondary: #8b949e;
+  --color-text: #c9d1d9;
+  --color-heading: #ffffff;
+}
+
+.light {
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-primary: #2563eb;
+  --color-secondary: #64748b;
+  --color-text: #334155;
+  --color-heading: #1e293b;
+}
+
+@theme {
+  --color-background: var(--color-background);
+  --color-surface: var(--color-surface);
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-heading);
+  }
+}
+
+.glass {
+  background: rgba(22, 27, 34, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.light .glass {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.gradient-text {
+  background: linear-gradient(to right, #58a6ff, #bc8cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.bg-gradient-hover {
+  background-size: 200% auto;
+  transition: 0.5s;
+}
+
+.bg-gradient-hover:hover {
+  background-position: right center;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 4px;
+}
+
+.light body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #58a6ff;
+}
+
+/* Custom Cursor Styles */
+.custom-cursor {
+  width: 32px;
+  height: 32px;
+  background: rgba(88, 166, 255, 0.3);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: transform 0.1s ease;
+}
+
+.custom-cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #58a6ff;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+}
