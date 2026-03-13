@@ -15,23 +15,33 @@ const Contact = () => {
     e.preventDefault();
     setStatus('sending');
 
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey || serviceId === 'your_service_id') {
+      console.error('EmailJS credentials are not configured in .env file');
+      setStatus('error');
+      setTimeout(() => setStatus(''), 5000);
+      return;
+    }
+
     try {
-      // Replace these placeholders with your actual EmailJS Service ID, Template ID, and Public Key
       await emailjs.send(
-        'YOUR_SERVICE_ID', 
-        'YOUR_TEMPLATE_ID', 
+        serviceId,
+        templateId,
         {
-          from_name: formData.name,
+          name: formData.name,
           reply_to: formData.email,
           message: formData.message,
-        }, 
-        'YOUR_PUBLIC_KEY'
+        },
+        publicKey
       );
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
       setTimeout(() => setStatus(''), 5000);
     } catch (err) {
-      console.error(err);
+      console.error('EmailJS Error:', err);
       setStatus('error');
       setTimeout(() => setStatus(''), 5000);
     }
