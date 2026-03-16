@@ -18,9 +18,9 @@ const About = () => {
         </h2>
         
         <div className="flex flex-col md:flex-row gap-12">
-          <div className="flex-1 space-y-6 text-gray-300 text-lg leading-relaxed">
+          <div className="flex-1 space-y-6 text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
-              <div className="w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden shrink-0 border-4 border-gray-800 shadow-xl shadow-blue-500/20">
+              <div className="w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden shrink-0 border-4 border-gray-200 dark:border-gray-800 shadow-xl shadow-blue-500/20">
                 <img 
                   src="/profile.jpg" 
                   alt="Ruthragurubaran" 
@@ -35,7 +35,7 @@ const About = () => {
               </p>
             </div>
             <p>
-              My current focus is on <span className="text-purple-400 font-bold">full-stack development</span>. While I enjoy jumping across the stack, I have a deep-rooted interest in <span className="text-primary font-bold">backend systems</span> and designing <span className="text-emerald-400 font-bold">scalable, high-performance applications</span> that can handle real-world challenges.
+              My current focus is on <span className="text-purple-600 dark:text-purple-400 font-bold">full-stack development</span>. While I enjoy jumping across the stack, I have a deep-rooted interest in <span className="text-primary font-bold">backend systems</span> and designing <span className="text-emerald-600 dark:text-emerald-400 font-bold">scalable, high-performance applications</span> that can handle real-world challenges.
             </p>
             <p>
               Using modern technologies like Java, Spring Boot, Python, and React, I love blending clean code with logical problem-solving. Whether it's crafting efficient REST APIs or creating dynamic user interfaces, my goal is always to deliver impactful and functional digital products.

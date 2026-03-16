@@ -39,8 +39,8 @@ const Hero = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mb-8 p-3 glass rounded-full inline-flex items-center space-x-2 border border-blue-500/30 shadow-[0_0_20px_rgba(88,166,255,0.15)]"
         >
-          <Code size={18} className="text-blue-400" />
-          <span className="text-sm font-medium text-gray-300 pr-2">Available for new opportunities</span>
+          <Code size={18} className="text-blue-500 dark:text-blue-400" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 pr-2">Available for new opportunities</span>
         </motion.div>
 
         <motion.h1

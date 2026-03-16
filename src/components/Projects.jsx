@@ -211,8 +211,8 @@ const Projects = () => {
 
                 <div className="space-y-6">
                   <div>
-                    <h4 className="text-blue-400 text-xs font-black uppercase tracking-widest mb-2">Detailed Summary</h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                    <h4 className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-widest mb-2">Detailed Summary</h4>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
                       {selectedProject.longDescription || selectedProject.description}
                     </p>
                   </div>
