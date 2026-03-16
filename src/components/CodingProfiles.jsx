@@ -6,6 +6,8 @@ import axios from 'axios';
 const CodingProfiles = () => {
   const [lcData, setLcData] = useState(null);
   const [lcProfile, setLcProfile] = useState(null);
+  const [hrData, setHrData] = useState(null);
+  const [hrBadges, setHrBadges] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,6 +32,26 @@ const CodingProfiles = () => {
       } catch (err) {
         console.error('Failed to fetch LeetCode Profile', err);
       }
+
+      try {
+        // HackerRank Profile Stats
+        const hrRes = await axios.get('https://www.hackerrank.com/rest/contests/master/hackers/gurudaya49/profile');
+        if (hrRes.data && hrRes.data.model) {
+          setHrData(hrRes.data.model);
+        }
+      } catch (err) {
+        console.error('Failed to fetch HackerRank Profile', err);
+      }
+
+      try {
+        // HackerRank Badges
+        const badgesRes = await axios.get('https://www.hackerrank.com/rest/hackers/gurudaya49/badges');
+        if (badgesRes.data && badgesRes.data.models) {
+          setHrBadges(badgesRes.data.models);
+        }
+      } catch (err) {
+        console.error('Failed to fetch HackerRank Badges', err);
+      }
       
       setLoading(false);
     };
@@ -53,7 +75,7 @@ const CodingProfiles = () => {
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         
         {/* GitHub Card */}
         <motion.div
@@ -190,6 +212,80 @@ const CodingProfiles = () => {
           </div>
         </motion.div>
 
+        {/* HackerRank Card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="glass p-8 md:p-10 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-green-500/30 transition-all shadow-lg"
+        >
+          <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-green-600/10 rounded-full blur-[40px] group-hover:bg-green-600/20 transition-colors duration-500"></div>
+          
+          <div className="z-10 flex flex-col h-full">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                {hrData?.avatar ? (
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.3)] group-hover:scale-110 group-hover:border-green-400 transition-all duration-300">
+                    <img src={hrData.avatar} alt="HackerRank Avatar" className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 bg-gray-800/80 rounded-full flex items-center justify-center shadow-lg border border-white/10 group-hover:scale-110 transition-transform duration-300">
+                    <Code2 className="w-8 h-8 text-green-500" />
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-2xl font-bold text-white leading-tight">HackerRank</h3>
+                  <a href="https://www.hackerrank.com/profile/gurudaya49" target="_blank" rel="noopener noreferrer" className="text-sm text-green-400 hover:underline">@gurudaya49</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 text-green-500">
+                <Trophy size={20} />
+              </div>
+            </div>
+
+            {loading ? (
+              <div className="flex-grow flex flex-col justify-center items-center py-6">
+                 <div className="w-8 h-8 border-3 border-green-500/30 border-t-green-500 rounded-full animate-spin"></div>
+                 <p className="text-sm text-gray-500 mt-3">Fetching live stats...</p>
+              </div>
+            ) : hrBadges ? (
+              <div className="flex-grow flex flex-col justify-center space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  {hrBadges.slice(0, 4).map((badge, idx) => (
+                    <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-3 hover:bg-white/10 transition-colors">
+                      <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">{badge.badge_name}</div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xl font-black text-white">{badge.stars}</span>
+                        <span className="text-yellow-500 text-xs">★</span>
+                        <span className="text-gray-400 text-[10px] ml-auto">{badge.solved} solved</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-gray-400 text-xs leading-relaxed italic">
+                  Actively solving problems in Java, SQL, and Data Structures.
+                </p>
+              </div>
+            ) : (
+              <div className="flex-grow flex flex-col justify-center items-center text-center">
+                <Trophy className="w-12 h-12 text-gray-800 mb-4" />
+                <p className="text-gray-500 text-sm">
+                  Visit profile to view latest verified skills and gold badges.
+                </p>
+              </div>
+            )}
+
+            <a 
+              href="https://www.hackerrank.com/profile/gurudaya49" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="z-10 mt-8 inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-green-500/25 w-full justify-center"
+            >
+              View HackerRank
+            </a>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
