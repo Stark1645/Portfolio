@@ -138,6 +138,7 @@ export const eventsData = [
     title: "Project Review & Mentorship",
     location: "Kovaipudur, Tamil Nadu",
     description: "Presenting project progress and receiving industry-expert feedback during a technical review. (17.09.2025)",
+    image: "/events/kovaipudur_event.jpg"
   }
 ];
 
