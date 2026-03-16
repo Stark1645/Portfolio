@@ -61,13 +61,18 @@ const Hero = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-xl md:text-2xl text-secondary font-medium mb-8 max-w-3xl leading-relaxed"
         >
-          <span className="text-heading">Full Stack Developer</span> <span className="mx-2 opacity-30">|</span> 
-          <span>B.Tech Information Technology Student</span>
+          <span className="text-heading">Full-Stack Developer</span>
           
-          <div className="mt-4 text-lg text-secondary typing-effect-container h-[1.5em] overflow-hidden flex justify-center">
-            {/* Simple CSS typing effect equivalent or simple fade for Tagline */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-base md:text-lg">
+            <span className="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-blue-400">Java</span>
+            <span className="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-green-400">Spring Boot</span>
+            <span className="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-cyan-400">React</span>
+            <span className="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-yellow-400">Python</span>
+          </div>
+          
+          <div className="mt-6 text-lg text-secondary typing-effect-container h-[1.5em] overflow-hidden flex justify-center">
             <p className="typing-text border-r-2 border-primary pr-1 animate-pulse font-mono text-base md:text-lg">
-              Building scalable software systems, APIs, & intelligent applications.
+              Building scalable web applications and backend systems.
             </p>
           </div>
         </motion.div>

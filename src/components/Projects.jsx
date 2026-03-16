@@ -92,7 +92,7 @@ const Projects = () => {
                 </p>
 
                 {/* Tech Tags */}
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mb-6">
                   {project.technologies.slice(0, 3).map((tech) => (
                     <span
                       key={tech}
@@ -103,6 +103,38 @@ const Projects = () => {
                   ))}
                   {project.technologies.length > 3 && (
                     <span className="text-gray-500 text-xs flex items-center">+{project.technologies.length - 3} more</span>
+                  )}
+                </div>
+
+                {/* Card Action Buttons */}
+                <div className="mt-auto flex gap-3 z-10" onClick={(e) => e.stopPropagation()}>
+                  {project.githubUrl && project.githubUrl !== '#' ? (
+                    <a 
+                      href={project.githubUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-xs font-bold text-white transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                    >
+                      <Github size={14} /> GitHub
+                    </a>
+                  ) : (
+                    <div className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gray-800/50 rounded-lg text-xs font-bold text-gray-500 cursor-not-allowed">
+                      <Github size={14} /> Private
+                    </div>
+                  )}
+                  {project.liveUrl && project.liveUrl !== '#' ? (
+                    <a 
+                      href={project.liveUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-xs font-bold text-white transition-all shadow-md group-hover:shadow-blue-500/20 z-10 relative"
+                    >
+                      <ExternalLink size={14} /> Live Demo
+                    </a>
+                  ) : (
+                    <div className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gray-800/50 rounded-lg text-xs font-bold text-gray-500 cursor-not-allowed z-10">
+                      <ExternalLink size={14} /> No Demo
+                    </div>
                   )}
                 </div>
               </div>

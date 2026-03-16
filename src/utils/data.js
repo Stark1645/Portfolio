@@ -1,8 +1,8 @@
 export const skillsData = {
-  "Languages": ["Java", "Python", "C", "SQL", "JavaScript"],
-  "Frameworks": ["Spring Boot", "React"],
-  "Tools": ["Git", "GitHub", "MySQL", "IntelliJ IDEA", "VS Code"],
-  "Concepts": ["Data Structures", "OOP", "REST APIs"]
+  "Languages": ["Java", "Python", "JavaScript"],
+  "Frontend": ["HTML", "CSS", "React"],
+  "Backend": ["Spring Boot", "REST APIs"],
+  "Tools": ["Git", "GitHub", "Docker", "Postman", "Vercel"]
 };
 
 export const experienceData = [
@@ -138,7 +138,29 @@ export const eventsData = [
     title: "Project Review & Mentorship",
     location: "Kovaipudur, Tamil Nadu",
     description: "Presenting project progress and receiving industry-expert feedback during a technical review. (17.09.2025)",
-    image: "/events/kovaipudur_event.jpg"
   }
 ];
 
+export const blogData = [
+  {
+    title: "Mastering Spring Boot: A Beginner's Guide",
+    date: "March 15, 2026",
+    excerpt: "Learn the fundamentals of building robust backend systems and REST APIs with Spring Boot and Java.",
+    readTime: "5 min read",
+    tags: ["Spring Boot", "Java", "Backend"]
+  },
+  {
+    title: "Understanding RESTful APIs",
+    date: "February 28, 2026",
+    excerpt: "A deep dive into REST architectural constraints and how to design scalable and maintainable APIs.",
+    readTime: "7 min read",
+    tags: ["APIs", "Web Dev", "Architecture"]
+  },
+  {
+    title: "Problem Solving Strategies in Competitive Programming",
+    date: "January 14, 2026",
+    excerpt: "How maintaining a 70+ days LeetCode streak improved my logical thinking and coding efficiency.",
+    readTime: "4 min read",
+    tags: ["Problem Solving", "LeetCode", "Algorithms"]
+  }
+];

@@ -10,6 +10,8 @@ import Contact from '../components/Contact';
 import StatsSection from '../components/StatsSection';
 import WhatIDo from '../components/WhatIDo';
 import BackToTop from '../components/BackToTop';
+import BlogSection from '../components/BlogSection';
+import GitHubActivity from '../components/GitHubActivity';
 
 const Home = () => {
   return (
@@ -24,6 +26,8 @@ const Home = () => {
       <Certifications />
       <EventsGallery />
       <CodingProfiles />
+      <GitHubActivity />
+      <BlogSection />
       <Contact />
       <BackToTop />
     </div>

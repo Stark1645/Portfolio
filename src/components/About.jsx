@@ -31,14 +31,14 @@ const About = () => {
                 />
               </div>
               <p className="pt-2 text-center sm:text-left">
-                Hi, I'm <strong className="text-heading">Ruthragurubaran</strong>, a B.Tech Information Technology student at Sri Krishna College of Technology with a strong passion for building scalable software systems and intelligent applications.
+                Hi, I'm <strong className="text-heading">Ruthragurubaran</strong>. My journey into programming started with a simple curiosity about how digital systems work, which quickly evolved into a passion for architecting and building robust web applications. I am currently pursuing my B.Tech in Information Technology at Sri Krishna College of Technology.
               </p>
             </div>
             <p>
-              My expertise lies in <span className="text-primary font-medium">backend development</span>, <span className="text-purple-400 font-medium">full stack systems</span>, and building <span className="text-emerald-400 font-medium">REST APIs</span>.
+              My current focus is on <span className="text-purple-400 font-bold">full-stack development</span>. While I enjoy jumping across the stack, I have a deep-rooted interest in <span className="text-primary font-bold">backend systems</span> and designing <span className="text-emerald-400 font-bold">scalable, high-performance applications</span> that can handle real-world challenges.
             </p>
             <p>
-              I thrive on architecting complex systems using robust technologies like Java, Spring Boot, Python, React, and MySQL. I love tackling challenging problems and transforming ideas into functional, clean, and efficient digital products.
+              Using modern technologies like Java, Spring Boot, Python, and React, I love blending clean code with logical problem-solving. Whether it's crafting efficient REST APIs or creating dynamic user interfaces, my goal is always to deliver impactful and functional digital products.
             </p>
           </div>
 
