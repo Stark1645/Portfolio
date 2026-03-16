@@ -3,7 +3,7 @@ import About from '../components/About';
 import Skills from '../components/Skills';
 import Projects from '../components/Projects';
 import Experience from '../components/Experience';
-import GitHubSection from '../components/GitHubSection';
+import CodingProfiles from '../components/CodingProfiles';
 import Certifications from '../components/Certifications';
 import EventsGallery from '../components/EventsGallery';
 import Contact from '../components/Contact';
@@ -23,7 +23,7 @@ const Home = () => {
       <Projects />
       <Certifications />
       <EventsGallery />
-      <GitHubSection />
+      <CodingProfiles />
       <Contact />
       <BackToTop />
     </div>
