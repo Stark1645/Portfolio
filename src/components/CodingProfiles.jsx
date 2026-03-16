@@ -5,13 +5,18 @@ import axios from 'axios';
 
 const CodingProfiles = () => {
   const [lcData, setLcData] = useState(null);
+  const [lcProfile, setLcProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLeetCodeData = async () => {
       try {
-        const res = await axios.get('https://leetcode-api-faisalshohag.vercel.app/Ruthragurubaran-J');
-        setLcData(res.data);
+        const [statsRes, profileRes] = await Promise.all([
+          axios.get('https://leetcode-api-faisalshohag.vercel.app/Ruthragurubaran-J'),
+          axios.get('https://alfa-leetcode-api.onrender.com/Ruthragurubaran-J')
+        ]);
+        setLcData(statsRes.data);
+        setLcProfile(profileRes.data);
       } catch (err) {
         console.error('Failed to fetch LeetCode Data', err);
       } finally {
@@ -83,17 +88,23 @@ const CodingProfiles = () => {
           <div className="z-10 flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-gray-800/80 rounded-xl flex items-center justify-center shadow-lg border border-white/10 group-hover:scale-110 transition-transform duration-300">
-                  <Code2 className="w-8 h-8 text-orange-500" />
-                </div>
+                {lcProfile?.avatar ? (
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover:scale-110 group-hover:border-orange-400 transition-all duration-300">
+                    <img src={lcProfile.avatar} alt="LeetCode Avatar" className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 bg-gray-800/80 rounded-full flex items-center justify-center shadow-lg border border-white/10 group-hover:scale-110 transition-transform duration-300">
+                    <Code2 className="w-8 h-8 text-orange-500" />
+                  </div>
+                )}
                 <div>
                   <h3 className="text-2xl font-bold text-white leading-tight">LeetCode</h3>
                   <a href="https://leetcode.com/u/Ruthragurubaran-J/" target="_blank" rel="noopener noreferrer" className="text-sm text-orange-400 hover:underline">@Ruthragurubaran-J</a>
                 </div>
               </div>
               <div className="flex flex-col items-end">
-                <span className="flex items-center gap-1 text-sm text-gray-400"><Flame className="w-4 h-4 text-orange-500" /> Top Performer</span>
-                {lcData && <span className="text-xs font-semibold px-2 py-1 mt-1 bg-white/5 rounded-md text-gray-300">Rank: {lcData.ranking?.toLocaleString() || 'N/A'}</span>}
+                <span className="flex items-center gap-1 text-sm text-gray-400"><Flame className="w-4 h-4 text-orange-500" /></span>
+                {lcData && <span className="text-xs font-semibold px-3 py-1 mt-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-full text-orange-200 shadow-inner">Rank {lcData.ranking?.toLocaleString() || 'N/A'}</span>}
               </div>
             </div>
 
