@@ -30,7 +30,7 @@ const CodingProfiles = () => {
   }, []);
 
   return (
-    <section id="profiles" className="py-24 px-6 relative w-full max-w-7xl mx-auto">
+    <section id="profiles" className="py-24 px-6 relative w-full max-w-6xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -39,210 +39,144 @@ const CodingProfiles = () => {
         className="text-center mb-16"
       >
         <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
-          LeetCode <span className="gradient-text">Dashboard</span>
+          Coding <span className="gradient-text">Profiles</span>
         </h2>
         <p className="text-secondary max-w-2xl mx-auto text-lg mt-4">
-          A live look into my algorithmic problem-solving journey.
+          Where I build projects and solve algorithmic challenges.
         </p>
       </motion.div>
 
-      {loading ? (
-        <div className="flex flex-col justify-center items-center py-20">
-          <div className="w-12 h-12 border-4 border-orange-500/30 border-t-orange-500 rounded-full animate-spin"></div>
-          <p className="text-gray-400 mt-4 font-medium">Authenticating & Fetching Live Stats...</p>
-        </div>
-      ) : lcData ? (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        {/* GitHub Card */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="glass p-10 rounded-2xl flex flex-col justify-between items-center text-center relative overflow-hidden group border border-white/5 hover:border-blue-500/30 transition-all shadow-lg"
+        >
+          <div className="absolute -top-20 -left-20 w-48 h-48 bg-blue-600/10 rounded-full blur-[40px] group-hover:bg-blue-600/30 transition-colors duration-500"></div>
           
-          {/* LEFT: Profile Overview (Matches LeetCode Left Sidebar) */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:col-span-3 glass p-6 rounded-2xl border border-white/5"
+          <div className="z-10 flex flex-col items-center">
+            <div className="w-20 h-20 bg-gray-800/80 rounded-2xl flex items-center justify-center mb-6 shadow-xl border border-white/10 group-hover:scale-110 transition-transform duration-300">
+              <Github className="w-12 h-12 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-3">GitHub</h3>
+            <p className="text-gray-400 mb-8 max-w-sm">
+              Check out my open-source projects, full-stack applications, and contribution history.
+            </p>
+          </div>
+
+          <a 
+            href="https://github.com/Stark1645" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="z-10 inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-blue-500/25 w-full justify-center"
           >
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-20 h-20 rounded-xl overflow-hidden border border-white/10 shadow-lg">
-                <img 
-                  src={lcProfile?.avatar || "https://ui-avatars.com/api/?name=Ruthragurubaran&background=F97316&color=fff"} 
-                  alt="Avatar" 
-                  className="w-full h-full object-cover"
-                />
+            View Profile
+          </a>
+        </motion.div>
+
+        {/* LeetCode Card */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="glass p-8 md:p-10 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-orange-500/30 transition-all shadow-lg"
+        >
+          <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-orange-600/10 rounded-full blur-[40px] group-hover:bg-orange-600/20 transition-colors duration-500"></div>
+          
+          <div className="z-10 flex flex-col h-full">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                {lcProfile?.avatar ? (
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover:scale-110 group-hover:border-orange-400 transition-all duration-300">
+                    <img src={lcProfile.avatar} alt="LeetCode Avatar" className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 bg-gray-800/80 rounded-full flex items-center justify-center shadow-lg border border-white/10 group-hover:scale-110 transition-transform duration-300">
+                    <Code2 className="w-8 h-8 text-orange-500" />
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-2xl font-bold text-white leading-tight">LeetCode</h3>
+                  <a href="https://leetcode.com/u/Ruthragurubaran-J/" target="_blank" rel="noopener noreferrer" className="text-sm text-orange-400 hover:underline">@Ruthragurubaran-J</a>
+                </div>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-white">Ruthragurubaran-J</h3>
-                <p className="text-sm text-gray-400">@Ruthragurubaran-J</p>
+              <div className="flex flex-col items-end">
+                <span className="flex items-center gap-1 text-sm text-gray-400"><Flame className="w-4 h-4 text-orange-500" /></span>
+                {lcData && <span className="text-xs font-semibold px-3 py-1 mt-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-full text-orange-200 shadow-inner">Rank {lcData.ranking?.toLocaleString() || 'N/A'}</span>}
               </div>
             </div>
 
-            <div className="mb-6">
-              <span className="text-sm text-gray-400 block mb-1">Rank</span>
-              <span className="text-xl font-bold text-white">{lcData.ranking?.toLocaleString() || 'N/A'}</span>
-            </div>
+            {loading ? (
+              <div className="flex-grow flex flex-col justify-center items-center py-6">
+                 <div className="w-8 h-8 border-3 border-orange-500/30 border-t-orange-500 rounded-full animate-spin"></div>
+                 <p className="text-sm text-gray-500 mt-3">Fetching live stats...</p>
+              </div>
+            ) : lcData ? (
+              <div className="flex-grow flex flex-col justify-center">
+                <div className="flex items-end gap-2 mb-6">
+                  <span className="text-5xl font-extrabold text-white tracking-tighter">{lcData.totalSolved}</span>
+                  <span className="text-gray-400 mb-1 font-medium text-lg">Problems Solved</span>
+                  <Trophy className="w-6 h-6 text-yellow-500 mb-2 ml-1 opacity-80" />
+                </div>
 
+                <div className="space-y-4">
+                  {/* Easy */}
+                  <div>
+                    <div className="flex justify-between text-sm mb-1 font-medium">
+                      <span className="text-green-400">Easy</span>
+                      <span className="text-gray-400">{lcData.easySolved} / <span className="text-gray-600">{lcData.totalEasy}</span></span>
+                    </div>
+                    <div className="w-full bg-gray-800/50 rounded-full h-2.5 overflow-hidden">
+                      <div className="bg-green-500 h-2.5 rounded-full transition-all duration-1000 ease-out" style={{ width: `${(lcData.easySolved / lcData.totalEasy) * 100}%` }}></div>
+                    </div>
+                  </div>
+
+                  {/* Medium */}
+                  <div>
+                    <div className="flex justify-between text-sm mb-1 font-medium">
+                      <span className="text-yellow-400">Medium</span>
+                      <span className="text-gray-400">{lcData.mediumSolved} / <span className="text-gray-600">{lcData.totalMedium}</span></span>
+                    </div>
+                    <div className="w-full bg-gray-800/50 rounded-full h-2.5 overflow-hidden">
+                      <div className="bg-yellow-500 h-2.5 rounded-full transition-all duration-1000 ease-out" style={{ width: `${(lcData.mediumSolved / lcData.totalMedium) * 100}%` }}></div>
+                    </div>
+                  </div>
+
+                  {/* Hard */}
+                  <div>
+                    <div className="flex justify-between text-sm mb-1 font-medium">
+                      <span className="text-red-400">Hard</span>
+                      <span className="text-gray-400">{lcData.hardSolved} / <span className="text-gray-600">{lcData.totalHard}</span></span>
+                    </div>
+                    <div className="w-full bg-gray-800/50 rounded-full h-2.5 overflow-hidden">
+                      <div className="bg-red-500 h-2.5 rounded-full transition-all duration-1000 ease-out" style={{ width: `${(lcData.hardSolved / lcData.totalHard) * 100}%` }}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex-grow flex justify-center items-center text-red-400 text-sm">
+                Failed to load stats.
+              </div>
+            )}
+            
             <a 
               href="https://leetcode.com/u/Ruthragurubaran-J/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="w-full block text-center py-2.5 bg-green-600/20 hover:bg-green-600/30 border border-green-500/50 text-green-400 font-semibold rounded-lg transition-colors mb-6"
+              className="z-10 mt-8 inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-orange-500/25 w-full justify-center"
             >
-              Edit Profile
+              View LeetCode
             </a>
-
-            <div className="flex flex-col gap-3 text-sm text-gray-400">
-              <div className="flex items-center gap-3">
-                <Github size={18} /> 
-                <a href="https://github.com/Stark1645" className="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">Stark1645</a>
-              </div>
-            </div>
-
-            <div className="mt-8 pt-6 border-t border-white/10">
-              <h4 className="text-sm font-semibold text-white mb-4">Community Stats</h4>
-              <div className="flex flex-col gap-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="flex items-center gap-2"><Trophy size={16} className="text-yellow-500" /> Reputation</span>
-                  <span className="text-white font-medium">{lcProfile?.reputation || 0}</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* MIDDLE & RIGHT: Stats, Heatmap, and Recent Submissions */}
-          <div className="lg:col-span-9 flex flex-col gap-6">
-            
-            {/* Top Row: Solved Circular Chart & Badges */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-              {/* Circular Chart Replica */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="glass p-6 rounded-2xl border border-white/5 flex flex-col justify-center relative overflow-hidden"
-              >
-                <div className="flex justify-between items-center w-full">
-                  
-                  {/* Circle */}
-                  <div className="relative w-32 h-32 flex-shrink-0">
-                    <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="64" cy="64" r="58" className="stroke-gray-800" strokeWidth="8" fill="none" />
-                      <circle 
-                        cx="64" cy="64" r="58" 
-                        className="stroke-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]" 
-                        strokeWidth="8" fill="none" 
-                        strokeDasharray="364" 
-                        strokeDashoffset={364 - (364 * (lcData.totalSolved / lcData.totalQuestions))} 
-                        strokeLinecap="round" 
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-3xl font-bold text-white tracking-tighter">{lcData.totalSolved}</span>
-                      <span className="text-xs text-gray-500 font-semibold mb-1">Solved</span>
-                    </div>
-                  </div>
-
-                  {/* Difficulty breakdown */}
-                  <div className="flex flex-col gap-4 w-full pl-8">
-                    <div>
-                      <div className="flex justify-between text-xs mb-1 font-medium">
-                        <span className="text-[#00b8a3]">Easy</span>
-                        <span className="text-gray-400">{lcData.easySolved} <span className="text-gray-600">/{lcData.totalEasy}</span></span>
-                      </div>
-                      <div className="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
-                        <div className="bg-[#00b8a3] h-1.5 rounded-full" style={{ width: `${(lcData.easySolved / lcData.totalEasy) * 100}%` }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-xs mb-1 font-medium">
-                        <span className="text-[#ffc01e]">Medium</span>
-                        <span className="text-gray-400">{lcData.mediumSolved} <span className="text-gray-600">/{lcData.totalMedium}</span></span>
-                      </div>
-                      <div className="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
-                        <div className="bg-[#ffc01e] h-1.5 rounded-full" style={{ width: `${(lcData.mediumSolved / lcData.totalMedium) * 100}%` }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-xs mb-1 font-medium">
-                        <span className="text-[#ff375f]">Hard</span>
-                        <span className="text-gray-400">{lcData.hardSolved} <span className="text-gray-600">/{lcData.totalHard}</span></span>
-                      </div>
-                      <div className="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
-                        <div className="bg-[#ff375f] h-1.5 rounded-full" style={{ width: `${(lcData.hardSolved / lcData.totalHard) * 100}%` }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Badges / Streak Placeholder */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="glass p-6 rounded-2xl border border-white/5 flex flex-col justify-between"
-              >
-                <div className="flex justify-between items-start">
-                  <h4 className="text-gray-400 text-sm font-semibold">Accomplishments</h4>
-                  <Flame className="text-orange-500 w-5 h-5" />
-                </div>
-                
-                <div className="flex items-center gap-4 mt-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-green-500/20 to-blue-500/20 border border-green-500/30 rounded-full flex justify-center items-center shadow-[0_0_15px_rgba(34,197,94,0.2)]">
-                    <span className="text-green-400 font-bold text-xs text-center">50<br/>Days</span>
-                  </div>
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30 rounded-full flex justify-center items-center">
-                    <span className="text-blue-400 font-bold text-xs">Top<br/>1M</span>
-                  </div>
-                </div>
-
-                <p className="text-sm text-gray-500 mt-4 font-medium relative top-2">
-                  Top performer with consistent daily learning streaks!
-                </p>
-              </motion.div>
-
-            </div>
-
-            {/* Bottom Row: Recent Submissions / Activity */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="glass p-6 rounded-2xl border border-white/5"
-            >
-              <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-4">
-                <Code2 className="text-gray-400 w-5 h-5" />
-                <h4 className="text-white font-semibold flex-1">Recent Submissions</h4>
-              </div>
-
-              <div className="flex flex-col gap-0">
-                {lcData.recentSubmissions && lcData.recentSubmissions.slice(0, 5).map((sub, i) => (
-                  <a 
-                    key={i} 
-                    href={`https://leetcode.com/problems/${sub.titleSlug}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex justify-between items-center py-4 hover:bg-white/5 px-3 rounded-lg transition-colors group"
-                  >
-                    <span className="text-sm text-gray-300 font-medium group-hover:text-blue-400 transition-colors">
-                      {sub.title}
-                    </span>
-                    <span className="text-xs font-bold text-green-500 bg-green-500/10 px-3 py-1 rounded-full">
-                      Accepted
-                    </span>
-                  </a>
-                ))}
-              </div>
-            </motion.div>
           </div>
-        </div>
-      ) : (
-        <div className="flex flex-col justify-center items-center py-20">
-          <p className="text-red-400 font-medium mb-4">Error loading live data from LeetCode.</p>
-          <a href="https://leetcode.com/u/Ruthragurubaran-J/" target="_blank" rel="noopener noreferrer" className="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg">View Profile Directly</a>
-        </div>
-      )}
+        </motion.div>
+
+      </div>
     </section>
   );
 };
