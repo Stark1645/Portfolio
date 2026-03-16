@@ -12,10 +12,6 @@ const Hero = () => {
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-24 overflow-hidden">
-      {/* Background Ornaments */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none" />
-
       <div className="container mx-auto px-6 max-w-5xl z-10 flex flex-col items-center text-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}

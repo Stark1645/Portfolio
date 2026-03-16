@@ -5,11 +5,13 @@ import Footer from './components/Footer';
 import ScrollProgress from './components/ScrollProgress';
 import CustomCursor from './components/CustomCursor';
 import BackToTop from './components/BackToTop';
+import AuroraBackground from './components/AuroraBackground';
 
 function App() {
   return (
     <Router>
       <div className="relative min-h-screen font-sans selection:bg-blue-500/30">
+        <AuroraBackground />
         <CustomCursor />
         <ScrollProgress />
         <BackToTop />
