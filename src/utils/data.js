@@ -81,7 +81,7 @@ export const projectsData = [
     ],
     technologies: ["React", "Spring Boot", "MySQL", "Full-Stack", "JWT"],
     githubUrl: "https://github.com/Stark1645/HomeFlameuh-Final",
-    liveUrl: "#",
+    liveUrl: "https://homeflameuh-final-1.onrender.com/",
     image: "/projects/homeflame.jpg"
   },
   {
