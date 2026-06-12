@@ -10,7 +10,7 @@ export const experienceData = [
     role: "B.Tech Information Technology Student",
     company: "Sri Krishna College of Technology",
     duration: "2024 – 2028",
-    description: "Maintaining a CGPA of 7.91/10 while actively participating in hackathons and building technical projects.",
+    description: "Maintaining a CGPA of 8.03/10 while actively participating in hackathons and building technical projects.",
     highlights: ["DevHack 2026 Participant", "Smart India Hackathon (SIH) 2025 Participant", "70+ day coding streak on LeetCode"]
   }
 ];

@@ -23,7 +23,7 @@ const stats = [
   {
     icon: <Zap className="text-orange-500" />,
     label: "CGPA",
-    value: "7.91",
+    value: "8.03",
     suffix: "/ 10"
   }
 ];

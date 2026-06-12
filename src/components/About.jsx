@@ -61,7 +61,7 @@ const About = () => {
                       <MapPin size={14} /> Sri Krishna College of Technology
                     </p>
                     <p className="text-gray-400 text-sm flex items-center gap-1">
-                      <Calendar size={14} /> 2024 - 2028 | CGPA: 7.91
+                      <Calendar size={14} /> 2024 - 2028 | CGPA: 8.03
                     </p>
                   </div>
                 </div>
