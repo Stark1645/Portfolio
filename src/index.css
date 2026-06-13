@@ -136,8 +136,12 @@ body::-webkit-scrollbar-thumb:hover {
 @layer base {
   html {
     font-size: 16px;
-    @screen sm { font-size: 17px; }
-    @screen lg { font-size: 18px; }
+  }
+  @media (width >= 640px) {
+    html { font-size: 17px; }
+  }
+  @media (width >= 1024px) {
+    html { font-size: 18px; }
   }
 }
 

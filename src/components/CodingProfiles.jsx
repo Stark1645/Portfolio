@@ -191,7 +191,7 @@ const CodingProfiles = () => {
             ) : (
               <div className="flex-grow flex flex-col justify-center">
                 <div className="flex items-end gap-2 mb-6">
-                  <span className="text-5xl font-extrabold text-white tracking-tighter">70+</span>
+                  <span className="text-5xl font-extrabold text-white tracking-tighter">169+</span>
                   <span className="text-gray-400 mb-1 font-medium text-lg">Problems Solved</span>
                   <Trophy className="w-6 h-6 text-yellow-500 mb-2 ml-1 opacity-80" />
                 </div>
