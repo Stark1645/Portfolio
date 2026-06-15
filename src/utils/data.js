@@ -7,6 +7,42 @@ export const skillsData = {
 
 export const experienceData = [
   {
+    role: "Full Stack Java Intern",
+    company: "Ether Services",
+    duration: "30 Apr 2026 – 03 Jun 2026",
+    description: "Acquired hands-on exposure and practical skills in Full Stack Java development. Developed and optimized backend endpoints, managed data tables, and integrated dynamic user interfaces.",
+    highlights: ["Full Stack Java", "Spring Boot", "React", "MySQL", "REST APIs", "ISO 9001:2015 Certified"],
+    image: "/certs/ether_services_working.jpg",
+    images: [
+      {
+        src: "/certs/ether_services_working.jpg",
+        title: "Development Workstation",
+        date: "11 May 2026",
+        location: "Ether Services Office, Coimbatore"
+      },
+      {
+        src: "/certs/ether_services_team.jpg",
+        title: "Team Collaboration",
+        date: "03 Jun 2026",
+        location: "Incubation Center, Coimbatore"
+      },
+      {
+        src: "/certs/pofitech_working.jpg",
+        title: "Coding Session",
+        date: "08 May 2026",
+        location: "POFI Technologies, Coimbatore"
+      },
+      {
+        src: "/certs/appin_lab.jpg",
+        title: "Training Center Visit",
+        date: "08 May 2026",
+        location: "Appin Technology Lab, Coimbatore"
+      }
+    ],
+    certificate: "/certs/ether_services_cert.jpg",
+    type: "internship"
+  },
+  {
     role: "B.Tech Information Technology Student",
     company: "Sri Krishna College of Technology",
     duration: "2024 – 2028",
