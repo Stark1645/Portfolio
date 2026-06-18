@@ -26,13 +26,20 @@ const Experience = () => {
           date: img.date,
           location: img.location
         })),
-        {
+        ...(internshipItem.certificates || [
+          {
+            src: internshipItem.certificate,
+            title: "Internship Completion Certificate",
+            date: "03 Jun 2026",
+            location: "Ether Services Office, Coimbatore"
+          }
+        ]).map(cert => ({
           type: 'certificate',
-          src: internshipItem.certificate,
-          title: "Internship Completion Certificate",
-          date: "03 Jun 2026",
-          location: "Ether Services Office, Coimbatore"
-        }
+          src: cert.src,
+          title: cert.title,
+          date: cert.date,
+          location: cert.location
+        }))
       ]
     : [];
 
@@ -198,13 +205,17 @@ const Experience = () => {
                   </div>
 
                   {/* View Certificate CTA Button */}
-                  {item.certificate && (
+                  {(item.certificate || item.certificates) && (
                     <button
                       onClick={() => setSelectedMediaIndex(item.images ? item.images.length : 0)}
                       className="mt-6 flex items-center gap-2 px-4 py-2.5 bg-primary/10 hover:bg-primary/20 border border-primary/25 hover:border-primary/45 rounded-xl text-xs font-bold text-primary transition-all duration-300 shadow-md shadow-primary/5 hover:scale-[1.03] cursor-pointer"
                     >
                       <FileText size={14} />
-                      <span>View Internship Certificate</span>
+                      <span>
+                        {item.certificates && item.certificates.length > 1 
+                          ? "View Internship Certificates" 
+                          : "View Internship Certificate"}
+                      </span>
                     </button>
                   )}
                 </div>

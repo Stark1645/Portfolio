@@ -39,6 +39,20 @@ export const experienceData = [
         location: "Appin Technology Lab, Coimbatore"
       }
     ],
+    certificates: [
+      {
+        src: "/certs/ether_services_cert.jpg",
+        title: "Internship Completion Certificate",
+        date: "03 Jun 2026",
+        location: "Ether Services Office, Coimbatore"
+      },
+      {
+        src: "/certs/ether_services_internship.jpg",
+        title: "Internship Attendance Certificate",
+        date: "03 Jun 2026",
+        location: "Ether Services Office, Coimbatore"
+      }
+    ],
     certificate: "/certs/ether_services_cert.jpg",
     type: "internship"
   },
@@ -51,6 +65,24 @@ export const experienceData = [
   }
 ];
 export const certsData = [
+  {
+    title: "Java Full Stack Bootcamp: Industry Edition",
+    issuer: "Botkov.AI",
+    link: "/certs/botkov_java_bootcamp.jpg",
+    image: "/certs/botkov_java_bootcamp.jpg"
+  },
+  {
+    title: "Placement Training Certificate",
+    issuer: "Botkov.AI",
+    link: "/certs/botkov_placement.jpg",
+    image: "/certs/botkov_placement.jpg"
+  },
+  {
+    title: "Internship Attendance Certificate",
+    issuer: "Ether Services",
+    link: "/certs/ether_services_internship.jpg",
+    image: "/certs/ether_services_internship.jpg"
+  },
   {
     title: "Algorithm Design Techniques",
     issuer: "iamneo",
