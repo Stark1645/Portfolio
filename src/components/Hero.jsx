@@ -201,8 +201,8 @@ const Hero = () => {
           <div
             className="relative"
             style={{
-              width:  'min(380px, calc(100vw - 48px))',
-              height: 'min(380px, calc(100vw - 48px))',
+              width:  'min(480px, calc(100vw - 48px))',
+              height: 'min(480px, calc(100vw - 48px))',
             }}
           >
             {/* Glow aura */}
@@ -252,7 +252,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65, duration: 0.5 }}
             className="flex flex-row items-stretch w-full bg-[#11151c] border border-white/5 shadow-xl rounded-2xl overflow-hidden"
-            style={{ width: 'min(480px, calc(46vw - 80px))' }}
+            style={{ width: 'min(480px, calc(100vw - 48px))' }}
           >
             {stats.map((s, i) => {
               const Icon = s.icon;
