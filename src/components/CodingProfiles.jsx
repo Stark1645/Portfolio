@@ -302,9 +302,9 @@ const CodingProfiles = () => {
               href="https://github.com/Stark1645"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-auto inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-blue-500/25 w-full justify-center"
+              className="mt-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-blue-500/25 w-full justify-center text-sm"
             >
-              <Github size={16} /> View GitHub Profile
+              <Github size={14} /> View GitHub Profile
             </a>
           </div>
         </motion.div>
@@ -407,10 +407,10 @@ const CodingProfiles = () => {
               </div>
             )}
             
-            <div className="z-10 mt-8 flex flex-col gap-3 w-full">
+            <div className="z-10 mt-8 flex flex-col gap-2.5 w-full">
               <button 
                 onClick={() => setShowLcModal(true)}
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-orange-500/25 w-full justify-center cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-orange-500/25 w-full justify-center cursor-pointer text-sm"
               >
                 View Detailed Stats
               </button>
@@ -418,7 +418,7 @@ const CodingProfiles = () => {
                 href="https://leetcode.com/u/Ruthragurubaran-J/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-bold border border-white/10 transition-colors w-full justify-center text-sm"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 font-bold border border-white/10 transition-colors w-full justify-center text-xs"
               >
                 View LeetCode Profile
               </a>
@@ -542,7 +542,7 @@ const CodingProfiles = () => {
               href="https://www.hackerrank.com/profile/gurudaya49" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="z-10 mt-8 inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-green-500/25 w-full justify-center"
+              className="z-10 mt-8 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-green-500/25 w-full justify-center text-sm"
             >
               View HackerRank
             </a>

@@ -173,9 +173,9 @@ const Contact = () => {
             <button
               type="submit"
               disabled={status === 'sending'}
-              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 flex justify-center items-center gap-2 transition-transform transform hover:-translate-y-1"
+              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-3 text-sm rounded-lg shadow-lg shadow-blue-500/30 flex justify-center items-center gap-2 transition-transform transform hover:-translate-y-1"
             >
-              {status === 'sending' ? 'Sending...' : 'Send Message'} <Send size={20} />
+              {status === 'sending' ? 'Sending...' : 'Send Message'} <Send size={16} />
             </button>
 
             {status === 'success' && (
