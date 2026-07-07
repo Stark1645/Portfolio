@@ -52,10 +52,10 @@ const Hero = () => {
       {/* ════════════════════════════════════════
           MAIN ROW  —  text left | photo right
       ════════════════════════════════════════ */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row flex-1 items-center w-full h-full">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row flex-1 items-center w-full h-full">
 
         {/* ── LEFT: Text ── */}
-        <div className="flex-1 flex flex-col gap-6 py-12 lg:py-16 lg:pr-10 w-full z-10">
+        <div className="flex-1 flex flex-col gap-5 py-12 lg:py-16 lg:pr-10 w-full z-10">
 
           {/* Status badge */}
           <motion.div
@@ -79,7 +79,7 @@ const Hero = () => {
             <h1
               className="font-extrabold tracking-tight leading-[1.05] gradient-text"
               style={{
-                fontSize: 'clamp(2.8rem, 4.5vw, 5.5rem)',
+                fontSize: 'clamp(2.1rem, 4vw, 3.75rem)',
                 filter: 'drop-shadow(0 0 32px rgba(88,166,255,0.4))',
               }}
             >
@@ -151,40 +151,40 @@ const Hero = () => {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 to="/projects"
-                className="group inline-flex items-center gap-2.5 bg-blue-600 hover:bg-blue-500
-                  text-white font-bold px-5 py-2.5 rounded-lg text-sm
-                  shadow-[0_4px_20px_rgba(88,166,255,0.3)] hover:shadow-[0_8px_28px_rgba(88,166,255,0.45)]
+                className="group inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500
+                  text-white font-semibold px-5 py-3 rounded-xl text-sm
+                  shadow-[0_4px_15px_rgba(88,166,255,0.25)] hover:shadow-[0_8px_20px_rgba(88,166,255,0.35)]
                   transition-all duration-300 hover:-translate-y-0.5"
               >
                 View Projects
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 to="/contact"
-                className="group inline-flex items-center gap-2.5 bg-[#11151c] text-heading font-bold
-                  px-5 py-2.5 rounded-lg text-sm border border-white/5
+                className="group inline-flex items-center gap-2 bg-[#11151c] text-heading font-semibold
+                  px-5 py-3 rounded-xl text-sm border border-white/5
                   hover:border-white/10 hover:bg-[#1a202c] transition-all duration-300 hover:-translate-y-0.5 shadow-lg"
               >
-                Contact Me <Mail size={16} />
+                Contact Me <Mail size={15} />
               </Link>
               <button
                 onClick={() => setResumeOpen(true)}
-                className="group inline-flex items-center gap-2.5 bg-[#11151c] text-secondary hover:text-heading font-bold
-                  px-5 py-2.5 rounded-lg text-sm border border-white/5
+                className="group inline-flex items-center gap-2 bg-[#11151c] text-secondary hover:text-heading font-semibold
+                  px-5 py-3 rounded-xl text-sm border border-white/5
                   hover:border-white/10 hover:bg-[#1a202c] hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-lg"
               >
-                Resume <Download size={16} className="group-hover:translate-y-0.5 transition-transform" />
+                Resume <Download size={15} className="group-hover:translate-y-0.5 transition-transform" />
               </button>
             </div>
             
             <div className="flex">
               <Link
                 to="/profiles"
-                className="group inline-flex items-center gap-2.5 bg-[#11151c] text-secondary hover:text-heading font-bold
-                  px-5 py-2.5 rounded-lg text-sm border border-white/5
+                className="group inline-flex items-center gap-2 bg-[#11151c] text-secondary hover:text-heading font-semibold
+                  px-5 py-3 rounded-xl text-sm border border-white/5
                   hover:border-white/10 hover:bg-[#1a202c] hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-lg"
               >
-                Coding Profiles <Code2 size={16} className="text-orange-400 group-hover:text-green-400 transition-colors duration-500" />
+                Coding Profiles <Code2 size={15} className="text-orange-400 group-hover:text-green-400 transition-colors duration-500" />
               </Link>
             </div>
           </motion.div>
@@ -201,8 +201,8 @@ const Hero = () => {
           <div
             className="relative"
             style={{
-              width:  'min(420px, calc(100vw - 48px))',
-              height: 'min(420px, calc(100vw - 48px))',
+              width:  'min(380px, calc(100vw - 48px))',
+              height: 'min(380px, calc(100vw - 48px))',
             }}
           >
             {/* Glow aura */}
@@ -252,7 +252,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65, duration: 0.5 }}
             className="flex flex-row items-stretch w-full bg-[#11151c] border border-white/5 shadow-xl rounded-2xl overflow-hidden"
-            style={{ width: 'min(420px, calc(100vw - 48px))' }}
+            style={{ width: 'min(380px, calc(100vw - 48px))' }}
           >
             {stats.map((s, i) => {
               const Icon = s.icon;

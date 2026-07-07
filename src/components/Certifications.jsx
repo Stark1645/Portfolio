@@ -19,7 +19,7 @@ const Certifications = () => {
   };
 
   return (
-    <section id="certifications" className="py-24 max-w-7xl mx-auto px-6 md:px-12 relative w-full overflow-hidden">
+    <section id="certifications" className="py-20 max-w-7xl mx-auto px-6 relative w-full overflow-hidden">
       {/* Creative Background Elements */}
       <div className="absolute top-1/4 -left-64 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 -right-64 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none" />
@@ -29,21 +29,21 @@ const Certifications = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-20 relative z-10"
+        className="text-center mb-12 relative z-10"
       >
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 text-blue-400 text-sm font-bold mb-6 border border-blue-500/20">
-          <ShieldCheck size={16} />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold mb-6 border border-blue-500/20">
+          <ShieldCheck size={14} />
           Verified Credentials
         </div>
-        <h2 className="text-4xl md:text-6xl font-extrabold text-heading mb-6 tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-heading mb-4">
           Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Certifications</span>
         </h2>
-        <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+        <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
           Validated skills and knowledge through industry-recognized certifications from top organizations.
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 relative z-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 relative z-10">
         {certsData.map((cert, index) => (
           <motion.div
             key={index}
@@ -52,7 +52,7 @@ const Certifications = () => {
             viewport={{ once: true, margin: '-50px' }}
             transition={{ delay: index * 0.1, duration: 0.7, type: "spring", bounce: 0.4 }}
             onClick={() => setSelectedCertIndex(index)}
-            className="group relative h-[280px] rounded-[2rem] overflow-hidden cursor-pointer shadow-2xl bg-[#0d1117] border border-white/5 hover:border-blue-500/40 transition-colors duration-500"
+            className="group relative h-[240px] rounded-2xl overflow-hidden cursor-pointer shadow-xl bg-[#0d1117] border border-white/5 hover:border-blue-500/40 transition-colors duration-500"
           >
             {/* Background Image - Blurred by default, clear on hover */}
             <div className="absolute inset-0 z-0">
@@ -64,7 +64,7 @@ const Certifications = () => {
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-gray-900 to-blue-950 flex items-center justify-center">
-                  <Award size={64} className="text-blue-500/20" />
+                  <Award size={48} className="text-blue-500/20" />
                 </div>
               )}
               {/* Overlay gradient */}
@@ -72,17 +72,17 @@ const Certifications = () => {
             </div>
 
             {/* Content overlay */}
-            <div className="absolute inset-0 z-10 flex flex-col justify-end p-8 transform group-hover:-translate-y-4 transition-transform duration-500">
+            <div className="absolute inset-0 z-10 flex flex-col justify-end p-6 transform group-hover:-translate-y-3 transition-transform duration-500">
               <div className="mb-auto self-end opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-                <div className="w-12 h-12 rounded-full glass flex items-center justify-center border border-white/20 text-white backdrop-blur-md hover:bg-white hover:text-black transition-colors shadow-lg">
-                  <Eye size={20} />
+                <div className="w-10 h-10 rounded-full glass flex items-center justify-center border border-white/20 text-white backdrop-blur-md hover:bg-white hover:text-black transition-colors shadow-md">
+                  <Eye size={16} />
                 </div>
               </div>
               
-              <p className="text-blue-400 font-bold text-sm tracking-wider uppercase mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 delay-100">
+              <p className="text-blue-400 font-bold text-[10px] tracking-wider uppercase mb-1 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 delay-100">
                 {cert.issuer}
               </p>
-              <h3 className="text-2xl font-bold text-white leading-tight mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 delay-150 line-clamp-2">
+              <h3 className="text-lg font-bold text-white leading-tight mb-1 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 delay-150 line-clamp-2">
                 {cert.title}
               </h3>
 
@@ -95,16 +95,16 @@ const Certifications = () => {
                     href={cert.link} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/10 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-xs text-white border border-white/10 transition-colors"
                   >
-                    Verify Credential <ExternalLink size={12} />
+                    Verify Credential <ExternalLink size={10} />
                   </a>
                 </div>
               )}
             </div>
             
             {/* Glowing border effect on hover */}
-            <div className="absolute inset-0 border-2 border-transparent group-hover:border-blue-400/30 rounded-[2rem] pointer-events-none transition-colors duration-500" />
+            <div className="absolute inset-0 border-2 border-transparent group-hover:border-blue-400/30 rounded-2xl pointer-events-none transition-colors duration-500" />
           </motion.div>
         ))}
       </div>

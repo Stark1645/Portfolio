@@ -3,25 +3,25 @@ import { Layout, Server, Database, Globe } from 'lucide-react';
 
 const services = [
   {
-    icon: <Layout size={32} />,
+    icon: <Layout size={24} />,
     title: "Frontend Development",
     description: "Crafting beautiful, responsive, and high-performance user interfaces using React and modern CSS.",
     color: "blue"
   },
   {
-    icon: <Server size={32} />,
+    icon: <Server size={24} />,
     title: "Backend Development",
     description: "Building robust and scalable server-side logic and REST APIs using Spring Boot and Java.",
     color: "green"
   },
   {
-    icon: <Database size={32} />,
+    icon: <Database size={24} />,
     title: "Database Design",
     description: "Architecting efficient data models and managing complex queries with MySQL and relational databases.",
     color: "purple"
   },
   {
-    icon: <Globe size={32} />,
+    icon: <Globe size={24} />,
     title: "Full Stack Integration",
     description: "Seamlessly connecting frontend applications with backend services for a unified user experience.",
     color: "orange"
@@ -30,17 +30,17 @@ const services = [
 
 const WhatIDo = () => {
   return (
-    <section className="py-24 max-w-7xl mx-auto px-6 md:px-12 relative w-full">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
+    <section className="py-20 max-w-7xl mx-auto px-6 relative w-full">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4">
           What <span className="gradient-text">I Do</span>
         </h2>
-        <p className="text-secondary max-w-2xl mx-auto">
+        <p className="text-secondary max-w-2xl mx-auto text-sm sm:text-base">
           Combining technical expertise with creative problem-solving to build comprehensive software solutions.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {services.map((service, index) => (
           <motion.div
             key={index}
@@ -48,15 +48,15 @@ const WhatIDo = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
-            className="glass p-8 rounded-3xl border border-white/5 hover:border-primary/30 transition-all duration-500 group relative overflow-hidden"
+            className="glass p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-all duration-500 group relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full translate-x-8 -translate-y-8 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-500" />
             
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
               {service.icon}
             </div>
             
-            <h3 className="text-xl font-bold text-heading mb-3 group-hover:text-primary transition-colors">
+            <h3 className="text-lg font-bold text-heading mb-2 group-hover:text-primary transition-colors">
               {service.title}
             </h3>
             

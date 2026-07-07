@@ -48,18 +48,18 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 max-w-7xl mx-auto px-6 md:px-12 relative w-full">
+    <section id="contact" className="py-20 max-w-7xl mx-auto px-6 relative w-full">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-16"
+        className="text-center mb-12"
       >
-        <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4">
           Get in <span className="gradient-text">Touch</span>
         </h2>
-        <p className="text-secondary max-w-2xl mx-auto">
+        <p className="text-secondary max-w-2xl mx-auto text-sm sm:text-base">
           Currently open for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!
         </p>
       </motion.div>
@@ -127,7 +127,7 @@ const Contact = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="lg:w-2/3 glass p-10 rounded-2xl"
+          className="lg:w-2/3 glass p-6 md:p-8 rounded-2xl"
         >
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -139,7 +139,7 @@ const Contact = () => {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="bg-surface border border-white/10 text-heading rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition-colors"
+                  className="bg-surface border border-white/10 text-heading rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors"
                   placeholder="John Doe"
                 />
               </div>
@@ -151,7 +151,7 @@ const Contact = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="bg-surface border border-white/10 text-heading rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition-colors"
+                  className="bg-surface border border-white/10 text-heading rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors"
                   placeholder="john@example.com"
                 />
               </div>
@@ -165,7 +165,7 @@ const Contact = () => {
                 rows={6}
                 value={formData.message}
                 onChange={handleChange}
-                className="bg-surface border border-white/10 text-heading rounded-lg px-4 py-3 focus:outline-none focus:border-primary transition-colors resize-none"
+                className="bg-surface border border-white/10 text-heading rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors resize-none"
                 placeholder="I have a project for you..."
               ></textarea>
             </div>

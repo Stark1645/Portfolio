@@ -21,18 +21,18 @@ const Skills = () => {
   };
 
   return (
-    <section id="skills" className="py-24 max-w-7xl mx-auto px-6 md:px-12 relative w-full">
+    <section id="skills" className="py-20 max-w-7xl mx-auto px-6 relative w-full">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-16"
+        className="text-center mb-12"
       >
-        <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-heading mb-4">
           My <span className="gradient-text">Skills</span>
         </h2>
-        <p className="text-secondary max-w-2xl mx-auto mb-8">
+        <p className="text-secondary max-w-2xl mx-auto mb-8 text-sm sm:text-base">
           Here is a collection of my technical skills and core competencies that I have acquired over my journey as a student and full stack developer.
         </p>
 
@@ -62,7 +62,7 @@ const Skills = () => {
       </motion.div>
 
       {viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
           {Object.entries(skillsData).map(([category, skills], index) => (
             <motion.div
               key={category}
@@ -70,9 +70,9 @@ const Skills = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ delay: index * 0.2, duration: 0.6 }}
-              className="glass p-8 rounded-2xl hover:border-primary/50 transition-colors"
+              className="glass p-6 rounded-2xl hover:border-primary/50 transition-colors"
             >
-              <h3 className="text-2xl font-bold text-heading mb-6 tracking-wide border-b border-white/10 pb-3">
+              <h3 className="text-xl font-bold text-heading mb-4 tracking-wide border-b border-white/10 pb-2">
                 {category}
               </h3>
               
@@ -81,14 +81,14 @@ const Skills = () => {
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true }}
-                className="flex flex-wrap gap-3"
+                className="flex flex-wrap gap-2.5"
               >
                 {skills.map((skill) => (
                   <motion.span
                     key={skill}
                     variants={item}
-                    whileHover={{ scale: 1.1, backgroundColor: 'var(--color-primary)', color: '#fff' }}
-                    className="px-4 py-2 bg-surface text-primary border border-primary/20 rounded-lg text-sm font-semibold cursor-default transition-colors shadow-sm"
+                    whileHover={{ scale: 1.05, backgroundColor: 'var(--color-primary)', color: '#fff' }}
+                    className="px-3 py-1.5 bg-surface text-primary border border-primary/20 rounded-lg text-xs font-semibold cursor-default transition-colors shadow-sm"
                   >
                     {skill}
                   </motion.span>

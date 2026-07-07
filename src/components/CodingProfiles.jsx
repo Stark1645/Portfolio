@@ -198,23 +198,23 @@ const CodingProfiles = () => {
   }, []);
 
   return (
-    <section id="profiles" className="py-24 max-w-7xl mx-auto px-6 md:px-12 relative w-full">
+    <section id="profiles" className="py-20 max-w-7xl mx-auto px-6 relative w-full">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-16"
+        className="text-center mb-12"
       >
-        <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4">
           Coding <span className="gradient-text">Profiles</span>
         </h2>
-        <p className="text-secondary max-w-2xl mx-auto text-lg mt-4">
+        <p className="text-secondary max-w-2xl mx-auto text-sm sm:text-base mt-3">
           Where I build projects and solve algorithmic challenges.
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         
         {/* GitHub Card */}
         <motion.div

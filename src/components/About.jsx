@@ -3,24 +3,24 @@ import { BookOpen, GraduationCap, MapPin, Calendar } from 'lucide-react';
 
 const About = () => {
   return (
-    <section id="about" className="py-24 max-w-7xl mx-auto px-6 md:px-12 relative z-10 w-full">
+    <section id="about" className="py-20 max-w-7xl mx-auto px-6 relative z-10 w-full">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
-        className="glass rounded-3xl p-8 md:p-12 relative overflow-hidden"
+        className="glass rounded-2xl p-6 md:p-8 relative overflow-hidden"
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px]" />
         
-        <h2 className="text-3xl md:text-5xl font-bold mb-8 text-heading flex items-center gap-4">
-          <BookOpen className="text-primary" size={36} /> About Me
+        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-heading flex items-center gap-3">
+          <BookOpen className="text-primary" size={26} /> About Me
         </h2>
         
-        <div className="flex flex-col md:flex-row gap-12">
-          <div className="flex-1 space-y-6 text-text text-lg leading-relaxed">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
-              <div className="w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden shrink-0 border-4 border-gray-800 light:border-gray-200 shadow-xl shadow-blue-500/20">
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="flex-1 space-y-4 text-text text-base leading-relaxed">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-6">
+              <div className="w-32 h-32 md:w-36 md:h-36 rounded-xl overflow-hidden shrink-0 border-2 border-gray-800 light:border-gray-200 shadow-md shadow-blue-500/10">
                 <img 
                   src="/profile.jpg" 
                   alt="Ruthragurubaran" 
@@ -30,24 +30,24 @@ const About = () => {
                   }}
                 />
               </div>
-              <p className="pt-2 text-center sm:text-left">
+              <p className="pt-2 text-center sm:text-left text-sm sm:text-base">
                 Hi, I'm <strong className="text-heading">Ruthragurubaran</strong>. My journey into programming started with a simple curiosity about how digital systems work, which quickly evolved into a passion for architecting and building robust web applications. I am currently pursuing my B.Tech in Information Technology at Sri Krishna College of Technology.
               </p>
             </div>
-            <p>
+            <p className="text-sm sm:text-base">
               My current focus is on <span className="text-purple-400 light:text-purple-600 font-bold">full-stack development</span>. While I enjoy jumping across the stack, I have a deep-rooted interest in <span className="text-primary font-bold">backend systems</span> and designing <span className="text-emerald-400 light:text-emerald-600 font-bold">scalable, high-performance applications</span> that can handle real-world challenges.
             </p>
-            <p>
+            <p className="text-sm sm:text-base">
               Using modern technologies like Java, Spring Boot, Python, and React, I love blending clean code with logical problem-solving. Whether it's crafting efficient REST APIs or creating dynamic user interfaces, my goal is always to deliver impactful and functional digital products.
             </p>
           </div>
 
-          <div className="flex-1 bg-white/5 rounded-2xl p-8 border border-white/10 relative">
-            <div className="absolute -left-4 -top-4 w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-              <GraduationCap className="text-white" size={24} />
+          <div className="flex-1 bg-white/5 rounded-xl p-6 border border-white/10 relative">
+            <div className="absolute -left-4 -top-4 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <GraduationCap className="text-white" size={20} />
             </div>
             
-            <h3 className="text-2xl font-bold text-heading mb-6 tracking-wide border-b border-white/5 pb-3">
+            <h3 className="text-xl font-bold text-heading mb-4 tracking-wide border-b border-white/5 pb-2">
               Education
             </h3>
             <div className="space-y-4 relative before:absolute before:inset-0 before:ml-1 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-blue-500 before:to-transparent pl-6 md:pl-0 pt-2">
@@ -55,13 +55,13 @@ const About = () => {
                 <div className="absolute left-0 mt-1 md:left-1/2 -translate-x-[5px] md:-translate-x-1/2 w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(88,166,255,0.8)] border border-gray-900 group-hover:scale-150 transition-transform"></div>
                 
                 <div className="w-full md:w-1/2 md:pr-8 pb-4">
-                  <div className="bg-gray-800/50 backdrop-blur-md p-5 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
-                    <h4 className="text-xl font-bold text-white mb-1">B.Tech Information Technology</h4>
-                    <p className="text-blue-400 font-medium mb-3 flex items-center gap-1 text-sm">
-                      <MapPin size={14} /> Sri Krishna College of Technology
+                  <div className="bg-gray-800/50 backdrop-blur-md p-4 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
+                    <h4 className="text-base font-bold text-white mb-1">B.Tech Information Technology</h4>
+                    <p className="text-blue-400 font-medium mb-2 flex items-center gap-1 text-xs">
+                      <MapPin size={12} /> Sri Krishna College of Technology
                     </p>
-                    <p className="text-gray-400 text-sm flex items-center gap-1">
-                      <Calendar size={14} /> 2024 - 2028 | CGPA: 8.03
+                    <p className="text-gray-400 text-xs flex items-center gap-1">
+                      <Calendar size={12} /> 2024 - 2028 | CGPA: 8.03
                     </p>
                   </div>
                 </div>
@@ -71,13 +71,13 @@ const About = () => {
                 <div className="absolute left-0 mt-1 md:left-1/2 -translate-x-[5px] md:-translate-x-1/2 w-3 h-3 rounded-full bg-blue-500/50 border border-gray-900 group-hover:scale-150 transition-transform"></div>
                 
                 <div className="w-full md:w-1/2 md:pl-8 pb-4">
-                  <div className="bg-gray-800/50 backdrop-blur-md p-5 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
-                    <h4 className="text-xl font-bold text-white mb-1">Higher Secondary Certificate (HSC)</h4>
-                    <p className="text-blue-400 font-medium mb-3 flex items-center gap-1 text-sm">
-                      <MapPin size={14} /> Cheran Matric Hr. Sec. School
+                  <div className="bg-gray-800/50 backdrop-blur-md p-4 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
+                    <h4 className="text-base font-bold text-white mb-1">Higher Secondary Certificate (HSC)</h4>
+                    <p className="text-blue-400 font-medium mb-2 flex items-center gap-1 text-xs">
+                      <MapPin size={12} /> Cheran Matric Hr. Sec. School
                     </p>
-                    <p className="text-gray-400 text-sm flex items-center gap-1">
-                      <Calendar size={14} /> 2024 | 84%
+                    <p className="text-gray-400 text-xs flex items-center gap-1">
+                      <Calendar size={12} /> 2024 | 84%
                     </p>
                   </div>
                 </div>
@@ -87,13 +87,13 @@ const About = () => {
                 <div className="absolute left-0 mt-1 md:left-1/2 -translate-x-[5px] md:-translate-x-1/2 w-3 h-3 rounded-full bg-blue-500/30 border border-gray-900 group-hover:scale-150 transition-transform"></div>
                 
                 <div className="w-full md:w-1/2 md:pr-8 pb-4">
-                  <div className="bg-gray-800/50 backdrop-blur-md p-5 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
-                    <h4 className="text-xl font-bold text-white mb-1">Secondary School Leaving Certificate (SSLC)</h4>
-                    <p className="text-blue-400 font-medium mb-3 flex items-center gap-1 text-sm">
-                      <MapPin size={14} /> Cheran Matric Hr. Sec. School
+                  <div className="bg-gray-800/50 backdrop-blur-md p-4 rounded-xl border border-gray-700 hover:border-blue-500/50 transition-colors">
+                    <h4 className="text-base font-bold text-white mb-1">Secondary School Leaving Certificate (SSLC)</h4>
+                    <p className="text-blue-400 font-medium mb-2 flex items-center gap-1 text-xs">
+                      <MapPin size={12} /> Cheran Matric Hr. Sec. School
                     </p>
-                    <p className="text-gray-400 text-sm flex items-center gap-1">
-                      <Calendar size={14} /> 2022 | 83%
+                    <p className="text-gray-400 text-xs flex items-center gap-1">
+                      <Calendar size={12} /> 2022 | 83%
                     </p>
                   </div>
                 </div>

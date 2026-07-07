@@ -64,23 +64,23 @@ const Experience = () => {
   };
 
   return (
-    <section id="experience" className="py-24 max-w-7xl mx-auto px-6 md:px-12 relative w-full">
+    <section id="experience" className="py-20 max-w-7xl mx-auto px-6 relative w-full">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-16"
+        className="text-center mb-12"
       >
-        <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-heading mb-4">
           Journey & <span className="gradient-text">Experience</span>
         </h2>
-        <p className="text-secondary max-w-2xl mx-auto">
+        <p className="text-secondary max-w-2xl mx-auto text-sm sm:text-base">
           A combination of my professional training, key roles, and the path I've taken throughout my degree.
         </p>
       </motion.div>
 
-      <div className="space-y-12">
+      <div className="space-y-8">
         {experienceData.map((item, index) => {
           if (item.type === 'internship') {
             return (
@@ -90,39 +90,39 @@ const Experience = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.6 }}
-                className="glass flex flex-col lg:flex-row gap-8 p-8 md:p-10 rounded-3xl relative overflow-hidden group hover:border-primary/40 transition-all border border-white/5"
+                className="glass flex flex-col lg:flex-row gap-6 p-6 md:p-8 rounded-2xl relative overflow-hidden group hover:border-primary/40 transition-all border border-white/5"
               >
                 <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-blue-500 to-purple-500 group-hover:w-4 transition-all" />
                 
                 {/* Left Content */}
-                <div className="lg:w-3/5 space-y-6 flex flex-col justify-between">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-primary/20 rounded-2xl flex items-center justify-center text-primary border border-primary/10 shrink-0">
-                        <Briefcase size={28} />
+                <div className="lg:w-3/5 space-y-4 flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center text-primary border border-primary/10 shrink-0">
+                        <Briefcase size={22} />
                       </div>
                       <div>
-                        <span className="text-[10px] uppercase font-black tracking-widest text-primary px-2 py-0.5 bg-primary/10 border border-primary/25 rounded-md">Spotlight Experience</span>
-                        <h3 className="text-3xl font-black text-white mt-1 leading-tight">{item.role}</h3>
-                        <p className="text-lg font-bold text-primary">{item.company} <span className="text-xs text-secondary font-medium">• Coimbatore, India</span></p>
+                        <span className="text-[9px] uppercase font-black tracking-widest text-primary px-2 py-0.5 bg-primary/10 border border-primary/25 rounded">Spotlight Experience</span>
+                        <h3 className="text-2xl font-bold text-white mt-1 leading-tight">{item.role}</h3>
+                        <p className="text-base font-semibold text-primary">{item.company} <span className="text-xs text-secondary font-medium">• Coimbatore, India</span></p>
                       </div>
                     </div>
 
-                    <p className="text-secondary text-sm font-semibold">{item.duration}</p>
+                    <p className="text-secondary text-xs font-semibold">{item.duration}</p>
                     
-                    <p className="text-lg text-secondary leading-relaxed pt-2">
+                    <p className="text-base text-secondary leading-relaxed pt-2">
                       {item.description}
                     </p>
                   </div>
 
-                  <div className="pt-6 border-t border-white/5 mt-auto">
-                    <div className="flex flex-wrap gap-4">
-                      <span className="text-secondary text-xs font-bold uppercase tracking-wider mt-1.5">Skills Gained:</span>
+                  <div className="pt-4 border-t border-white/5 mt-auto">
+                    <div className="flex flex-wrap gap-3">
+                      <span className="text-secondary text-[10px] font-bold uppercase tracking-wider mt-1">Skills Gained:</span>
                       <div className="flex flex-wrap gap-2">
                         {item.highlights.map((highlight, hIndex) => (
                           <span 
                             key={hIndex}
-                            className="px-3 py-1.5 bg-surface text-primary border border-primary/15 rounded-xl text-xs font-semibold"
+                            className="px-2.5 py-1 bg-surface text-primary border border-primary/15 rounded-lg text-xs font-semibold"
                           >
                             {highlight}
                           </span>
@@ -134,7 +134,7 @@ const Experience = () => {
 
                 {/* Right Interactive Image Panel - Scrapbook Polaroid Collage */}
                 <div className="lg:w-2/5 flex flex-col items-center justify-center relative py-4 select-none">
-                  <div className="relative w-full max-w-[360px] h-[430px] mx-auto flex items-center justify-center">
+                  <div className="relative w-full max-w-[320px] h-[380px] mx-auto flex items-center justify-center">
                     
                     {/* Hand-drawn heart doodle background */}
                     <div className="absolute top-[22%] left-[8%] opacity-20 pointer-events-none select-none -rotate-12 text-white">
@@ -175,7 +175,7 @@ const Experience = () => {
                         <div
                           key={idx}
                           onClick={() => setSelectedMediaIndex(idx)}
-                          className={`absolute ${layoutClasses} w-[165px] bg-[#faf9f5] text-stone-800 p-2.5 pb-5 border border-stone-200 shadow-xl shadow-black/45 transition-all duration-300 cursor-pointer`}
+                          className={`absolute ${layoutClasses} w-[145px] bg-[#faf9f5] text-stone-800 p-2 border border-stone-200 shadow-xl shadow-black/45 transition-all duration-300 cursor-pointer`}
                         >
                           {tapeElement}
                           
@@ -188,13 +188,13 @@ const Experience = () => {
                             />
                             {/* Maximize Icon on hover */}
                             <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                              <Maximize2 size={16} className="text-white" />
+                              <Maximize2 size={14} className="text-white" />
                             </div>
                           </div>
                           
                           {/* Polaroid Caption Space */}
-                          <div className="mt-2 text-center">
-                            <p className="font-serif italic text-[11px] font-semibold text-stone-700 tracking-tight leading-tight select-none">
+                          <div className="mt-1.5 text-center">
+                            <p className="font-serif italic text-[10px] font-semibold text-stone-700 tracking-tight leading-tight select-none">
                               {img.title}
                             </p>
                           </div>
@@ -208,9 +208,9 @@ const Experience = () => {
                   {(item.certificate || item.certificates) && (
                     <button
                       onClick={() => setSelectedMediaIndex(item.images ? item.images.length : 0)}
-                      className="mt-6 flex items-center gap-2 px-4 py-2.5 bg-primary/10 hover:bg-primary/20 border border-primary/25 hover:border-primary/45 rounded-xl text-xs font-bold text-primary transition-all duration-300 shadow-md shadow-primary/5 hover:scale-[1.03] cursor-pointer"
+                      className="mt-5 flex items-center gap-2 px-3.5 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/25 hover:border-primary/45 rounded-lg text-xs font-bold text-primary transition-all duration-300 shadow-md shadow-primary/5 hover:scale-[1.03] cursor-pointer"
                     >
-                      <FileText size={14} />
+                      <FileText size={12} />
                       <span>
                         {item.certificates && item.certificates.length > 1 
                           ? "View Internship Certificates" 
@@ -230,33 +230,33 @@ const Experience = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="glass flex flex-col md:flex-row gap-8 p-8 md:p-12 rounded-3xl relative overflow-hidden group hover:border-primary/30 transition-all"
+              className="glass flex flex-col md:flex-row gap-6 p-6 md:p-8 rounded-2xl relative overflow-hidden group hover:border-primary/30 transition-all"
             >
               <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-primary to-purple-500 group-hover:w-4 transition-all" />
               
-              <div className="md:w-1/3 space-y-4">
-                <div className="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center text-primary">
-                  <Briefcase size={32} />
+              <div className="md:w-1/3 space-y-3">
+                <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
+                  <Briefcase size={22} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-heading mb-1">{item.role}</h3>
-                  <p className="text-primary font-semibold">{item.company}</p>
-                  <p className="text-secondary text-sm mt-1">{item.duration}</p>
+                  <h3 className="text-xl font-bold text-heading mb-1">{item.role}</h3>
+                  <p className="text-primary font-medium text-sm">{item.company}</p>
+                  <p className="text-secondary text-xs mt-1">{item.duration}</p>
                 </div>
               </div>
 
-              <div className="md:w-2/3 space-y-6">
-                <p className="text-lg text-secondary leading-relaxed">
+              <div className="md:w-2/3 space-y-4">
+                <p className="text-base text-secondary leading-relaxed">
                   {item.description}
                 </p>
                 
-                <div className="flex flex-wrap gap-4 pt-4 border-t border-white/5">
-                  <span className="text-secondary text-sm font-bold uppercase tracking-wider">Highlights:</span>
-                  <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 pt-3 border-t border-white/5">
+                  <span className="text-secondary text-xs font-bold uppercase tracking-wider mt-0.5">Highlights:</span>
+                  <div className="flex flex-wrap gap-2">
                     {item.highlights.map((highlight, hIndex) => (
                       <span 
                         key={hIndex}
-                        className="px-3 py-1 bg-surface text-primary border border-primary/10 rounded-full text-xs"
+                        className="px-2.5 py-1 bg-surface text-primary border border-primary/10 rounded-lg text-xs"
                       >
                         {highlight}
                       </span>

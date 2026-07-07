@@ -34,10 +34,10 @@ const Navbar = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
       className={`fixed w-full top-0 z-40 transition-all duration-300 ${
-        scrolled ? 'glass py-4 shadow-lg' : 'bg-transparent py-6'
+        scrolled ? 'glass py-2.5 shadow-md' : 'bg-transparent py-4'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         <Link 
           to="/" 
           onClick={() => setIsOpen(false)}
