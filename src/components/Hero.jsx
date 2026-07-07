@@ -12,11 +12,11 @@ const roles = [
 ];
 
 const techStack = [
-  { label: 'Java',        color: 'text-orange-400', border: 'border-orange-500/30', bg: 'bg-orange-500/10' },
-  { label: 'Spring Boot', color: 'text-green-400',  border: 'border-green-500/30',  bg: 'bg-green-500/10'  },
-  { label: 'React',       color: 'text-cyan-400',   border: 'border-cyan-500/30',   bg: 'bg-cyan-500/10'   },
-  { label: 'Python',      color: 'text-blue-400',   border: 'border-blue-500/30',   bg: 'bg-blue-500/10'   },
-  { label: 'MySQL',       color: 'text-purple-400', border: 'border-purple-500/30', bg: 'bg-purple-500/10' },
+  { label: 'Java',        color: 'text-orange-400', border: 'border-orange-500/30', bg: 'bg-[#11151c]' },
+  { label: 'Spring Boot', color: 'text-green-400',  border: 'border-green-500/30',  bg: 'bg-[#11151c]' },
+  { label: 'React',       color: 'text-cyan-400',   border: 'border-cyan-500/30',   bg: 'bg-[#11151c]' },
+  { label: 'Python',      color: 'text-blue-400',   border: 'border-blue-500/30',   bg: 'bg-[#11151c]' },
+  { label: 'MySQL',       color: 'text-purple-400', border: 'border-purple-500/30', bg: 'bg-[#11151c]' },
 ];
 
 const stats = [
@@ -62,7 +62,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
-            className="self-start flex items-center gap-2.5 px-5 py-2.5 glass rounded-full border border-green-500/25"
+            className="self-start flex items-center gap-2.5 px-5 py-2.5 bg-[#11151c] rounded-full border border-green-500/20 shadow-lg"
           >
             <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.9)]" />
             <span className="text-sm font-semibold text-green-300">Available for new opportunities</span>
@@ -94,7 +94,7 @@ const Hero = () => {
             transition={{ duration: 0.55, delay: 0.2 }}
             className="flex items-center gap-3 h-9"
           >
-            <div className="w-8 h-0.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex-shrink-0" />
+            <div className="w-8 h-0.5 rounded-full bg-blue-500 flex-shrink-0" />
             <AnimatePresence mode="wait">
               <motion.span
                 key={roleIndex}
@@ -102,7 +102,7 @@ const Hero = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.22 }}
-                className="text-xl font-bold text-primary whitespace-nowrap"
+                className="text-xl font-bold text-blue-400 whitespace-nowrap"
               >
                 {roles[roleIndex]}
               </motion.span>
@@ -146,46 +146,47 @@ const Hero = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.5 }}
-            className="flex flex-wrap items-center gap-4"
+            className="flex flex-col gap-4"
           >
-            <Link
-              to="/projects"
-              className="group inline-flex items-center gap-2.5 bg-blue-600 hover:bg-blue-500
-                text-white font-bold px-8 py-4 rounded-xl text-base
-                shadow-[0_6px_28px_rgba(88,166,255,0.4)] hover:shadow-[0_12px_40px_rgba(88,166,255,0.55)]
-                transition-all duration-300 hover:-translate-y-0.5"
-            >
-              View Projects
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              to="/contact"
-              className="group inline-flex items-center gap-2.5 glass text-heading font-bold
-                px-8 py-4 rounded-xl text-base border border-white/10
-                hover:border-blue-500/40 hover:bg-white/8 transition-all duration-300 hover:-translate-y-0.5"
-            >
-              Contact Me <Mail size={18} />
-            </Link>
-            <button
-              onClick={() => setResumeOpen(true)}
-              className="group inline-flex items-center gap-2.5 text-secondary hover:text-heading font-bold
-                px-8 py-4 rounded-xl text-base border border-white/8
-                hover:border-blue-500/30 hover:text-blue-300 transition-all duration-300 hover:-translate-y-0.5"
-            >
-              Resume <Download size={18} className="group-hover:translate-y-0.5 transition-transform" />
-            </button>
-            <Link
-              to="/profiles"
-              className="relative group inline-flex items-center gap-2.5 font-bold
-                px-8 py-4 rounded-xl text-base transition-all duration-300 hover:-translate-y-0.5 overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-white/5 border border-white/10 rounded-xl group-hover:opacity-0 transition-opacity duration-300" />
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 via-blue-500/20 to-green-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 border border-transparent group-hover:border-blue-400/30 rounded-xl transition-colors duration-500" />
-              <span className="relative z-10 flex items-center gap-2 text-secondary group-hover:text-white transition-colors duration-300">
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                to="/projects"
+                className="group inline-flex items-center gap-2.5 bg-blue-600 hover:bg-blue-500
+                  text-white font-bold px-8 py-4 rounded-xl text-base
+                  shadow-[0_6px_28px_rgba(88,166,255,0.4)] hover:shadow-[0_12px_40px_rgba(88,166,255,0.55)]
+                  transition-all duration-300 hover:-translate-y-0.5"
+              >
+                View Projects
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                to="/contact"
+                className="group inline-flex items-center gap-2.5 bg-[#11151c] text-heading font-bold
+                  px-8 py-4 rounded-xl text-base border border-white/5
+                  hover:border-white/10 hover:bg-[#1a202c] transition-all duration-300 hover:-translate-y-0.5 shadow-lg"
+              >
+                Contact Me <Mail size={18} />
+              </Link>
+              <button
+                onClick={() => setResumeOpen(true)}
+                className="group inline-flex items-center gap-2.5 bg-[#11151c] text-secondary hover:text-heading font-bold
+                  px-8 py-4 rounded-xl text-base border border-white/5
+                  hover:border-white/10 hover:bg-[#1a202c] hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-lg"
+              >
+                Resume <Download size={18} className="group-hover:translate-y-0.5 transition-transform" />
+              </button>
+            </div>
+            
+            <div className="flex">
+              <Link
+                to="/profiles"
+                className="group inline-flex items-center gap-2.5 bg-[#11151c] text-secondary hover:text-heading font-bold
+                  px-8 py-4 rounded-xl text-base border border-white/5
+                  hover:border-white/10 hover:bg-[#1a202c] hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-lg"
+              >
                 Coding Profiles <Code2 size={18} className="text-orange-400 group-hover:text-green-400 transition-colors duration-500" />
-              </span>
-            </Link>
+              </Link>
+            </div>
           </motion.div>
         </div>
 
@@ -237,7 +238,7 @@ const Hero = () => {
               animate={{ y: [0, -8, 0] }}
               transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
               className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap z-20
-                glass border border-green-500/30 rounded-full px-6 py-2.5
+                bg-[#11151c] border border-green-500/30 rounded-full px-6 py-2.5
                 flex items-center gap-2.5 shadow-xl"
             >
               <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.9)]" />
@@ -250,7 +251,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65, duration: 0.5 }}
-            className="flex flex-row items-stretch w-full glass border border-white/8 rounded-2xl overflow-hidden"
+            className="flex flex-row items-stretch w-full bg-[#11151c] border border-white/5 shadow-xl rounded-2xl overflow-hidden"
             style={{ width: 'min(480px, calc(46vw - 80px))' }}
           >
             {stats.map((s, i) => {
