@@ -37,7 +37,7 @@ const Navbar = () => {
         scrolled ? 'glass py-4 shadow-lg' : 'bg-transparent py-6'
       }`}
     >
-      <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         <Link 
           to="/" 
           onClick={() => setIsOpen(false)}

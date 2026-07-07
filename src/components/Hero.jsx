@@ -52,10 +52,10 @@ const Hero = () => {
       {/* ════════════════════════════════════════
           MAIN ROW  —  text left | photo right
       ════════════════════════════════════════ */}
-      <div className="container mx-auto px-6 md:px-12 flex flex-col lg:flex-row flex-1 items-center w-full h-full">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row flex-1 items-center w-full h-full">
 
         {/* ── LEFT: Text ── */}
-        <div className="flex-1 flex flex-col gap-7 py-20 lg:py-28 lg:pr-10 w-full z-10">
+        <div className="flex-1 flex flex-col gap-6 py-12 lg:py-16 lg:pr-10 w-full z-10">
 
           {/* Status badge */}
           <motion.div
@@ -146,7 +146,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.5 }}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-3 mt-2"
           >
             <div className="flex flex-wrap items-center gap-4">
               <Link
@@ -195,14 +195,14 @@ const Hero = () => {
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.15, ease: 'easeOut' }}
-          className="relative flex flex-col items-center justify-center gap-8 py-16 lg:py-24 w-full lg:w-[46vw] flex-shrink-0 z-10"
+          className="relative flex flex-col items-center justify-center gap-6 py-12 w-full lg:w-[46vw] flex-shrink-0 z-10"
         >
           {/* Photo container — bigger now */}
           <div
             className="relative"
             style={{
-              width:  'min(480px, calc(100vw - 48px))',
-              height: 'min(480px, calc(100vw - 48px))',
+              width:  'min(420px, calc(100vw - 48px))',
+              height: 'min(420px, calc(100vw - 48px))',
             }}
           >
             {/* Glow aura */}
@@ -252,7 +252,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65, duration: 0.5 }}
             className="flex flex-row items-stretch w-full bg-[#11151c] border border-white/5 shadow-xl rounded-2xl overflow-hidden"
-            style={{ width: 'min(480px, calc(100vw - 48px))' }}
+            style={{ width: 'min(420px, calc(100vw - 48px))' }}
           >
             {stats.map((s, i) => {
               const Icon = s.icon;
