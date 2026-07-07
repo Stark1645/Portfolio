@@ -198,7 +198,7 @@ const CodingProfiles = () => {
   }, []);
 
   return (
-    <section id="profiles" className="py-24 px-6 md:px-16 xl:px-24 relative w-full">
+    <section id="profiles" className="py-24 container mx-auto px-6 md:px-12 relative w-full">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}

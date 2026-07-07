@@ -4,7 +4,7 @@ import { MapPin, Users, Camera } from 'lucide-react';
 
 const EventsGallery = () => {
   return (
-    <section id="events" className="py-24 px-6 md:px-16 xl:px-24 relative w-full">
+    <section id="events" className="py-24 container mx-auto px-6 md:px-12 relative w-full">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-blue-600/5 blur-[120px] pointer-events-none rounded-full" />
       
       <motion.div

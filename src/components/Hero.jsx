@@ -52,10 +52,10 @@ const Hero = () => {
       {/* ════════════════════════════════════════
           MAIN ROW  —  text left | photo right
       ════════════════════════════════════════ */}
-      <div className="flex flex-col lg:flex-row flex-1 items-center w-full">
+      <div className="container mx-auto px-6 md:px-12 flex flex-col lg:flex-row flex-1 items-center w-full h-full">
 
         {/* ── LEFT: Text ── */}
-        <div className="flex-1 flex flex-col gap-7 px-6 lg:pl-16 xl:pl-24 2xl:pl-36 lg:pr-10 py-20 lg:py-28 w-full z-10">
+        <div className="flex-1 flex flex-col gap-7 py-20 lg:py-28 lg:pr-10 w-full z-10">
 
           {/* Status badge */}
           <motion.div
