@@ -222,7 +222,7 @@ const CodingProfiles = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="glass p-8 md:p-10 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-blue-500/30 transition-all shadow-lg"
+          className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-blue-500/30 transition-all shadow-lg"
         >
           <div className="absolute -top-16 -left-16 w-48 h-48 bg-blue-600/10 rounded-full blur-[50px] group-hover:bg-blue-600/25 transition-colors duration-500" />
 
@@ -315,30 +315,34 @@ const CodingProfiles = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="glass p-8 md:p-10 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-orange-500/30 transition-all shadow-lg"
+          className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-orange-500/30 transition-all shadow-lg"
         >
           <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-orange-600/10 rounded-full blur-[40px] group-hover:bg-orange-600/20 transition-colors duration-500"></div>
           
           <div className="z-10 flex flex-col h-full">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between mb-6 gap-2">
+              <div className="flex items-center gap-3">
                 {lcProfile?.avatar ? (
-                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover:scale-110 group-hover:border-orange-400 transition-all duration-300">
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover:scale-110 group-hover:border-orange-400 transition-all duration-300 flex-shrink-0">
                     <img src={lcProfile.avatar} alt="LeetCode Avatar" className="w-full h-full object-cover" />
                   </div>
                 ) : (
-                  <div className="w-16 h-16 bg-gray-800/80 rounded-full flex items-center justify-center shadow-lg border border-white/10 group-hover:scale-110 transition-transform duration-300">
-                    <Code2 className="w-8 h-8 text-orange-500" />
+                  <div className="w-14 h-14 bg-gray-800/80 rounded-full flex items-center justify-center shadow-lg border border-white/10 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                    <Code2 className="w-6 h-6 text-orange-500" />
                   </div>
                 )}
                 <div>
-                  <h3 className="text-2xl font-bold text-white leading-tight">LeetCode</h3>
-                  <a href="https://leetcode.com/u/Ruthragurubaran-J/" target="_blank" rel="noopener noreferrer" className="text-sm text-orange-400 hover:underline">@Ruthragurubaran-J</a>
+                  <h3 className="text-xl font-bold text-white leading-tight">LeetCode</h3>
+                  <a href="https://leetcode.com/u/Ruthragurubaran-J/" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-400 hover:underline block truncate max-w-[120px]">@Ruthragurubaran-J</a>
+                  {lcData && (
+                    <span className="inline-block text-[9px] font-semibold px-2 py-0.5 mt-1 bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded text-orange-200">
+                      Rank {lcData.ranking?.toLocaleString() || 'N/A'}
+                    </span>
+                  )}
                 </div>
               </div>
-              <div className="flex flex-col items-end">
-                <span className="flex items-center gap-1 text-sm text-gray-400"><Flame className="w-4 h-4 text-orange-500" /></span>
-                {lcData && <span className="text-xs font-semibold px-3 py-1 mt-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-full text-orange-200 shadow-inner">Rank {lcData.ranking?.toLocaleString() || 'N/A'}</span>}
+              <div className="flex flex-col items-end flex-shrink-0">
+                <span className="flex items-center gap-1 text-sm text-gray-400"><Flame className="w-5 h-5 text-orange-500" /></span>
               </div>
             </div>
 
@@ -428,30 +432,32 @@ const CodingProfiles = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="glass p-8 md:p-10 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-green-500/30 transition-all shadow-lg"
+          className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-green-500/30 transition-all shadow-lg"
         >
           <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-green-600/10 rounded-full blur-[40px] group-hover:bg-green-600/20 transition-colors duration-500"></div>
           
           <div className="z-10 flex flex-col h-full">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between mb-6 gap-2">
+              <div className="flex items-center gap-3">
                 {hrData?.avatar || lcProfile?.avatar ? (
-                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.3)] group-hover:scale-110 group-hover:border-green-400 transition-all duration-300">
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.3)] group-hover:scale-110 group-hover:border-green-400 transition-all duration-300 flex-shrink-0">
                     <img src={hrData?.avatar || lcProfile?.avatar} alt="HackerRank Avatar" className="w-full h-full object-cover" />
                   </div>
                 ) : (
-                  <div className="w-16 h-16 bg-gray-800/80 rounded-full flex items-center justify-center shadow-lg border border-white/10 group-hover:scale-110 transition-transform duration-300">
-                    <Code2 className="w-8 h-8 text-green-500" />
+                  <div className="w-14 h-14 bg-gray-800/80 rounded-full flex items-center justify-center shadow-lg border border-white/10 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                    <Code2 className="w-6 h-6 text-green-500" />
                   </div>
                 )}
                 <div>
-                  <h3 className="text-2xl font-bold text-white leading-tight">HackerRank</h3>
-                  <a href="https://www.hackerrank.com/profile/gurudaya49" target="_blank" rel="noopener noreferrer" className="text-sm text-green-400 hover:underline">@gurudaya49</a>
+                  <h3 className="text-xl font-bold text-white leading-tight">HackerRank</h3>
+                  <a href="https://www.hackerrank.com/profile/gurudaya49" target="_blank" rel="noopener noreferrer" className="text-xs text-green-400 hover:underline block truncate max-w-[120px]">@gurudaya49</a>
+                  <span className="inline-block text-[9px] font-semibold px-2 py-0.5 mt-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded text-green-200 uppercase tracking-wider">
+                    Verified
+                  </span>
                 </div>
               </div>
-              <div className="flex flex-col items-end">
-                <Trophy className="w-6 h-6 text-green-500 opacity-80" />
-                <span className="text-[10px] text-gray-500 mt-1 uppercase tracking-widest font-bold">Verified</span>
+              <div className="flex flex-col items-end flex-shrink-0">
+                <Trophy className="w-5 h-5 text-green-500 opacity-80" />
               </div>
             </div>
 
@@ -549,7 +555,7 @@ const CodingProfiles = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="glass p-8 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-blue-400/30 transition-all shadow-lg"
+          className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-blue-400/30 transition-all shadow-lg"
         >
           {/* Glow bg */}
           <div
