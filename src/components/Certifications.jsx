@@ -19,7 +19,7 @@ const Certifications = () => {
   };
 
   return (
-    <section id="certifications" className="py-24 px-16 xl:px-24 relative w-full overflow-hidden">
+    <section id="certifications" className="py-24 px-6 md:px-16 xl:px-24 relative w-full overflow-hidden">
       {/* Creative Background Elements */}
       <div className="absolute top-1/4 -left-64 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 -right-64 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none" />

@@ -52,10 +52,10 @@ const Hero = () => {
       {/* ════════════════════════════════════════
           MAIN ROW  —  text left | photo right
       ════════════════════════════════════════ */}
-      <div className="flex flex-row flex-1 items-center">
+      <div className="flex flex-col lg:flex-row flex-1 items-center w-full">
 
         {/* ── LEFT: Text ── */}
-        <div className="flex-1 flex flex-col gap-7 pl-16 xl:pl-24 2xl:pl-36 pr-10 py-28">
+        <div className="flex-1 flex flex-col gap-7 px-6 lg:pl-16 xl:pl-24 2xl:pl-36 lg:pr-10 py-20 lg:py-28 w-full z-10">
 
           {/* Status badge */}
           <motion.div
@@ -194,15 +194,14 @@ const Hero = () => {
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.15, ease: 'easeOut' }}
-          className="relative flex flex-col items-center justify-center gap-8 py-24"
-          style={{ width: '46vw', flexShrink: 0 }}
+          className="relative flex flex-col items-center justify-center gap-8 py-16 lg:py-24 w-full lg:w-[46vw] flex-shrink-0 z-10"
         >
           {/* Photo container — bigger now */}
           <div
             className="relative"
             style={{
-              width:  'min(480px, calc(46vw - 80px))',
-              height: 'min(480px, calc(46vw - 80px))',
+              width:  'min(380px, calc(100vw - 48px))',
+              height: 'min(380px, calc(100vw - 48px))',
             }}
           >
             {/* Glow aura */}
