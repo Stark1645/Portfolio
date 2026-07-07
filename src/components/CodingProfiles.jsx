@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Github, Code2, Trophy, Flame, Calendar, Activity, X } from 'lucide-react';
+import { Github, Code2, Trophy, Flame, Calendar, Activity, X, RefreshCw, Star, BookOpen } from 'lucide-react';
 import axios from 'axios';
 
 const fallbackCalendar = (() => {
@@ -66,6 +66,73 @@ const CodingProfiles = () => {
   const [loading, setLoading] = useState(true);
   const [showLcModal, setShowLcModal] = useState(false);
 
+  // GitHub state
+  const [ghData, setGhData] = useState(null);
+
+  // Google Skills state
+  const [gsData, setGsData] = useState({
+    name: 'Ruthragurubaran J',
+    avatar: 'https://lh3.googleusercontent.com/a/ACg8ocLtv36dsRITxuTdhK9p8FQnjerBEkVoD3KEE9Syh_zcW0vK3Wo=s320-c',
+    league: 'Bronze League',
+    points: 100,
+    badges: 0,
+    memberSince: '2026',
+    lastFetched: null,
+  });
+  const [gsFetching, setGsFetching] = useState(false);
+
+  const GOOGLE_SKILLS_URL = 'https://www.skills.google/public_profiles/1714331c-0949-42cf-9021-c0438aa40b13';
+
+  const fetchGoogleSkills = useCallback(async () => {
+    setGsFetching(true);
+    try {
+      // Use allorigins proxy to bypass CORS
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(GOOGLE_SKILLS_URL)}`;
+      const res = await fetch(proxyUrl);
+      const json = await res.json();
+      const html = json.contents || '';
+
+      // Parse avatar
+      const avatarMatch = html.match(/ql-avatar[^>]+src='([^']+)'/);
+      const avatar = avatarMatch ? avatarMatch[1] : gsData.avatar;
+
+      // Parse league
+      const leagueMatch = html.match(/ql-headline-medium[^>]*>([^<]+League[^<]*)</);
+      const league = leagueMatch ? leagueMatch[1].trim() : gsData.league;
+
+      // Parse points
+      const pointsMatch = html.match(/<strong>(\d+)\s*points<\/strong>/);
+      const points = pointsMatch ? parseInt(pointsMatch[1]) : gsData.points;
+
+      // Parse badge count
+      const badgesMatch = html.match(/hasn't earned any badges yet/);
+      const badgeCountMatch = html.match(/(\d+)\s+badge/);
+      const badges = badgesMatch ? 0 : badgeCountMatch ? parseInt(badgeCountMatch[1]) : gsData.badges;
+
+      // Parse member since
+      const memberMatch = html.match(/Member since (\d{4})/);
+      const memberSince = memberMatch ? memberMatch[1] : gsData.memberSince;
+
+      setGsData({ name: 'Ruthragurubaran J', avatar, league, points, badges, memberSince, lastFetched: new Date() });
+    } catch (err) {
+      console.warn('Google Skills fetch failed, using cached data:', err);
+    } finally {
+      setGsFetching(false);
+    }
+  }, []);
+
+  // Auto-refresh Google Skills every 5 minutes
+  useEffect(() => {
+    fetchGoogleSkills();
+    const interval = setInterval(fetchGoogleSkills, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [fetchGoogleSkills]);
+
+  const leagueColor = gsData.league.toLowerCase().includes('gold')     ? { text: 'text-yellow-400', border: 'border-yellow-500/30', bg: 'bg-yellow-500/10', glow: 'rgba(234,179,8,0.2)' }
+                    : gsData.league.toLowerCase().includes('silver')   ? { text: 'text-slate-300',  border: 'border-slate-400/30',  bg: 'bg-slate-400/10',  glow: 'rgba(148,163,184,0.2)' }
+                    : gsData.league.toLowerCase().includes('platinum') ? { text: 'text-cyan-300',   border: 'border-cyan-400/30',   bg: 'bg-cyan-400/10',   glow: 'rgba(34,211,238,0.2)' }
+                    :                                                    { text: 'text-amber-700',   border: 'border-amber-700/30',  bg: 'bg-amber-700/10',  glow: 'rgba(146,64,14,0.15)' };
+
   useEffect(() => {
     const fetchLeetCodeData = async () => {
       setLoading(true);
@@ -109,13 +176,29 @@ const CodingProfiles = () => {
         console.error('Failed to fetch HackerRank Badges', err);
       }
       
+      try {
+        // GitHub Profile
+        const ghRes = await axios.get('https://api.github.com/users/Stark1645');
+        const ghReposRes = await axios.get('https://api.github.com/users/Stark1645/repos?per_page=100&sort=updated');
+        if (ghRes.data) {
+          const repos = ghReposRes.data || [];
+          const totalStars = repos.reduce((s, r) => s + r.stargazers_count, 0);
+          const langCount = {};
+          repos.forEach(r => { if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1; });
+          const topLangs = Object.entries(langCount).sort((a,b) => b[1]-a[1]).slice(0,3);
+          setGhData({ ...ghRes.data, totalStars, topLangs, repoCount: repos.length });
+        }
+      } catch (err) {
+        console.error('Failed to fetch GitHub data', err);
+      }
+
       setLoading(false);
     };
     fetchLeetCodeData();
   }, []);
 
   return (
-    <section id="profiles" className="py-24 px-6 relative w-full max-w-6xl mx-auto">
+    <section id="profiles" className="py-24 px-16 xl:px-24 relative w-full">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -131,7 +214,7 @@ const CodingProfiles = () => {
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
         
         {/* GitHub Card */}
         <motion.div
@@ -139,28 +222,91 @@ const CodingProfiles = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="glass p-10 rounded-2xl flex flex-col justify-between items-center text-center relative overflow-hidden group border border-white/5 hover:border-blue-500/30 transition-all shadow-lg"
+          className="glass p-8 md:p-10 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-blue-500/30 transition-all shadow-lg"
         >
-          <div className="absolute -top-20 -left-20 w-48 h-48 bg-blue-600/10 rounded-full blur-[40px] group-hover:bg-blue-600/30 transition-colors duration-500"></div>
-          
-          <div className="z-10 flex flex-col items-center">
-            <div className="w-20 h-20 bg-gray-800/80 rounded-2xl flex items-center justify-center mb-6 shadow-xl border border-white/10 group-hover:scale-110 transition-transform duration-300">
-              <Github className="w-12 h-12 text-white" />
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-3">GitHub</h3>
-            <p className="text-gray-400 mb-8 max-w-sm">
-              Check out my open-source projects, full-stack applications, and contribution history.
-            </p>
-          </div>
+          <div className="absolute -top-16 -left-16 w-48 h-48 bg-blue-600/10 rounded-full blur-[50px] group-hover:bg-blue-600/25 transition-colors duration-500" />
 
-          <a 
-            href="https://github.com/Stark1645" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="z-10 inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-blue-500/25 w-full justify-center"
-          >
-            View Profile
-          </a>
+          <div className="z-10 flex flex-col h-full gap-5">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/40 shadow-[0_0_16px_rgba(88,166,255,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                  {ghData?.avatar_url ? (
+                    <img src={ghData.avatar_url} alt="GitHub Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                      <Github size={24} className="text-white" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white leading-tight">GitHub</h3>
+                  <a href="https://github.com/Stark1645" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:underline">
+                    @Stark1645
+                  </a>
+                </div>
+              </div>
+              <Github size={20} className="text-gray-500 group-hover:text-white transition-colors" />
+            </div>
+
+            {/* Key stats */}
+            {loading ? (
+              <div className="flex justify-center py-4">
+                <div className="w-6 h-6 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { label: 'Repos',     value: ghData?.repoCount   ?? ghData?.public_repos ?? '10+' },
+                  { label: 'Followers', value: ghData?.followers   ?? '—' },
+                  { label: 'Stars',     value: ghData?.totalStars  ?? '—' },
+                ].map(s => (
+                  <div key={s.label} className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/5">
+                    <span className="text-xl font-black text-white leading-none">{s.value}</span>
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wider mt-1">{s.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Top languages */}
+            {ghData?.topLangs?.length > 0 && (
+              <div className="space-y-2.5">
+                {ghData.topLangs.map(([lang, count]) => {
+                  const total = ghData.topLangs.reduce((s,[,c]) => s + c, 0);
+                  const pct = Math.round((count / total) * 100);
+                  const colors = { Java: 'bg-orange-500', JavaScript: 'bg-yellow-400', Python: 'bg-blue-400', TypeScript: 'bg-blue-500', HTML: 'bg-red-400', CSS: 'bg-purple-400' };
+                  const bar = colors[lang] || 'bg-gray-400';
+                  return (
+                    <div key={lang}>
+                      <div className="flex justify-between text-xs mb-1 font-medium">
+                        <span className="text-gray-300">{lang}</span>
+                        <span className="text-gray-500">{pct}%</span>
+                      </div>
+                      <div className="w-full bg-gray-800/50 rounded-full h-2 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${pct}%` }}
+                          transition={{ duration: 1, ease: 'easeOut' }}
+                          className={`h-2 rounded-full ${bar}`}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* CTA */}
+            <a
+              href="https://github.com/Stark1645"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-auto inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-blue-500/25 w-full justify-center"
+            >
+              <Github size={16} /> View GitHub Profile
+            </a>
+          </div>
         </motion.div>
 
         {/* LeetCode Card */}
@@ -393,6 +539,116 @@ const CodingProfiles = () => {
               className="z-10 mt-8 inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-green-500/25 w-full justify-center"
             >
               View HackerRank
+            </a>
+          </div>
+        </motion.div>
+
+        {/* ── Google Skills Card ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="glass p-8 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-blue-400/30 transition-all shadow-lg"
+        >
+          {/* Glow bg */}
+          <div
+            className="absolute -top-16 -right-16 w-56 h-56 rounded-full blur-[60px] transition-all duration-500 opacity-60 group-hover:opacity-100"
+            style={{ background: `radial-gradient(circle, ${leagueColor.glow}, transparent 70%)` }}
+          />
+          {/* Google Skills logo watermark */}
+          <div className="absolute bottom-4 right-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <BookOpen size={80} className="text-blue-400" />
+          </div>
+
+          <div className="z-10 flex flex-col h-full gap-5">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {/* Avatar */}
+                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/40 shadow-[0_0_16px_rgba(88,166,255,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                  <img
+                    src={gsData.avatar}
+                    alt="Google Skills Avatar"
+                    className="w-full h-full object-cover"
+                    onError={e => { e.target.src = '/profile.jpg'; }}
+                  />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white leading-tight">Google Skills</h3>
+                  <a
+                    href={GOOGLE_SKILLS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-400 hover:underline"
+                  >
+                    @Ruthragurubaran J
+                  </a>
+                </div>
+              </div>
+
+              {/* Live refresh button */}
+              <button
+                onClick={fetchGoogleSkills}
+                disabled={gsFetching}
+                className="p-2 rounded-lg glass border border-white/10 hover:border-blue-500/30 transition-all"
+                title="Refresh live data"
+              >
+                <RefreshCw
+                  size={14}
+                  className={`text-blue-400 ${gsFetching ? 'animate-spin' : ''}`}
+                />
+              </button>
+            </div>
+
+            {/* League badge */}
+            <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${leagueColor.border} ${leagueColor.bg}`}>
+              <Trophy size={20} className={leagueColor.text} />
+              <div>
+                <p className={`font-bold text-sm ${leagueColor.text}`}>{gsData.league}</p>
+                <p className="text-xs text-gray-400">Member since {gsData.memberSince}</p>
+              </div>
+              <div className="ml-auto text-right">
+                <p className="font-black text-white text-lg leading-none">{gsData.points}</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider">XP Points</p>
+              </div>
+            </div>
+
+            {/* Stats row */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/5">
+                <Star size={16} className="text-yellow-400 mb-1" />
+                <span className="text-xl font-black text-white">{gsData.badges}</span>
+                <span className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Badges</span>
+              </div>
+              <div className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/5">
+                <BookOpen size={16} className="text-blue-400 mb-1" />
+                <span className="text-xl font-black text-white">{gsData.points}</span>
+                <span className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">XP Earned</span>
+              </div>
+            </div>
+
+            {/* Live indicator */}
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              <span className="text-[10px] text-gray-500">
+                {gsData.lastFetched
+                  ? `Live · Updated ${gsData.lastFetched.toLocaleTimeString()}`
+                  : 'Live · Auto-refreshes every 5 min'}
+              </span>
+            </div>
+
+            {/* CTA */}
+            <a
+              href={GOOGLE_SKILLS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-auto inline-flex items-center gap-2 px-6 py-3 rounded-xl
+                bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400
+                text-white font-bold transition-all transform hover:-translate-y-1
+                shadow-lg shadow-blue-500/25 w-full justify-center text-sm"
+            >
+              View Google Skills Profile
             </a>
           </div>
         </motion.div>

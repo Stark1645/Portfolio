@@ -21,7 +21,7 @@ const Skills = () => {
   };
 
   return (
-    <section id="skills" className="py-24 px-6 relative w-full max-w-6xl mx-auto">
+    <section id="skills" className="py-24 px-16 xl:px-24 relative w-full">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}

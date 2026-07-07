@@ -30,7 +30,7 @@ const services = [
 
 const WhatIDo = () => {
   return (
-    <section className="py-24 px-6 relative w-full max-w-7xl mx-auto">
+    <section className="py-24 px-16 xl:px-24 relative w-full">
       <div className="text-center mb-16">
         <h2 className="text-4xl md:text-5xl font-extrabold text-heading mb-4">
           What <span className="gradient-text">I Do</span>

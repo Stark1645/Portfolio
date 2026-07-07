@@ -3,7 +3,7 @@ import { BookOpen, GraduationCap, MapPin, Calendar } from 'lucide-react';
 
 const About = () => {
   return (
-    <section id="about" className="py-24 px-6 relative z-10 w-full max-w-5xl mx-auto">
+    <section id="about" className="py-24 px-16 xl:px-24 relative z-10 w-full">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
