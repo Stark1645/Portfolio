@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Github, ExternalLink, FolderGit2, X, CheckCircle2 } from 'lucide-react';
 import { projectsData } from '../utils/data';
 
-const FILTERS = ["All", "React", "Spring Boot", "Machine Learning", "Full-Stack", "Java"];
+const FILTERS = ["All", "React", "Spring Boot", "Machine Learning", "Full-Stack", "Java", "TypeScript", "IoT"];
 
 const Projects = () => {
   const [filter, setFilter] = useState("All");
@@ -63,6 +63,13 @@ const Projects = () => {
             >
               {/* Project Image */}
               <div className="relative h-48 w-full overflow-hidden">
+                {project.status && (
+                  <div className="absolute top-3 left-3 z-10 px-2.5 py-1 bg-amber-500/25 border border-amber-500/35 backdrop-blur-md rounded-full shadow-lg">
+                    <span className="text-[9px] font-bold text-amber-300 tracking-wider uppercase">
+                      {project.status}
+                    </span>
+                  </div>
+                )}
                 {project.image ? (
                   <img 
                     src={project.image} 
@@ -182,9 +189,16 @@ const Projects = () => {
                   <X size={20} />
                 </button>
 
-                <h3 className="text-xl font-bold text-white mb-3 pr-8">
-                  {selectedProject.title}
-                </h3>
+                <div className="flex flex-wrap items-center gap-2 mb-3 pr-8">
+                  <h3 className="text-xl font-bold text-white">
+                    {selectedProject.title}
+                  </h3>
+                  {selectedProject.status && (
+                    <span className="px-2.5 py-0.5 bg-amber-500/25 border border-amber-500/35 text-amber-300 text-[9px] font-bold rounded-full uppercase tracking-wider">
+                      {selectedProject.status}
+                    </span>
+                  )}
+                </div>
 
                 <div className="flex gap-3 mb-4">
                   {selectedProject.githubUrl && selectedProject.githubUrl !== '#' && (

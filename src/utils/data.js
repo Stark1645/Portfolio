@@ -123,6 +123,22 @@ export const certsData = [
 
 export const projectsData = [
   {
+    title: "EvoDrive",
+    description: "Real-time AI-powered vehicle experience and legacy platform built for Tata electric vehicles.",
+    longDescription: "EvoDrive transforms raw sensor telemetry from electric vehicles into structured driving profiles, building a living AutoDNA profile per vehicle and preserving a permanent Vehicle Legacy that survives ownership changes. Built for the Tata Hackathon 2026.",
+    features: [
+      "Living AutoDNA profile for safety scoring, wear indexing, and evolution tracking",
+      "Experience Engine classifying thermal stress, battery degradation, and eco-cruising",
+      "Driver DNA clustering (Eco, Smooth, Aggressive, Mountain, Night Driver)",
+      "Real-time vehicle telemetry streaming using WebSocket STOMP protocol",
+      "ONNX-based machine learning model inference for style classification"
+    ],
+    technologies: ["Java", "Spring Boot", "Machine Learning", "WebSocket", "PostgreSQL", "Full-Stack"],
+    githubUrl: "https://github.com/Stark1645/Evodrive",
+    liveUrl: "https://evodrive-sand.vercel.app",
+    image: "/projects/evodrive.png"
+  },
+  {
     title: "ExplainFirst",
     description: "AI learning evaluation platform that evaluates student explanations using Gemini API.",
     longDescription: "ExplainFirst is an innovative educational tool designed to test high-level understanding. Instead of multiple-choice questions, it asks students to explain concepts in their own words. The system uses Google's Gemini AI to analyze these explanations, identify gaps in knowledge, and provide personalized feedback.",
@@ -136,6 +152,22 @@ export const projectsData = [
     githubUrl: "https://github.com/Stark1645/explainfirstuh-working",
     liveUrl: "#",
     image: "/projects/explainfirst.jpg"
+  },
+  {
+    title: "SHIELD",
+    description: "Autonomous Cybersecurity War Room powered by a multi-agent threat containment system.",
+    longDescription: "An enterprise-grade cybersecurity war room powered by an autonomous multi-agent system. It automates threat detection, dynamically evaluates risk scores, tracks multi-stage attack chains, monitors real-time JVM system metrics, and uses Isolation Forest ML models to auto-remediate security threats.",
+    features: [
+      "6 autonomous defense agents performing real-time threat isolation and remediation",
+      "Real-time JVM, CPU, and memory system health dashboard",
+      "AI Threat Prediction Engine forecasting future security vectors",
+      "ML anomaly detection using FastAPI and Isolation Forest models",
+      "Advanced threat geolocation and frequency tracking grids"
+    ],
+    technologies: ["React", "Spring Boot", "FastAPI", "Machine Learning", "Full-Stack", "PostgreSQL", "Docker"],
+    githubUrl: "https://github.com/Stark1645/S.H.I.E.L.D.",
+    liveUrl: "https://s-h-i-e-l-d-gilt.vercel.app",
+    image: "/projects/shield.png"
   },
   {
     title: "HomeFlame",
@@ -153,6 +185,37 @@ export const projectsData = [
     image: "/projects/homeflame.jpg"
   },
   {
+    title: "EcoClean",
+    description: "On-demand booking platform for eco-friendly home cleaning services with integrated Gemini AI assistant.",
+    longDescription: "EcoClean is an on-demand service booking application that connects users with verified, eco-friendly cleaning professionals. It features slot booking logic, localized cleaner profiles, and integrates Google's Gemini GenAI API to provide cost estimation, cleaning advice, and customized requests.",
+    features: [
+      "Interactive booking system with real-time slot scheduling and cleaner matching",
+      "Verified cleaner profiles showing ratings, completed jobs, and specialties",
+      "AI assistant (Gemini API) for cleaning advice, cost estimation, and support",
+      "Location-based filter mapping cleaners across different metropolitan cities"
+    ],
+    technologies: ["React", "TypeScript", "Google GenAI", "Tailwind CSS", "Vite", "Full-Stack"],
+    githubUrl: "https://github.com/Stark1645/HOME-CLEANING-SERVICE-APP",
+    liveUrl: "#",
+    image: "/projects/ecoclean.png"
+  },
+  {
+    title: "AgriSmart",
+    description: "IoT-driven smart farming dashboard for precision agriculture, crop planning, and drone tracking.",
+    longDescription: "AgriSmart is an IoT-based precision agriculture dashboard. It connects smart agricultural sensors to track soil moisture, plan precision irrigation, detect crop pests, monitor drone routes, analyze historical yields, and track real-time market prices.",
+    features: [
+      "IoT sensor telemetry monitoring for precision farming and moisture tracking",
+      "Crop planning guides and smart irrigation recommendations",
+      "Pest detection alerts and drone route visualizers",
+      "Real-time crop market price index integration"
+    ],
+    technologies: ["React", "IoT", "JavaScript", "Full-Stack", "CSS"],
+    githubUrl: "https://github.com/Stark1645/AgriSmart-Smart_farming",
+    liveUrl: "#",
+    image: "/projects/agrismart.png",
+    status: "Under Development"
+  },
+  {
     title: "Asset Tracking API",
     description: "Enterprise-grade REST APIs for tracking organizational assets and their lifecycle.",
     longDescription: "A specialized backend solution for large organizations to track the procurement, assignment, and maintenance of hardware and software assets. Built with security in mind, it provides a centralized system for IT administrators to manage inventory and ensure accountability.",
@@ -165,21 +228,6 @@ export const projectsData = [
     technologies: ["Spring Boot", "MySQL", "JWT", "REST API", "Hibernate"],
     githubUrl: "#",
     liveUrl: "#"
-  },
-  {
-    title: "SHIELD",
-    description: "Advanced authentication and threat defense system for web applications.",
-    longDescription: "SHIELD is a security-focused application layer that provides automated threat defense for modern web apps. It implements multi-factor authentication, session monitoring, and real-time security logging to protect user data against common vulnerabilities like XSS and Brute Force attacks.",
-    features: [
-      "Advanced JWT authentication layer",
-      "Real-time security threat monitoring",
-      "Automated session invalidation on suspicious activity",
-      "Comprehensive security event logging"
-    ],
-    technologies: ["React", "Spring Boot", "Security", "Full-Stack", "Docker"],
-    githubUrl: "https://github.com/Stark1645/S.H.I.E.L.D.",
-    liveUrl: "#",
-    image: "/projects/shield.png"
   }
 ];
 
