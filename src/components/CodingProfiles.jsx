@@ -200,6 +200,18 @@ const getCalendarData = (submissionCalendar) => {
   return data;
 };
 
+const fallbackGitHubData = {
+  login: "Stark1645",
+  name: "Ruthragurubaran J",
+  avatar_url: "/profile.jpg",
+  html_url: "https://github.com/Stark1645",
+  public_repos: 18,
+  repoCount: 18,
+  followers: 2,
+  totalStars: 0,
+  topLangs: [["Java", 12], ["JavaScript", 4], ["Python", 2]]
+};
+
 const CodingProfiles = () => {
   // LeetCode State
   const [lcData, setLcData] = useState({
@@ -230,7 +242,7 @@ const CodingProfiles = () => {
   const [badgeFilter, setBadgeFilter] = useState('all');
 
   // GitHub State
-  const [ghData, setGhData] = useState(null);
+  const [ghData, setGhData] = useState(fallbackGitHubData);
   const [ghFetching, setGhFetching] = useState(false);
 
   // Google Skills State
@@ -488,9 +500,10 @@ const CodingProfiles = () => {
               <div className="flex items-center gap-3">
                 <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/40 shadow-[0_0_16px_rgba(88,166,255,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
                   <img 
-                    src={ghData?.avatar_url || "/assets/avatars/github_avatar.png"} 
+                    src={ghData?.avatar_url || "/profile.jpg"} 
                     alt="GitHub Avatar" 
                     className="w-full h-full object-cover" 
+                    onError={e => { e.target.src = '/profile.jpg'; }}
                   />
                 </div>
                 <div>
