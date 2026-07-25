@@ -381,7 +381,13 @@ const CodingProfiles = () => {
         const langCount = {};
         repos.forEach(r => { if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1; });
         const topLangs = Object.entries(langCount).sort((a,b) => b[1]-a[1]).slice(0,3);
-        setGhData({ ...ghRes.data, totalStars, topLangs, repoCount: repos.length });
+        setGhData({ 
+          ...ghRes.data, 
+          avatar_url: "/profile.jpg",
+          totalStars, 
+          topLangs, 
+          repoCount: repos.length 
+        });
       }
     } catch (err) {
       console.warn('GitHub fetch fallback:', err);
@@ -500,7 +506,7 @@ const CodingProfiles = () => {
               <div className="flex items-center gap-3">
                 <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/40 shadow-[0_0_16px_rgba(88,166,255,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
                   <img 
-                    src={ghData?.avatar_url || "/profile.jpg"} 
+                    src="/profile.jpg" 
                     alt="GitHub Avatar" 
                     className="w-full h-full object-cover" 
                     onError={e => { e.target.src = '/profile.jpg'; }}
