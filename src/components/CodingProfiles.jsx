@@ -203,7 +203,7 @@ const getCalendarData = (submissionCalendar) => {
 const fallbackGitHubData = {
   login: "Stark1645",
   name: "Ruthragurubaran J",
-  avatar_url: "/profile.jpg",
+  avatar_url: "https://avatars.githubusercontent.com/u/224800156",
   html_url: "https://github.com/Stark1645",
   public_repos: 18,
   repoCount: 18,
@@ -383,7 +383,7 @@ const CodingProfiles = () => {
         const topLangs = Object.entries(langCount).sort((a,b) => b[1]-a[1]).slice(0,3);
         setGhData({ 
           ...ghRes.data, 
-          avatar_url: "/profile.jpg",
+          avatar_url: ghRes.data.avatar_url || "https://avatars.githubusercontent.com/u/224800156",
           totalStars, 
           topLangs, 
           repoCount: repos.length 
@@ -506,10 +506,10 @@ const CodingProfiles = () => {
               <div className="flex items-center gap-3">
                 <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/40 shadow-[0_0_16px_rgba(88,166,255,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
                   <img 
-                    src="/profile.jpg" 
+                    src={ghData?.avatar_url || "https://avatars.githubusercontent.com/u/224800156"} 
                     alt="GitHub Avatar" 
                     className="w-full h-full object-cover" 
-                    onError={e => { e.target.src = '/profile.jpg'; }}
+                    onError={e => { e.target.src = '/assets/avatars/github_avatar.png'; }}
                   />
                 </div>
                 <div>
