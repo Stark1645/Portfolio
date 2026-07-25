@@ -20,7 +20,7 @@ const techStack = [
 ];
 
 const stats = [
-  { icon: Trophy, iconColor: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', value: '169+', unit: 'Days', label: 'LeetCode Streak' },
+  { icon: Trophy, iconColor: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', value: '206+', unit: 'Days', label: 'LeetCode Streak' },
   { icon: Code2,  iconColor: 'text-blue-400',   bg: 'bg-blue-500/10',   border: 'border-blue-500/20',  value: '10+',  unit: '',     label: 'Projects Built'  },
   { icon: Clock,  iconColor: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/20',value: '1K+',  unit: 'hrs',  label: 'Coding Hours'    },
   { icon: Star,   iconColor: 'text-emerald-400',bg: 'bg-emerald-500/10',border: 'border-emerald-500/20',value: '8.03',unit: '/ 10', label: 'CGPA'            },
@@ -38,7 +38,7 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="relative w-full min-h-screen flex flex-col overflow-hidden"
+      className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-center overflow-hidden py-4 lg:py-8"
     >
       {/* Ambient glows */}
       <div className="absolute inset-0 pointer-events-none">
@@ -52,10 +52,10 @@ const Hero = () => {
       {/* ════════════════════════════════════════
           MAIN ROW  —  text left | photo right
       ════════════════════════════════════════ */}
-      <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row flex-1 items-center w-full h-full">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row flex-1 items-center justify-center w-full">
 
         {/* ── LEFT: Text ── */}
-        <div className="flex-1 flex flex-col gap-5 py-12 lg:py-16 lg:pr-10 w-full z-10">
+        <div className="flex-1 flex flex-col justify-center gap-4 lg:gap-5 py-6 lg:py-8 lg:pr-10 w-full z-10">
 
           {/* Status badge */}
           <motion.div
@@ -195,7 +195,7 @@ const Hero = () => {
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.15, ease: 'easeOut' }}
-          className="relative flex flex-col items-center justify-center gap-6 py-12 w-full lg:w-[46vw] flex-shrink-0 z-10"
+          className="relative flex flex-col items-center justify-center gap-5 lg:gap-6 py-6 w-full lg:w-[46vw] flex-shrink-0 z-10"
         >
           {/* Photo container — bigger now */}
           <div
@@ -285,9 +285,6 @@ const Hero = () => {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
       {/* Resume Modal */}
       <ResumeModal isOpen={resumeOpen} onClose={() => setResumeOpen(false)} />
