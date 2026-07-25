@@ -266,14 +266,17 @@ const CodingProfiles = () => {
     }
 
     try {
-      // Fetch live LeetCode GraphQL badges
+      // Fetch live LeetCode GraphQL avatar & badges
       const gqlQuery = {
-        query: `query userBadges($username: String!) { matchedUser(username: $username) { badges { id name displayName icon category } } }`,
+        query: `query userProfileAndBadges($username: String!) { matchedUser(username: $username) { profile { userAvatar } badges { id name displayName shortName icon category } } }`,
         variables: { username: "Ruthragurubaran-J" }
       };
       const gqlRes = await axios.post('https://leetcode.com/graphql', gqlQuery, {
         headers: { 'Content-Type': 'application/json' }
       });
+      if (gqlRes.data?.data?.matchedUser?.profile?.userAvatar) {
+        setLcProfile({ avatar: gqlRes.data.data.matchedUser.profile.userAvatar });
+      }
       if (gqlRes.data?.data?.matchedUser?.badges) {
         const rawBadges = gqlRes.data.data.matchedUser.badges;
         const formatted = rawBadges.map(b => {
@@ -484,13 +487,11 @@ const CodingProfiles = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/40 shadow-[0_0_16px_rgba(88,166,255,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                  {ghData?.avatar_url ? (
-                    <img src={ghData.avatar_url} alt="GitHub Avatar" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                      <Github size={24} className="text-white" />
-                    </div>
-                  )}
+                  <img 
+                    src={ghData?.avatar_url || "/assets/avatars/github_avatar.png"} 
+                    alt="GitHub Avatar" 
+                    className="w-full h-full object-cover" 
+                  />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white leading-tight">GitHub</h3>
@@ -584,7 +585,7 @@ const CodingProfiles = () => {
                 <div className="relative">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-orange-500/60 shadow-[0_0_20px_rgba(249,115,22,0.4)] group-hover:scale-110 group-hover:border-orange-400 transition-all duration-300 flex-shrink-0">
                     <img 
-                      src={lcProfile?.avatar || ghData?.avatar_url || "/profile.jpg"} 
+                      src={lcProfile?.avatar || "/assets/avatars/leetcode_avatar.png"} 
                       alt="LeetCode Avatar" 
                       className="w-full h-full object-cover" 
                       referrerPolicy="no-referrer"
@@ -721,7 +722,7 @@ const CodingProfiles = () => {
               <div className="flex items-center gap-3">
                 <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-green-500/60 shadow-[0_0_20px_rgba(34,197,94,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
                   <img 
-                    src={hrData?.avatar || ghData?.avatar_url || "/profile.jpg"} 
+                    src={hrData?.avatar || "/assets/avatars/hackerrank_avatar.png"} 
                     alt="HackerRank Avatar" 
                     className="w-full h-full object-cover" 
                     referrerPolicy="no-referrer"
@@ -842,17 +843,13 @@ const CodingProfiles = () => {
               <div className="flex items-center gap-3">
                 <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/40 shadow-[0_0_16px_rgba(88,166,255,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
                   <img
-                    src={gsData.avatar || ghData?.avatar_url || "/profile.jpg"}
+                    src={gsData.avatar || "/assets/avatars/google_skills_avatar.png"}
                     alt="Google Skills Avatar"
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
                     crossOrigin="anonymous"
                     onError={e => { 
-                      if (ghData?.avatar_url && e.target.src !== ghData.avatar_url) {
-                        e.target.src = ghData.avatar_url;
-                      } else {
-                        e.target.src = '/profile.jpg';
-                      }
+                      e.target.src = '/assets/avatars/google_skills_avatar.png';
                     }}
                   />
                 </div>
