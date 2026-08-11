@@ -61,7 +61,7 @@ export const experienceData = [
     company: "Sri Krishna College of Technology",
     duration: "2024 – 2028",
     description: "Maintaining a CGPA of 8.03/10 while actively participating in hackathons and building technical projects.",
-    highlights: ["DevHack 2026 Participant", "Smart India Hackathon (SIH) 2025 Participant", "206+ day coding streak on LeetCode"]
+    highlights: ["DevHack 2026 Participant", "Smart India Hackathon (SIH) 2025 Participant", "223+ day coding streak on LeetCode"]
   }
 ];
 export const certsData = [
@@ -282,7 +282,7 @@ export const blogData = [
   {
     title: "Problem Solving Strategies in Competitive Programming",
     date: "January 14, 2026",
-    excerpt: "How maintaining a 206+ days LeetCode streak improved my logical thinking and coding efficiency.",
+    excerpt: "How maintaining a 223+ days LeetCode streak improved my logical thinking and coding efficiency.",
     readTime: "4 min read",
     tags: ["Problem Solving", "LeetCode", "Algorithms"]
   }

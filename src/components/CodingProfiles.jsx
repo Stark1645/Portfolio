@@ -6,7 +6,7 @@ import axios from 'axios';
 const fallbackCalendar = (() => {
   const calendar = {};
   const today = new Date();
-  let remaining = 206;
+  let remaining = 223;
   for (let i = 0; i < 300 && remaining > 0; i++) {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
@@ -35,7 +35,7 @@ const fallbackLeetCodeBadges = [
   {
     id: "200_days_2026",
     name: "200 Days Badge 2026",
-    category: "ANNUAL",
+    category: "Annual Badge",
     icon: "/assets/badges/leetcode_annual_200.png",
     issuer: "LeetCode",
     active: true
@@ -43,15 +43,22 @@ const fallbackLeetCodeBadges = [
   {
     id: "100_days_2026",
     name: "100 Days Badge 2026",
-    category: "ANNUAL",
+    category: "Annual Badge",
     icon: "/assets/badges/leetcode_annual_100.png",
     issuer: "LeetCode"
   },
   {
     id: "50_days_2026",
     name: "50 Days Badge 2026",
-    category: "ANNUAL",
+    category: "Annual Badge",
     icon: "/assets/badges/leetcode_annual_50.png",
+    issuer: "LeetCode"
+  },
+  {
+    id: "dcc_jul_2026",
+    name: "Jul Badge",
+    category: "Daily Medals",
+    icon: "/assets/badges/leetcode_dcc_2026_7.png",
     issuer: "LeetCode"
   },
   {
@@ -137,7 +144,7 @@ const calculateLeetCodeStreak = (submissionCalendar) => {
   const calendarObj = submissionCalendar || fallbackCalendar;
   const timestamps = Object.keys(calendarObj).map(Number).sort((a, b) => a - b);
   
-  if (timestamps.length === 0) return { currentStreak: 206, totalActiveDays: 206 };
+  if (timestamps.length === 0) return { currentStreak: 223, totalActiveDays: 220 };
 
   const datesSet = new Set();
   timestamps.forEach(ts => {
@@ -168,8 +175,8 @@ const calculateLeetCodeStreak = (submissionCalendar) => {
   }
 
   return {
-    currentStreak: Math.max(streak, 206),
-    totalActiveDays: Math.max(totalActiveDays, 206)
+    currentStreak: Math.max(streak, 223),
+    totalActiveDays: Math.max(totalActiveDays, 220)
   };
 };
 
@@ -215,16 +222,16 @@ const fallbackGitHubData = {
 const CodingProfiles = () => {
   // LeetCode State
   const [lcData, setLcData] = useState({
-    totalSolved: 221,
-    easySolved: 65,
-    totalEasy: 955,
-    mediumSolved: 110,
-    totalMedium: 2089,
-    hardSolved: 46,
-    totalHard: 955,
-    ranking: 736876,
-    currentStreak: 206,
-    totalActiveDays: 206
+    totalSolved: 252,
+    easySolved: 85,
+    totalEasy: 958,
+    mediumSolved: 117,
+    totalMedium: 2098,
+    hardSolved: 50,
+    totalHard: 962,
+    ranking: 626170,
+    currentStreak: 223,
+    totalActiveDays: 220
   });
   const [lcProfile, setLcProfile] = useState(null);
   const [lcBadges, setLcBadges] = useState(fallbackLeetCodeBadges);
@@ -262,70 +269,133 @@ const CodingProfiles = () => {
   // 1. Fetch LeetCode Data & Live Badges
   const fetchLeetCode = useCallback(async () => {
     setLcFetching(true);
+
+    // Primary: Query LeetCode GraphQL directly for real-time stats, streak, badges & avatar
+    try {
+      const gqlQuery = {
+        query: `query userProfileAndBadges($username: String!) {
+          matchedUser(username: $username) {
+            profile { userAvatar ranking }
+            userCalendar { streak totalActiveDays submissionCalendar }
+            badges { id name displayName shortName icon category creationDate }
+            submitStatsGlobal {
+              acSubmissionNum { difficulty count }
+            }
+          }
+        }`,
+        variables: { username: "Ruthragurubaran-J" }
+      };
+
+      const gqlRes = await axios.post('https://leetcode.com/graphql', gqlQuery, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (gqlRes.data?.data?.matchedUser) {
+        const user = gqlRes.data.data.matchedUser;
+
+        if (user.profile?.userAvatar) {
+          setLcProfile({ avatar: user.profile.userAvatar });
+        }
+
+        let totalSolved = 252;
+        let easySolved = 85;
+        let mediumSolved = 117;
+        let hardSolved = 50;
+
+        if (user.submitStatsGlobal?.acSubmissionNum) {
+          user.submitStatsGlobal.acSubmissionNum.forEach(item => {
+            if (item.difficulty === 'All') totalSolved = item.count;
+            if (item.difficulty === 'Easy') easySolved = item.count;
+            if (item.difficulty === 'Medium') mediumSolved = item.count;
+            if (item.difficulty === 'Hard') hardSolved = item.count;
+          });
+        }
+
+        let currentStreak = 223;
+        let totalActiveDays = 220;
+        let calendarData = null;
+
+        if (user.userCalendar) {
+          totalActiveDays = Math.max(user.userCalendar.totalActiveDays || 220, 220);
+          if (user.userCalendar.submissionCalendar) {
+            try {
+              calendarData = typeof user.userCalendar.submissionCalendar === 'string'
+                ? JSON.parse(user.userCalendar.submissionCalendar)
+                : user.userCalendar.submissionCalendar;
+              const streakInfo = calculateLeetCodeStreak(calendarData);
+              currentStreak = Math.max(user.userCalendar.streak || 0, streakInfo.currentStreak, 223);
+            } catch (e) {
+              currentStreak = Math.max(user.userCalendar.streak || 223, 223);
+            }
+          } else {
+            currentStreak = Math.max(user.userCalendar.streak || 223, 223);
+          }
+        }
+
+        setLcData(prev => ({
+          ...prev,
+          totalSolved,
+          easySolved,
+          mediumSolved,
+          hardSolved,
+          ranking: user.profile?.ranking || prev.ranking || 626170,
+          currentStreak,
+          totalActiveDays,
+          submissionCalendar: calendarData || prev.submissionCalendar
+        }));
+
+        if (user.badges && user.badges.length > 0) {
+          const formatted = user.badges.map(b => {
+            let icon = b.icon.startsWith('http') ? b.icon : `https://leetcode.com${b.icon}`;
+            const bName = (b.shortName || b.displayName || b.name || "").toLowerCase();
+
+            if (bName.includes('jul')) icon = "/assets/badges/leetcode_dcc_2026_7.png";
+            else if (bName.includes('jun')) icon = "/assets/badges/leetcode_dcc_2026_6.png";
+            else if (bName.includes('may')) icon = "/assets/badges/leetcode_dcc_2026_5.png";
+            else if (bName.includes('apr')) icon = "/assets/badges/leetcode_dcc_2026_4.png";
+            else if (bName.includes('mar')) icon = "/assets/badges/leetcode_dcc_2026_3.png";
+            else if (bName.includes('feb')) icon = "/assets/badges/leetcode_dcc_2026_2.png";
+            else if (bName.includes('jan')) icon = "/assets/badges/leetcode_dcc_2026_1.png";
+            else if (bName.includes('200 days')) icon = "/assets/badges/leetcode_annual_200.png";
+            else if (bName.includes('100 days')) icon = "/assets/badges/leetcode_annual_100.png";
+            else if (bName.includes('50 days')) icon = "/assets/badges/leetcode_annual_50.png";
+
+            return {
+              id: b.id,
+              name: b.shortName || b.displayName || b.name,
+              category: b.category === 'ANNUAL' ? 'Annual Badge' : 'Daily Medals',
+              icon: icon,
+              issuer: 'LeetCode'
+            };
+          });
+          setLcBadges(formatted);
+        }
+        setLcLastUpdated(new Date());
+      }
+    } catch (gqlErr) {
+      console.warn('LeetCode GraphQL fetch fallback:', gqlErr);
+    }
+
+    // Secondary fallback: Faisalshohag API
     try {
       const statsRes = await axios.get('https://leetcode-api-faisalshohag.vercel.app/Ruthragurubaran-J');
       if (statsRes.data && statsRes.data.totalSolved) {
         const streakInfo = calculateLeetCodeStreak(statsRes.data.submissionCalendar);
-        setLcData({
-          ...statsRes.data,
-          currentStreak: streakInfo.currentStreak,
-          totalActiveDays: streakInfo.totalActiveDays
-        });
+        setLcData(prev => ({
+          ...prev,
+          totalSolved: statsRes.data.totalSolved || prev.totalSolved,
+          easySolved: statsRes.data.easySolved || prev.easySolved,
+          mediumSolved: statsRes.data.mediumSolved || prev.mediumSolved,
+          hardSolved: statsRes.data.hardSolved || prev.hardSolved,
+          ranking: statsRes.data.ranking || prev.ranking,
+          submissionCalendar: statsRes.data.submissionCalendar || prev.submissionCalendar,
+          currentStreak: Math.max(streakInfo.currentStreak, prev.currentStreak || 223),
+          totalActiveDays: Math.max(streakInfo.totalActiveDays, prev.totalActiveDays || 220)
+        }));
         setLcLastUpdated(new Date());
       }
     } catch (err) {
       console.warn('LeetCode API fetch fallback:', err);
-    }
-
-    try {
-      // Fetch live LeetCode GraphQL avatar & badges
-      const gqlQuery = {
-        query: `query userProfileAndBadges($username: String!) { matchedUser(username: $username) { profile { userAvatar } badges { id name displayName shortName icon category } } }`,
-        variables: { username: "Ruthragurubaran-J" }
-      };
-      const gqlRes = await axios.post('https://leetcode.com/graphql', gqlQuery, {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      if (gqlRes.data?.data?.matchedUser?.profile?.userAvatar) {
-        setLcProfile({ avatar: gqlRes.data.data.matchedUser.profile.userAvatar });
-      }
-      if (gqlRes.data?.data?.matchedUser?.badges) {
-        const rawBadges = gqlRes.data.data.matchedUser.badges;
-        const formatted = rawBadges.map(b => {
-          let icon = b.icon.startsWith('http') ? b.icon : `https://leetcode.com${b.icon}`;
-          const bName = (b.shortName || b.displayName || b.name || "").toLowerCase();
-          
-          if (bName.includes('jun')) icon = "/assets/badges/leetcode_dcc_2026_6.png";
-          else if (bName.includes('may')) icon = "/assets/badges/leetcode_dcc_2026_5.png";
-          else if (bName.includes('apr')) icon = "/assets/badges/leetcode_dcc_2026_4.png";
-          else if (bName.includes('mar')) icon = "/assets/badges/leetcode_dcc_2026_3.png";
-          else if (bName.includes('feb')) icon = "/assets/badges/leetcode_dcc_2026_2.png";
-          else if (bName.includes('jan')) icon = "/assets/badges/leetcode_dcc_2026_1.png";
-          else if (bName.includes('200 days')) icon = "/assets/badges/leetcode_annual_200.png";
-          else if (bName.includes('100 days')) icon = "/assets/badges/leetcode_annual_100.png";
-          else if (bName.includes('50 days')) icon = "/assets/badges/leetcode_annual_50.png";
-
-          return {
-            id: b.id,
-            name: b.shortName || b.displayName || b.name,
-            category: b.category === 'ANNUAL' ? 'Annual Badge' : 'Daily Medals',
-            icon: icon,
-            issuer: 'LeetCode'
-          };
-        });
-        if (formatted.length > 0) setLcBadges(formatted);
-      }
-    } catch (err) {
-      console.warn('LeetCode GraphQL Badges fallback used:', err);
-    }
-
-    try {
-      const profileRes = await axios.get('https://alfa-leetcode-api.onrender.com/Ruthragurubaran-J');
-      if (profileRes.data && !profileRes.data.error) {
-        setLcProfile(profileRes.data);
-      }
-    } catch (err) {
-      console.warn('LeetCode Profile fetch fallback:', err);
     } finally {
       setLcFetching(false);
     }
@@ -645,7 +715,7 @@ const CodingProfiles = () => {
                 </div>
                 <div>
                   <div className="text-2xl font-black text-white leading-none flex items-baseline gap-1">
-                    <span>{lcData.currentStreak || 206}</span>
+                    <span>{lcData.currentStreak || 223}</span>
                     <span className="text-xs font-bold text-orange-300">Days</span>
                   </div>
                   <div className="text-[10px] font-extrabold text-orange-400 uppercase tracking-wider mt-0.5 flex items-center gap-1">
@@ -655,7 +725,7 @@ const CodingProfiles = () => {
                 </div>
               </div>
               <div className="text-right pl-2 border-l border-white/10">
-                <div className="text-2xl font-black text-white leading-none">{lcData.totalSolved || 221}</div>
+                <div className="text-2xl font-black text-white leading-none">{lcData.totalSolved || 252}</div>
                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Problems</p>
                 <p className="text-[8px] font-semibold text-green-400 mt-0.5">{lcBadges.length} Badges</p>
               </div>
@@ -665,12 +735,12 @@ const CodingProfiles = () => {
               <div>
                 <div className="flex justify-between text-xs mb-1 font-semibold">
                   <span className="text-green-400 flex items-center gap-1"><Zap size={12} /> Easy</span>
-                  <span className="text-gray-300 font-bold">{lcData.easySolved || 65} <span className="text-gray-500">/ {lcData.totalEasy || 955}</span></span>
+                  <span className="text-gray-300 font-bold">{lcData.easySolved || 85} <span className="text-gray-500">/ {lcData.totalEasy || 958}</span></span>
                 </div>
                 <div className="w-full bg-gray-800/60 rounded-full h-2 overflow-hidden p-0.5 border border-white/5">
                   <motion.div
                     initial={{ width: 0 }}
-                    whileInView={{ width: `${((lcData.easySolved || 65) / (lcData.totalEasy || 955)) * 100}%` }}
+                    whileInView={{ width: `${((lcData.easySolved || 85) / (lcData.totalEasy || 958)) * 100}%` }}
                     transition={{ duration: 1, ease: "easeOut" }}
                     className="bg-gradient-to-r from-green-500 to-emerald-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"
                   />
@@ -680,12 +750,12 @@ const CodingProfiles = () => {
               <div>
                 <div className="flex justify-between text-xs mb-1 font-semibold">
                   <span className="text-yellow-400 flex items-center gap-1"><Trophy size={12} /> Medium</span>
-                  <span className="text-gray-300 font-bold">{lcData.mediumSolved || 110} <span className="text-gray-500">/ {lcData.totalMedium || 2089}</span></span>
+                  <span className="text-gray-300 font-bold">{lcData.mediumSolved || 117} <span className="text-gray-500">/ {lcData.totalMedium || 2089}</span></span>
                 </div>
                 <div className="w-full bg-gray-800/60 rounded-full h-2 overflow-hidden p-0.5 border border-white/5">
                   <motion.div
                     initial={{ width: 0 }}
-                    whileInView={{ width: `${((lcData.mediumSolved || 110) / (lcData.totalMedium || 2089)) * 100}%` }}
+                    whileInView={{ width: `${((lcData.mediumSolved || 117) / (lcData.totalMedium || 2089)) * 100}%` }}
                     transition={{ duration: 1, ease: "easeOut" }}
                     className="bg-gradient-to-r from-yellow-500 to-amber-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(234,179,8,0.5)]"
                   />
@@ -695,12 +765,12 @@ const CodingProfiles = () => {
               <div>
                 <div className="flex justify-between text-xs mb-1 font-semibold">
                   <span className="text-red-400 flex items-center gap-1"><Flame size={12} /> Hard</span>
-                  <span className="text-gray-300 font-bold">{lcData.hardSolved || 46} <span className="text-gray-500">/ {lcData.totalHard || 955}</span></span>
+                  <span className="text-gray-300 font-bold">{lcData.hardSolved || 50} <span className="text-gray-500">/ {lcData.totalHard || 962}</span></span>
                 </div>
                 <div className="w-full bg-gray-800/60 rounded-full h-2 overflow-hidden p-0.5 border border-white/5">
                   <motion.div
                     initial={{ width: 0 }}
-                    whileInView={{ width: `${((lcData.hardSolved || 46) / (lcData.totalHard || 955)) * 100}%` }}
+                    whileInView={{ width: `${((lcData.hardSolved || 50) / (lcData.totalHard || 962)) * 100}%` }}
                     transition={{ duration: 1, ease: "easeOut" }}
                     className="bg-gradient-to-r from-red-500 to-rose-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.5)]"
                   />
@@ -1081,7 +1151,7 @@ const CodingProfiles = () => {
                     <h3 className="text-2xl font-black text-white flex items-center gap-2">
                       LeetCode Live Insights
                       <span className="text-xs px-2.5 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40 text-orange-300 font-bold">
-                        {lcData.currentStreak || 206} Days Streak ({lcBadges.length} Official Badges)
+                        {lcData.currentStreak || 223} Days Streak ({lcBadges.length} Official Badges)
                       </span>
                     </h3>
                     <p className="text-sm text-gray-400">Deep-dive stats and activity log for @Ruthragurubaran-J</p>
@@ -1109,7 +1179,7 @@ const CodingProfiles = () => {
                         cx="95" cy="95" r="75"
                         stroke="#22c55e" strokeWidth="12" fill="transparent"
                         strokeDasharray="471"
-                        strokeDashoffset={471 - (471 * ((lcData.easySolved || 65) / (lcData.totalEasy || 955)))}
+                        strokeDashoffset={471 - (471 * ((lcData.easySolved || 85) / (lcData.totalEasy || 958)))}
                         strokeLinecap="round"
                         className="transition-all duration-1000 ease-out"
                       />
@@ -1118,7 +1188,7 @@ const CodingProfiles = () => {
                         cx="95" cy="95" r="58"
                         stroke="#eab308" strokeWidth="12" fill="transparent"
                         strokeDasharray="364"
-                        strokeDashoffset={364 - (364 * ((lcData.mediumSolved || 110) / (lcData.totalMedium || 2089)))}
+                        strokeDashoffset={364 - (364 * ((lcData.mediumSolved || 117) / (lcData.totalMedium || 2089)))}
                         strokeLinecap="round"
                         className="transition-all duration-1000 ease-out"
                       />
@@ -1127,7 +1197,7 @@ const CodingProfiles = () => {
                         cx="95" cy="95" r="41"
                         stroke="#ef4444" strokeWidth="12" fill="transparent"
                         strokeDasharray="257"
-                        strokeDashoffset={257 - (257 * ((lcData.hardSolved || 46) / (lcData.totalHard || 955)))}
+                        strokeDashoffset={257 - (257 * ((lcData.hardSolved || 50) / (lcData.totalHard || 962)))}
                         strokeLinecap="round"
                         className="transition-all duration-1000 ease-out"
                       />
@@ -1135,7 +1205,7 @@ const CodingProfiles = () => {
                     
                     {/* Center Stat */}
                     <div className="absolute flex flex-col items-center justify-center">
-                      <span className="text-4xl font-black text-white leading-none">{lcData.totalSolved || 221}</span>
+                      <span className="text-4xl font-black text-white leading-none">{lcData.totalSolved || 252}</span>
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Total Solved</span>
                     </div>
                   </div>
@@ -1144,15 +1214,15 @@ const CodingProfiles = () => {
                   <div className="w-full grid grid-cols-3 gap-2 mt-4 text-xs font-semibold">
                     <div className="flex flex-col items-center p-2.5 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400">
                       <span>Easy</span>
-                      <span className="text-white font-bold text-base mt-0.5">{lcData.easySolved || 65}</span>
+                      <span className="text-white font-bold text-base mt-0.5">{lcData.easySolved || 85}</span>
                     </div>
                     <div className="flex flex-col items-center p-2.5 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400">
                       <span>Medium</span>
-                      <span className="text-white font-bold text-base mt-0.5">{lcData.mediumSolved || 110}</span>
+                      <span className="text-white font-bold text-base mt-0.5">{lcData.mediumSolved || 117}</span>
                     </div>
                     <div className="flex flex-col items-center p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
                       <span>Hard</span>
-                      <span className="text-white font-bold text-base mt-0.5">{lcData.hardSolved || 46}</span>
+                      <span className="text-white font-bold text-base mt-0.5">{lcData.hardSolved || 50}</span>
                     </div>
                   </div>
                 </div>
@@ -1194,7 +1264,7 @@ const CodingProfiles = () => {
               <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
                 <h4 className="text-white text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
                   <Calendar size={16} className="text-orange-500" />
-                  Submission Heatmap (Past 365 Days — {lcData.totalActiveDays || 206} Active Days)
+                  Submission Heatmap (Past 365 Days — {lcData.totalActiveDays || 220} Active Days)
                 </h4>
 
                 <div className="w-full overflow-x-auto pb-2">

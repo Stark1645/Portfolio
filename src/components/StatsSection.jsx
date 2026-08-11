@@ -5,7 +5,7 @@ const stats = [
   {
     icon: <Trophy className="text-yellow-500" />,
     label: "LeetCode Streak",
-    value: "206+",
+    value: "223+",
     suffix: "Days"
   },
   {
