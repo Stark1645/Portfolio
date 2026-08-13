@@ -239,6 +239,19 @@ export const projectsData = [
 
 export const eventsData = [
   {
+    title: "OTT Content Security Presentation",
+    location: "Kuniyamuthur, Coimbatore",
+    description: "Seminar presentation on how Netflix & Amazon Prime protect streaming content using AES encryption, block cipher modes, DRM, and secure delivery. (29.07.2026)",
+    image: "/events/ott_security_seminar.jpg"
+  },
+  {
+    title: "Containerization Using Docker Presentation",
+    location: "Kuniyamuthur, Coimbatore",
+    description: "Delivering a technical presentation on Containerization using Docker, covering container management, isolated environments, and modern DevOps workflows. (07.07.2026)",
+    image: "/events/docker_containerization_seminar.png",
+    tag: "Solo Presentation"
+  },
+  {
     title: "Build Your Own GPT Workshop",
     location: "Sri Eshwar College Of Engineering",
     description: "Collaborated with team to build custom AI agents and GPT models at 'THIRAN 2026'. (05.02.2026)",

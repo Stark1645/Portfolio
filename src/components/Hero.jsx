@@ -20,7 +20,7 @@ const techStack = [
 ];
 
 const stats = [
-  { icon: Trophy, iconColor: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', value: '223+', unit: 'Days', label: 'LeetCode Streak' },
+  { icon: Trophy, iconColor: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', value: '225+', unit: 'Days', label: 'LeetCode Streak' },
   { icon: Code2,  iconColor: 'text-blue-400',   bg: 'bg-blue-500/10',   border: 'border-blue-500/20',  value: '10+',  unit: '',     label: 'Projects Built'  },
   { icon: Clock,  iconColor: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/20',value: '1K+',  unit: 'hrs',  label: 'Coding Hours'    },
   { icon: Star,   iconColor: 'text-emerald-400',bg: 'bg-emerald-500/10',border: 'border-emerald-500/20',value: '8.03',unit: '/ 10', label: 'CGPA'            },

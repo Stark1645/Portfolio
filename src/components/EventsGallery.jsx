@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { eventsData } from '../utils/data';
-import { MapPin, Users, Camera } from 'lucide-react';
+import { MapPin, Users, User, Camera } from 'lucide-react';
 
 const EventsGallery = () => {
   return (
@@ -61,7 +61,15 @@ const EventsGallery = () => {
               </p>
               
               <div className="flex items-center gap-2 text-gray-400 text-[10px] font-semibold">
-                <Users size={12} /> Shared with friends
+                {event.tag ? (
+                  <>
+                    <User size={12} /> {event.tag}
+                  </>
+                ) : (
+                  <>
+                    <Users size={12} /> Shared with friends
+                  </>
+                )}
               </div>
             </div>
             
