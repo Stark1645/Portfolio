@@ -1,8 +1,10 @@
 export const skillsData = {
-  "Languages": ["Java", "Python", "JavaScript"],
-  "Frontend": ["HTML", "CSS", "React"],
+  "Languages": ["Java", "Python", "C", "SQL", "JavaScript"],
+  "Frontend": ["React", "HTML", "CSS", "Bootstrap"],
   "Backend": ["Spring Boot", "REST APIs"],
-  "Tools": ["Git", "GitHub", "Docker", "Postman", "Vercel"]
+  "Database": ["MySQL", "SQL", "Database Design", "CRUD Operations"],
+  "Tools": ["Git", "GitHub", "IntelliJ IDEA", "VS Code"],
+  "Core CS": ["Data Structures", "Algorithms", "Object-Oriented Programming (OOP)", "DBMS", "Agile Development", "Unit Testing"]
 };
 
 export const experienceData = [
