@@ -1,5 +1,4 @@
-@import "tailwindcss";
-
+@import 'tailwindcss';
 @custom-variant light (&:where(.light, .light *));
 
 :root {

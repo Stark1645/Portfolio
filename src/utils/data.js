@@ -1,19 +1,19 @@
 export const skillsData = {
   "Languages": ["Java", "Python", "C", "SQL", "JavaScript"],
   "Frontend": ["React", "HTML", "CSS", "Bootstrap"],
-  "Backend": ["Spring Boot", "REST APIs"],
-  "Database": ["MySQL", "SQL", "Database Design", "CRUD Operations"],
-  "Tools": ["Git", "GitHub", "IntelliJ IDEA", "VS Code"],
-  "Core CS": ["Data Structures", "Algorithms", "Object-Oriented Programming (OOP)", "DBMS", "Agile Development", "Unit Testing"]
+  "Backend": ["Spring Boot", "REST APIs", "Node.js", "Gemini API", "Hugging Face"],
+  "Database": ["MySQL", "SQL", "PostgreSQL", "Database Design", "CRUD Operations"],
+  "Tools": ["Git", "GitHub", "IntelliJ IDEA", "VS Code", "Maven", "Vercel", "Netlify", "Cloudflare"],
+  "Core CS": ["Data Structures", "Algorithms", "Object-Oriented Programming (OOP)", "DBMS", "Agile Development", "Unit Testing", "Problem Solving", "API Integration", "Debugging"]
 };
 
 export const experienceData = [
   {
     role: "Full Stack Java Intern",
     company: "Ether Services",
-    duration: "30 Apr 2026 – 03 Jun 2026",
-    description: "Acquired hands-on exposure and practical skills in Full Stack Java development. Developed and optimized backend endpoints, managed data tables, and integrated dynamic user interfaces.",
-    highlights: ["Full Stack Java", "Spring Boot", "React", "MySQL", "REST APIs", "ISO 9001:2015 Certified"],
+    duration: "Apr 2026 – Jun 2026",
+    description: "Completed an intensive 5-week Full Stack Java training program focused on Spring Boot and MySQL, covering backend development, database design, and REST API fundamentals. Rated Excellent overall for performance and technical proficiency throughout the internship.",
+    highlights: ["Full Stack Java", "Spring Boot", "MySQL", "REST APIs", "Database Design", "Rated Excellent"],
     image: "/certs/ether_services_working.jpg",
     images: [
       {
@@ -62,11 +62,29 @@ export const experienceData = [
     role: "B.Tech Information Technology Student",
     company: "Sri Krishna College of Technology",
     duration: "2024 – 2028",
-    description: "Maintaining a CGPA of 8.03/10 while actively participating in hackathons and building technical projects.",
-    highlights: ["DevHack 2026 Participant", "Smart India Hackathon (SIH) 2025 Participant", "223+ day coding streak on LeetCode"]
+    description: "Maintaining a CGPA of 8.03/10 while actively serving as Team Lead in college hackathons and solving 256+ problems with a 226-day active streak on LeetCode.",
+    highlights: ["DevHack 2026 Team Lead", "Web & App Showcase Team Lead", "Smart India Hackathon (SIH) 2025 Participant", "226+ day LeetCode Streak"]
   }
 ];
 export const certsData = [
+  {
+    title: "IBM Java Developer Professional Certificate",
+    issuer: "Coursera",
+    link: "https://coursera.org/verify/professional-cert/DWPFNO5REIVW",
+    image: "/certs/ibm_java.png"
+  },
+  {
+    title: "Crash Course on Python",
+    issuer: "Google",
+    link: "https://coursera.org/verify/AX1A5NE480V7",
+    image: "/certs/google_python.png"
+  },
+  {
+    title: "SQL: A Practical Introduction for Querying Databases",
+    issuer: "IBM",
+    link: "https://coursera.org/verify/9ENTK0VK90II",
+    image: "/certs/ibm_sql.png"
+  },
   {
     title: "AWS Cloud Practitioner Essentials",
     issuer: "AWS Training & Certification",
@@ -102,24 +120,6 @@ export const certsData = [
     issuer: "Sri Eshwar THIRAN 2026",
     link: "/certs/gpt_workshop.jpg",
     image: "/certs/gpt_workshop.jpg"
-  },
-  {
-    title: "IBM Java Developer Professional Certificate",
-    issuer: "Coursera",
-    link: "https://coursera.org/verify/professional-cert/DWPFNO5REIVW",
-    image: "/certs/ibm_java.png"
-  },
-  {
-    title: "Crash Course on Python",
-    issuer: "Google",
-    link: "https://coursera.org/verify/AX1A5NE480V7",
-    image: "/certs/google_python.png"
-  },
-  {
-    title: "SQL: A Practical Introduction for Querying Databases",
-    issuer: "IBM",
-    link: "https://coursera.org/verify/9ENTK0VK90II",
-    image: "/certs/ibm_sql.png"
   },
   {
     title: "Getting Started with Git and GitHub",
@@ -297,7 +297,7 @@ export const blogData = [
   {
     title: "Problem Solving Strategies in Competitive Programming",
     date: "January 14, 2026",
-    excerpt: "How maintaining a 223+ days LeetCode streak improved my logical thinking and coding efficiency.",
+    excerpt: "How maintaining a 226+ days LeetCode streak improved my logical thinking and coding efficiency.",
     readTime: "4 min read",
     tags: ["Problem Solving", "LeetCode", "Algorithms"]
   }

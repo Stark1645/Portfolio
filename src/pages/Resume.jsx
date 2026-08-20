@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const RESUME_PATH = '/Ruthragurubaran_Resume.pdf';
 const BASE_DOWNLOADS = 47;
-const LAST_UPDATED = 'July 2026';
+const LAST_UPDATED = 'August 2026';
 const ATS_SCORE = 92;
 
 const Resume = () => {
@@ -121,13 +121,15 @@ const Resume = () => {
           {/* Download */}
           <button
             onClick={handleDownload}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white
-              px-5 py-2 rounded-lg text-sm font-bold transition-all duration-300
-              shadow-[0_4px_20px_rgba(88,166,255,0.4)] hover:shadow-[0_6px_28px_rgba(88,166,255,0.55)]
-              hover:-translate-y-0.5"
+            className="btn-xshack btn-xshack-green flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black
+              px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer
+              shadow-[0_0_20px_rgba(16,185,129,0.4)]"
           >
-            <Download size={15} />
-            Download PDF
+            <span className="relative z-10 flex items-center gap-2">
+              <Download size={15} />
+              Download PDF
+            </span>
+            <div className="btn-fill bg-white" />
           </button>
         </div>
       </motion.div>
