@@ -64,9 +64,9 @@ const Hero3DCanvas = ({ className = '' }) => {
       let sx, sy, sz;
 
       floatPhases[i] = Math.random() * Math.PI * 2;
-      // Slow, graceful drift speed
-      floatSpeeds[i] = 0.25 + Math.random() * 0.45;
-      floatRadii[i] = 0.3 + Math.random() * 0.7;
+      // Very slow, calm drift speed
+      floatSpeeds[i] = 0.15 + Math.random() * 0.3;
+      floatRadii[i] = 0.3 + Math.random() * 0.6;
 
       if (i < ringCount) {
         // ── PROFILE CIRCLE CONVERGENCE ──
@@ -176,8 +176,8 @@ const Hero3DCanvas = ({ className = '' }) => {
       const elapsed = currentTime - startTime;
       const timeSec = elapsed * 0.001;
 
-      // Circle assembly (0ms -> 800ms)
-      const p = Math.min(elapsed / 800, 1.0);
+      // Circle assembly (0ms -> 1100ms for slightly slower, majestic pacing)
+      const p = Math.min(elapsed / 1100, 1.0);
       const ease = 1 - Math.pow(1 - p, 3); // Smooth cubic ease-out
 
       const pos = geometry.attributes.position.array;

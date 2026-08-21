@@ -79,7 +79,7 @@ const Hero = () => {
   if (!hasHeroBooted) {
     setTimeout(() => {
       hasHeroBooted = true;
-    }, 1600);
+    }, 2800);
   }
 
   // Normalized cursor coordinates (-1 to 1) for subtle hover response
@@ -126,12 +126,12 @@ const Hero = () => {
       <Hero3DCanvas className="absolute inset-0 w-full h-full -z-10 pointer-events-none" />
 
       {/* ════════════════════════════════════════
-          TOP HEADER METADATA BAR (300ms)
+          TOP HEADER METADATA BAR (1250ms)
       ════════════════════════════════════════ */}
       <motion.div
         initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: isBooted ? 0 : 0.3, ease: 'easeOut' }}
+        transition={{ duration: 0.45, delay: isBooted ? 0 : 1.25, ease: 'easeOut' }}
         className="w-full flex items-center justify-between z-10 border-b border-white/10 pb-3 pt-1"
       >
         {/* Left Subhead */}
@@ -157,12 +157,12 @@ const Hero = () => {
       ════════════════════════════════════════ */}
       <div className="relative w-full flex-1 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-4 my-2 lg:my-0 z-10">
 
-        {/* ── GIANT BACKGROUND WORDMARK ("PORTFOLIO") (250ms) ── */}
+        {/* ── GIANT BACKGROUND WORDMARK ("PORTFOLIO") (1350ms) ── */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
           <motion.h1
             initial={isBooted ? { opacity: 0.14 } : { opacity: 0 }}
             animate={{ opacity: 0.14 }}
-            transition={{ duration: 0.5, delay: isBooted ? 0 : 0.25, ease: 'easeOut' }}
+            transition={{ duration: 0.6, delay: isBooted ? 0 : 1.35, ease: 'easeOut' }}
             style={{
               ...(shouldReduceMotion ? {} : { x: textWatermarkX, y: textWatermarkY }),
               fontFamily: "'Impact', 'Arial Black', sans-serif",
@@ -178,21 +178,21 @@ const Hero = () => {
 
         {/* ── LEFT COLUMN: Typography, Name, Bio, Badges & CTAs ── */}
         <div className="lg:col-span-4 flex flex-col justify-center gap-3.5 z-20 py-4 lg:py-0 order-2 lg:order-1">
-          {/* PHASE 5: "Hello, I'm" (500ms) */}
+          {/* "Hello, I'm" (1450ms) */}
           <motion.div
             initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: isBooted ? 0 : 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.45, delay: isBooted ? 0 : 1.45, ease: 'easeOut' }}
             className="font-serif italic text-2xl sm:text-3xl text-cyan-300 flex items-center gap-2"
           >
             <span>Hello, I'm</span>
           </motion.div>
 
-          {/* PHASE 5: Name (600ms - strongest visual reveal) */}
+          {/* Name (1600ms - strongest visual reveal) */}
           <motion.div
             initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: isBooted ? 0 : 0.6, ease: 'easeOut' }}
+            transition={{ duration: 0.5, delay: isBooted ? 0 : 1.6, ease: 'easeOut' }}
             className="flex flex-col tracking-tight leading-[0.88]"
           >
             <span
@@ -219,33 +219,33 @@ const Hero = () => {
             </span>
           </motion.div>
 
-          {/* Role subtitle (650ms) */}
+          {/* Role subtitle (1700ms) */}
           <motion.div
             initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: isBooted ? 0 : 0.65, ease: 'easeOut' }}
+            transition={{ duration: 0.4, delay: isBooted ? 0 : 1.7, ease: 'easeOut' }}
             className="flex items-center gap-2 font-mono text-xs sm:text-sm font-bold text-cyan-400 tracking-wider uppercase mt-1"
           >
             <span className="text-secondary">//</span>
             <span className="text-cyan-300">Full-Stack Developer</span>
           </motion.div>
 
-          {/* PHASE 5: Description (700ms) */}
+          {/* Description (1850ms) */}
           <motion.p
             initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: isBooted ? 0 : 0.7, ease: 'easeOut' }}
+            transition={{ duration: 0.45, delay: isBooted ? 0 : 1.85, ease: 'easeOut' }}
             className="text-secondary text-xs sm:text-sm leading-relaxed max-w-sm"
           >
             I architect and engineer robust full-stack applications with clean code,
             high-throughput Spring Boot REST APIs, and performant React user interfaces.
           </motion.p>
 
-          {/* PHASE 5: Technology Badges (800ms) */}
+          {/* Technology Badges (2000ms) */}
           <motion.div
             initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: isBooted ? 0 : 0.8, ease: 'easeOut' }}
+            transition={{ duration: 0.4, delay: isBooted ? 0 : 2.0, ease: 'easeOut' }}
             className="flex flex-wrap gap-1.5 pt-1"
           >
             {techPills.map((t) => (
@@ -258,11 +258,11 @@ const Hero = () => {
             ))}
           </motion.div>
 
-          {/* PHASE 5: Buttons (900ms) */}
+          {/* Buttons (2150ms) */}
           <motion.div
             initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: isBooted ? 0 : 0.9, ease: 'easeOut' }}
+            transition={{ duration: 0.45, delay: isBooted ? 0 : 2.15, ease: 'easeOut' }}
             className="flex flex-wrap items-center gap-2.5 pt-2"
           >
             <MagneticButton>
@@ -301,7 +301,7 @@ const Hero = () => {
           </motion.div>
         </div>
 
-        {/* ── 5. CENTER COLUMN: Digital Core & Profile Materialization ── */}
+        {/* ── 5. CENTER COLUMN: Digital Core, Pure Soft Pulse & Profile Reveal ── */}
         <div className="lg:col-span-4 flex items-center justify-center relative z-20 py-4 lg:py-0 order-1 lg:order-2 mx-auto w-full">
           <div className="relative flex items-center justify-center">
 
@@ -309,53 +309,37 @@ const Hero = () => {
             <div className="relative w-[300px] h-[370px] sm:w-[370px] sm:h-[450px] md:w-[420px] md:h-[500px] lg:w-[450px] lg:h-[540px] flex items-center justify-center mx-auto">
 
               {/* ════════════════════════════════════════
-                  PHASE 2: DIGITAL CORE PULSE (~350ms -> 850ms)
-                  scale: 0.65 -> 1.15 -> 1, opacity: 0 -> 1 -> 0
+                  PURE SOFT RADIAL ENERGY PULSE (1100ms)
+                  Initial soft radial glow pulse as circle finishes forming
               ════════════════════════════════════════ */}
               {!isBooted && (
                 <motion.div
-                  initial={{ scale: 0.65, opacity: 0 }}
+                  initial={{ scale: 0.75, opacity: 0 }}
                   animate={{
-                    scale: [0.65, 1.15, 1],
-                    opacity: [0, 0.95, 0],
+                    scale: [0.75, 1.35, 1.0],
+                    opacity: [0, 0.9, 0],
                   }}
-                  transition={{ duration: 0.5, delay: 0.35, ease: 'easeOut' }}
-                  className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[320px] h-[320px] sm:w-[385px] sm:h-[385px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] rounded-full pointer-events-none z-10 blur-[15px]"
+                  transition={{ duration: 0.65, delay: 1.1, ease: 'easeOut' }}
+                  className="absolute top-[12%] sm:top-[14%] md:top-[15%] lg:top-[16%] left-[53%] -translate-x-1/2 w-[380px] h-[380px] sm:w-[460px] sm:h-[460px] md:w-[530px] md:h-[530px] lg:w-[600px] lg:h-[600px] rounded-full pointer-events-none z-10 blur-[30px]"
                   style={{
-                    background: 'radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.8) 0%, rgba(56, 189, 248, 0.5) 45%, rgba(129, 140, 248, 0.2) 70%, transparent 85%)',
+                    background: 'radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.8) 0%, rgba(56, 189, 248, 0.45) 40%, rgba(129, 140, 248, 0.2) 65%, transparent 80%)',
                   }}
                 />
               )}
 
               {/* ════════════════════════════════════════
-                  PHASE 3: THIN LUMINOUS ENERGY RING (~500ms -> 950ms)
-                  scale: 0.85 -> 1.12, opacity: 1 -> 0
+                  FINAL SYSTEM RING BLINK (After everything reveals: 2450ms)
+                  Thin, luminous cyan ring blink expanding outward
               ════════════════════════════════════════ */}
               {!isBooted && (
                 <motion.div
-                  initial={{ scale: 0.85, opacity: 0 }}
+                  initial={{ scale: 0.94, opacity: 0 }}
                   animate={{
-                    scale: [0.85, 1.12],
-                    opacity: [1, 0],
+                    scale: [0.94, 1.26],
+                    opacity: [0, 1, 0],
                   }}
-                  transition={{ duration: 0.45, delay: 0.5, ease: 'easeOut' }}
-                  className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-10 border-[1.5px] border-cyan-400 shadow-[0_0_15px_#00f0ff,inset_0_0_15px_#00f0ff]"
-                />
-              )}
-
-              {/* ════════════════════════════════════════
-                  PHASE 7: FINAL SYSTEM PULSE (~1100ms -> 1450ms)
-                  scale: 1 -> 1.35, opacity: 0.75 -> 0
-              ════════════════════════════════════════ */}
-              {!isBooted && (
-                <motion.div
-                  initial={{ scale: 1, opacity: 0 }}
-                  animate={{
-                    scale: [1, 1.35],
-                    opacity: [0.75, 0],
-                  }}
-                  transition={{ duration: 0.35, delay: 1.1, ease: 'easeOut' }}
-                  className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-10 border border-sky-400/60 blur-[1px] shadow-[0_0_20px_rgba(56,189,248,0.5)]"
+                  transition={{ duration: 0.5, delay: 2.45, ease: 'easeOut' }}
+                  className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-10 border-[1.5px] border-cyan-400/90 shadow-[0_0_15px_rgba(0,240,255,0.8),inset_0_0_10px_rgba(0,240,255,0.4)]"
                 />
               )}
 
@@ -363,7 +347,7 @@ const Hero = () => {
               <motion.div
                 initial={isBooted ? { opacity: 0.85 } : { opacity: 0 }}
                 animate={{ opacity: 0.85 }}
-                transition={{ duration: 0.5, delay: isBooted ? 0 : 0.4, ease: 'easeOut' }}
+                transition={{ duration: 0.6, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
                 style={{
                   background: 'radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.35) 0%, rgba(129, 140, 248, 0.22) 32%, rgba(168, 85, 247, 0.18) 50%, rgba(236, 72, 153, 0.1) 68%, transparent 80%)',
                 }}
@@ -374,7 +358,7 @@ const Hero = () => {
               <motion.div
                 initial={isBooted ? { opacity: 0.85 } : { opacity: 0 }}
                 animate={{ opacity: 0.85 }}
-                transition={{ duration: 0.5, delay: isBooted ? 0 : 0.45, ease: 'easeOut' }}
+                transition={{ duration: 0.6, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
                 style={{
                   background: 'conic-gradient(from 180deg at 50% 50%, #00f0ff 0%, #38bdf8 20%, #818cf8 40%, #a855f7 60%, #ec4899 80%, #00f0ff 100%)',
                 }}
@@ -385,7 +369,7 @@ const Hero = () => {
               <motion.div
                 initial={isBooted ? { opacity: 1 } : { opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.45, delay: isBooted ? 0 : 0.45, ease: 'easeOut' }}
+                transition={{ duration: 0.5, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
                 className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-0"
                 style={{
                   background: 'conic-gradient(from 0deg, #00f0ff 0%, #38bdf8 18%, #818cf8 38%, #a855f7 58%, #ec4899 78%, #00f0ff 100%)',
@@ -401,14 +385,11 @@ const Hero = () => {
                 />
               </motion.div>
 
-              {/* ════════════════════════════════════════
-                  PHASE 4: PROFILE MATERIALIZATION (~400ms -> 1000ms)
-                  opacity: 0 -> 1, scale: 0.94 -> 1, y: 10 -> 0 (easeOut, 600ms)
-              ════════════════════════════════════════ */}
+              {/* ── PROFILE MATERIALIZATION (1100ms) ── */}
               <motion.div
                 initial={isBooted ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.94, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: isBooted ? 0 : 0.4, ease: 'easeOut' }}
+                transition={{ duration: 0.6, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
                 style={{
                   ...(shouldReduceMotion ? {} : { x: photoParallaxX, y: photoParallaxY }),
                 }}
@@ -433,11 +414,11 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* ── 6. RIGHT COLUMN: HUD (PHASE 6: ~950ms activation: opacity 0 -> 1, y 8px -> 0) ── */}
+        {/* ── 6. RIGHT COLUMN: HUD (Reveals at 2300ms) ── */}
         <motion.div
           initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: isBooted ? 0 : 0.95, ease: 'easeOut' }}
+          transition={{ duration: 0.45, delay: isBooted ? 0 : 2.3, ease: 'easeOut' }}
           style={shouldReduceMotion ? {} : { x: floatBadgeX, y: floatBadgeY }}
           className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center z-20 py-4 lg:py-0 order-3 w-full"
         >
@@ -447,12 +428,12 @@ const Hero = () => {
       </div>
 
       {/* ════════════════════════════════════════
-          BOTTOM STATUS FOOTER BAR (1100ms)
+          BOTTOM STATUS FOOTER BAR (2500ms)
       ════════════════════════════════════════ */}
       <motion.div
         initial={isBooted ? { opacity: 1 } : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.35, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
+        transition={{ duration: 0.4, delay: isBooted ? 0 : 2.5, ease: 'easeOut' }}
         className="w-full flex items-center justify-between z-10 border-t border-white/10 pt-3 font-mono text-xs text-secondary"
       >
         <div className="flex items-center gap-2">
