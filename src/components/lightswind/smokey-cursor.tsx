@@ -1553,9 +1553,9 @@ export default function SmokeyCursor({
     };
 
     window.addEventListener("mousedown", handleMouseDown);
-    document.body.addEventListener("mousemove", handleFirstMouseMove);
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("touchstart", handleFirstTouchStart);
+    document.body.addEventListener("mousemove", handleFirstMouseMove, { passive: true });
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("touchstart", handleFirstTouchStart, { passive: true });
     window.addEventListener("touchstart", handleTouchStart, { passive: true });
     window.addEventListener("touchmove", handleTouchMove, { passive: true });
     window.addEventListener("touchend", handleTouchEnd, { passive: true });

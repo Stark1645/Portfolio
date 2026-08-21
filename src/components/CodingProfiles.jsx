@@ -387,6 +387,11 @@ const CodingProfiles = () => {
         submissionCalendar: calendarData || prev.submissionCalendar
       }));
 
+      try {
+        localStorage.setItem('leetcode_live_streak', String(currentStreak));
+        window.dispatchEvent(new CustomEvent('leetcode_streak_updated', { detail: currentStreak }));
+      } catch (e) {}
+
       if (user.badges && user.badges.length > 0) {
         const formatted = user.badges.map(b => {
           let icon = b.icon.startsWith('http') ? b.icon : `https://leetcode.com${b.icon}`;

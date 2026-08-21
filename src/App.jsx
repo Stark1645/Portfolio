@@ -14,11 +14,11 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Resume from './pages/Resume';
 import ScrollProgress from './components/ScrollProgress';
-import CustomCursor from './components/CustomCursor';
 import BackToTop from './components/BackToTop';
 import ProfessionalBackground from './components/ProfessionalBackground';
 import ScrollToTop from './components/ScrollToTop';
 import AnimatedPage from './components/AnimatedPage';
+import { SmokeyCursor } from './components/lightswind/smokey-cursor';
 
 function AppContent() {
   const location = useLocation();
@@ -27,7 +27,19 @@ function AppContent() {
     <div className="relative min-h-screen font-sans selection:bg-blue-500/30 flex flex-col justify-between">
       <ScrollToTop />
       <ProfessionalBackground />
-      <CustomCursor />
+      <SmokeyCursor
+        className="fixed inset-0 pointer-events-none z-0 opacity-60"
+        simulationResolution={96}
+        dyeResolution={512}
+        splatRadius={0.18}
+        splatForce={4800}
+        densityDissipation={3.6}
+        velocityDissipation={2.0}
+        pressureIterations={12}
+        curl={2}
+        enableShading={false}
+        transparent={true}
+      />
       <ScrollProgress />
       <BackToTop />
       <Navbar />

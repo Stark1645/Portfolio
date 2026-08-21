@@ -1,21 +1,31 @@
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
+import { useEffect } from 'react';
 
 const ProfessionalBackground = () => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const { scrollYProgress } = useScroll();
-  
-  // Smooth mouse movement for parallax
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const shouldReduceMotion = useReducedMotion();
+
+  const springConfig = { damping: 30, stiffness: 100, mass: 0.5 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  const glow1X = useTransform(smoothX, [-1, 1], [-20, 20]);
+  const glow1Y = useTransform(smoothY, [-1, 1], [-20, 20]);
+  const glow2X = useTransform(smoothX, [-1, 1], [30, -30]);
+  const glow2Y = useTransform(smoothY, [-1, 1], [30, -30]);
+
   useEffect(() => {
+    if (shouldReduceMotion) return;
     const handleMouseMove = (e) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20
-      });
+      const normX = (e.clientX / window.innerWidth - 0.5) * 2;
+      const normY = (e.clientY / window.innerHeight - 0.5) * 2;
+      mouseX.set(normX);
+      mouseY.set(normY);
     };
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [shouldReduceMotion, mouseX, mouseY]);
 
   return (
     <div className="fixed inset-0 -z-50 overflow-hidden pointer-events-none bg-background">
@@ -31,24 +41,18 @@ const ProfessionalBackground = () => {
 
       {/* 2. Animated Aurora Glows (Professional & Slower) */}
       <motion.div
-        animate={{
-          x: mousePos.x * 1.5,
-          y: mousePos.y * 1.5,
-        }}
-        className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-600/15 light:bg-blue-600/10 rounded-full blur-[120px]"
+        style={shouldReduceMotion ? {} : { x: glow1X, y: glow1Y }}
+        className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-600/15 light:bg-blue-600/10 rounded-full blur-[130px]"
       />
       
       <motion.div
-        animate={{
-          x: -mousePos.x * 2,
-          y: -mousePos.y * 2,
-        }}
-        className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 dark:bg-purple-600/10 rounded-full blur-[120px]"
+        style={shouldReduceMotion ? {} : { x: glow2X, y: glow2Y }}
+        className="absolute bottom-[-10%] right-[-10%] w-[55%] h-[55%] bg-gradient-to-tl from-purple-600/12 via-amber-500/8 to-blue-600/10 rounded-full blur-[140px]"
       />
 
       {/* 3. Floating "Glass" Orbs */}
       <motion.div
-        animate={{
+        animate={shouldReduceMotion ? {} : {
           y: [0, -40, 0],
           opacity: [0.1, 0.3, 0.1],
         }}
@@ -58,7 +62,7 @@ const ProfessionalBackground = () => {
 
       {/* 4. The "Scanning" Line (Very subtle) */}
       <motion.div
-        animate={{ top: ['-10%', '110%'] }}
+        animate={shouldReduceMotion ? {} : { top: ['-10%', '110%'] }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
         className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/10 to-transparent z-10"
       />

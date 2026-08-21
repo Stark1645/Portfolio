@@ -1,9 +1,10 @@
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
-import { Mail, Download, ArrowRight, Trophy, Code2, Clock, Star } from 'lucide-react';
+import { Mail, Download, ArrowRight, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import ResumeModal from './ResumeModal';
-import { SmokeyCursor } from './lightswind/smokey-cursor';
+import Hero3DCanvas from './Hero3DCanvas';
+import SpatialGlassDeck3D from './SpatialGlassDeck3D';
 
 const roles = [
   'Full-Stack Developer',
@@ -12,25 +13,12 @@ const roles = [
   'Backend Systems Builder',
 ];
 
-const techStack = [
-  { label: 'Java',        color: 'text-orange-400', border: 'border-orange-500/30', bg: 'bg-[#11151c]' },
-  { label: 'Spring Boot', color: 'text-green-400',  border: 'border-green-500/30',  bg: 'bg-[#11151c]' },
-  { label: 'React',       color: 'text-cyan-400',   border: 'border-cyan-500/30',   bg: 'bg-[#11151c]' },
-  { label: 'Python',      color: 'text-blue-400',   border: 'border-blue-500/30',   bg: 'bg-[#11151c]' },
-  { label: 'MySQL',       color: 'text-purple-400', border: 'border-purple-500/30', bg: 'bg-[#11151c]' },
-];
-
-const stats = [
-  { icon: Trophy, iconColor: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', value: '225+', unit: 'Days', label: 'LeetCode Streak' },
-  { icon: Code2,  iconColor: 'text-blue-400',   bg: 'bg-blue-500/10',   border: 'border-blue-500/20',  value: '10+',  unit: '',     label: 'Projects Built'  },
-  { icon: Clock,  iconColor: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/20',value: '1K+',  unit: 'hrs',  label: 'Coding Hours'    },
-  { icon: Star,   iconColor: 'text-emerald-400',bg: 'bg-emerald-500/10',border: 'border-emerald-500/20',value: '8.03',unit: '/ 10', label: 'CGPA'            },
-];
+const techPills = ['Java', 'Spring Boot', 'React', 'MySQL', 'Python', 'Docker'];
 
 // ==========================================
-// Magnetic CTA Button Wrapper Component
+// Magnetic CTA Button Wrapper
 // ==========================================
-const MagneticButton = ({ children, className = '', maxDistance = 7 }) => {
+const MagneticButton = ({ children, className = '', maxDistance = 6 }) => {
   const ref = useRef(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -72,7 +60,8 @@ const MagneticButton = ({ children, className = '', maxDistance = 7 }) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ x: smoothX, y: smoothY }}
-      whileHover={shouldReduceMotion ? {} : { scale: 1.03 }}
+      whileHover={shouldReduceMotion ? {} : { scale: 1.015, y: -2 }}
+      whileTap={shouldReduceMotion ? {} : { scale: 0.98, y: 1 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={`inline-block ${className}`}
     >
@@ -82,7 +71,7 @@ const MagneticButton = ({ children, className = '', maxDistance = 7 }) => {
 };
 
 // ==========================================
-// Main Hero Component
+// Main Editorial Magazine Hero Component
 // ==========================================
 const Hero = () => {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -91,38 +80,29 @@ const Hero = () => {
   const photoContainerRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
 
-  // Normalized cursor coordinates (-1 to 1)
+  // Normalized cursor coordinates (-1 to 1) for subtle hover response
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
-  const ringProximityVal = useMotionValue(0);
 
-  // Smooth springs for layered depths
-  const springConfig = { damping: 28, stiffness: 120, mass: 0.6 };
+  // Smooth springs for multi-layered mouse parallax
+  const springConfig = { damping: 30, stiffness: 100, mass: 0.6 };
   const smoothCursorX = useSpring(cursorX, springConfig);
   const smoothCursorY = useSpring(cursorY, springConfig);
-  const smoothRingProximity = useSpring(ringProximityVal, { damping: 20, stiffness: 140 });
 
-  // Layer 1: Ambient Background Glow (strongest movement: ~34px)
-  const bgGlowX = useTransform(smoothCursorX, [-1, 1], [-34, 34]);
-  const bgGlowY = useTransform(smoothCursorY, [-1, 1], [-34, 34]);
+  // Layer Mouse Parallax Transforms
+  const textWatermarkX = useTransform(smoothCursorX, [-1, 1], [-25, 25]);
+  const textWatermarkY = useTransform(smoothCursorY, [-1, 1], [-15, 15]);
 
-  // Layer 2: Neon Ring & Aura (medium movement: ~16px)
-  const ringX = useTransform(smoothCursorX, [-1, 1], [-16, 16]);
-  const ringY = useTransform(smoothCursorY, [-1, 1], [-16, 16]);
+  const photoParallaxX = useTransform(smoothCursorX, [-1, 1], [-14, 14]);
+  const photoParallaxY = useTransform(smoothCursorY, [-1, 1], [-10, 10]);
+  const rotateX = useTransform(smoothCursorY, [-1, 1], [3, -3]);
+  const rotateY = useTransform(smoothCursorX, [-1, 1], [-3, 3]);
 
-  // Layer 3: Profile Photo parallax & 3D tilt (8-10px translation, 2.5-3.5 deg tilt)
-  const photoX = useTransform(smoothCursorX, [-1, 1], [-10, 10]);
-  const photoY = useTransform(smoothCursorY, [-1, 1], [-10, 10]);
-  const rotateX = useTransform(smoothCursorY, [-1, 1], [3.2, -3.2]);
-  const rotateY = useTransform(smoothCursorX, [-1, 1], [-3.2, 3.2]);
+  const floatBadgeX = useTransform(smoothCursorX, [-1, 1], [18, -18]);
+  const floatBadgeY = useTransform(smoothCursorY, [-1, 1], [12, -12]);
 
-  // Layer 4: Stats Card (subtle movement: ~5px)
-  const statsX = useTransform(smoothCursorX, [-1, 1], [-5, 5]);
-  const statsY = useTransform(smoothCursorY, [-1, 1], [-5, 5]);
-
-  // Dynamic glow scale & opacity based on proximity to photo
-  const ringGlowScale = useTransform(smoothRingProximity, [0, 1], [1, 1.15]);
-  const ringGlowOpacity = useTransform(smoothRingProximity, [0, 1], [0.35, 0.75]);
+  const ringGlowScale = useTransform(smoothCursorY, [-1, 1], [0.96, 1.06]);
+  const ringGlowOpacity = useTransform(smoothCursorX, [-1, 1], [0.45, 0.75]);
 
   // Handle Hero mouse movement
   const handleMouseMove = useCallback((e) => {
@@ -131,37 +111,21 @@ const Hero = () => {
     const xRel = (e.clientX - rect.left) / rect.width;
     const yRel = (e.clientY - rect.top) / rect.height;
 
-    // Map to [-1, 1]
     const normX = (xRel - 0.5) * 2;
     const normY = (yRel - 0.5) * 2;
     cursorX.set(Math.max(-1, Math.min(1, normX)));
     cursorY.set(Math.max(-1, Math.min(1, normY)));
-
-    // Proximity to profile photo center
-    if (photoContainerRef.current) {
-      const pRect = photoContainerRef.current.getBoundingClientRect();
-      const pCenterX = pRect.left + pRect.width / 2;
-      const pCenterY = pRect.top + pRect.height / 2;
-      const dist = Math.hypot(e.clientX - pCenterX, e.clientY - pCenterY);
-      const maxProximityDist = 280;
-      const proxFactor = Math.max(0, Math.min(1, 1 - dist / maxProximityDist));
-      ringProximityVal.set(proxFactor);
-    }
-  }, [shouldReduceMotion, cursorX, cursorY, ringProximityVal]);
+  }, [shouldReduceMotion, cursorX, cursorY]);
 
   const handleMouseLeave = useCallback(() => {
     cursorX.set(0);
     cursorY.set(0);
-    ringProximityVal.set(0);
-  }, [cursorX, cursorY, ringProximityVal]);
+  }, [cursorX, cursorY]);
 
   useEffect(() => {
-    const id = setInterval(() => setRoleIndex(i => (i + 1) % roles.length), 2500);
+    const id = setInterval(() => setRoleIndex(i => (i + 1) % roles.length), 2800);
     return () => clearInterval(id);
   }, []);
-
-  const headingName = "Ruthragurubaran";
-  const nameLetters = useMemo(() => headingName.split(''), [headingName]);
 
   return (
     <section
@@ -169,344 +133,312 @@ const Hero = () => {
       id="home"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-center overflow-hidden py-4 lg:py-8"
+      className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-between overflow-hidden px-4 sm:px-6 lg:px-12 py-4 lg:py-6 select-none"
     >
       {/* ════════════════════════════════════════
-          1. CURSOR-REACTIVE AMBIENT BACKGROUND GLOWS
-      ════════════════════════════════════════ */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Base static ambient glows */}
-        <div className="absolute top-1/2 left-[5%] -translate-y-1/2 w-[380px] h-[380px] bg-blue-600/8 rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 right-[10%] -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[130px]" />
-        <div className="absolute top-[30%] right-[28%] w-[260px] h-[260px] bg-purple-600/8 rounded-full blur-[90px]" />
-
-        {/* Dynamic reactive ambient glow that smoothly follows cursor */}
-        {!shouldReduceMotion && (
-          <motion.div
-            style={{
-              x: bgGlowX,
-              y: bgGlowY,
-              background: 'radial-gradient(circle, rgba(88,166,255,0.14) 0%, rgba(188,140,255,0.09) 45%, transparent 70%)',
-            }}
-            className="absolute top-1/3 left-1/3 w-[520px] h-[520px] rounded-full blur-[140px] pointer-events-none opacity-60 mix-blend-screen"
-          >
-            <div className="w-full h-full rounded-full bg-gradient-to-tr from-blue-600/12 via-indigo-500/10 to-purple-600/10" />
-          </motion.div>
-        )}
-
-        {/* Right panel subtle tint */}
-        <div className="absolute top-0 right-0 bottom-0 w-[46vw] bg-gradient-to-l from-blue-950/20 via-transparent to-transparent" />
-      </div>
-
-      {/* ════════════════════════════════════════
-          SIGNATURE EFFECT: SMOKEY CURSOR FLUID SIMULATION
-          (Placed behind Hero content z-10, above ambient glow z-0)
+          1. 3D WEBGL ASSETS (LIGHTWEIGHT ATMOSPHERIC BACKGROUND)
       ════════════════════════════════════════ */}
       {!shouldReduceMotion && (
-        <SmokeyCursor
-          embed={true}
-          className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-75"
-          splatRadius={0.24}
-          splatForce={5500}
-          densityDissipation={3.2}
-          velocityDissipation={2.0}
-          curl={4}
-          enableShading={true}
-          transparent={true}
-        />
+        <Hero3DCanvas className="opacity-80 z-0 pointer-events-none" />
       )}
 
       {/* ════════════════════════════════════════
-          MAIN ROW — text left | photo right
+          2. TOP HEADER METADATA BAR
       ════════════════════════════════════════ */}
-      <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row flex-1 items-center justify-center w-full relative z-10">
+      <motion.div
+        initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.05, ease: 'easeOut' }}
+        className="w-full flex items-center justify-between z-10 border-b border-white/10 pb-3 pt-1"
+      >
+        {/* Left Subhead */}
+        <div className="flex items-center gap-2 font-mono text-xs text-secondary tracking-widest uppercase">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+          <span className="text-cyan-400 font-bold">FULL-STACK DEVELOPER</span>
+          <span className="text-white/30 hidden sm:inline">•</span>
+          <span className="hidden sm:inline text-white/70">BACKEND SYSTEMS ARCHITECT</span>
+        </div>
 
-        {/* ── LEFT: Text ── */}
-        <div className="flex-1 flex flex-col justify-center gap-4 lg:gap-5 py-6 lg:py-8 lg:pr-10 w-full z-10">
+        {/* Right Availability Badge */}
+        <div className="flex items-center gap-2 font-mono text-xs tracking-wider">
+          <div className="relative flex items-center justify-center w-2.5 h-2.5">
+            <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_#4ade80]" />
+          </div>
+          <span className="text-green-400 font-bold uppercase">AVAILABLE FOR OPPORTUNITIES</span>
+          <span className="text-amber-400 font-bold hidden sm:inline">✦</span>
+        </div>
+      </motion.div>
 
-          {/* Status badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: 'easeOut' }}
-            className="self-start flex items-center gap-2.5 px-5 py-2.5 bg-[#11151c] rounded-full border border-green-500/20 shadow-lg"
+      {/* ════════════════════════════════════════
+          3. MAIN HERO COMPOSITION (Symmetrical 3-Column Grid)
+      ════════════════════════════════════════ */}
+      <div className="relative w-full flex-1 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-4 my-2 lg:my-0 z-10">
+
+        {/* ── GIANT BACKGROUND WORDMARK ("PORTFOLIO") ── */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
+          <motion.h1
+            initial={shouldReduceMotion ? { opacity: 0.14 } : { opacity: 0 }}
+            animate={{ opacity: 0.14 }}
+            transition={{ duration: 0.6, delay: 0.05, ease: 'easeOut' }}
+            style={{
+              ...(shouldReduceMotion ? {} : { x: textWatermarkX, y: textWatermarkY }),
+              fontFamily: "'Impact', 'Arial Black', sans-serif",
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(56,189,248,0.3) 60%, rgba(13,17,23,0) 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}
+            className="font-black tracking-tighter uppercase text-[clamp(4.5rem,18vw,19rem)] leading-none text-center whitespace-nowrap opacity-[0.14] dark:opacity-[0.12] transition-transform duration-300"
           >
-            <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.9)]" />
-            <span className="text-sm font-semibold text-green-300">Available for new opportunities</span>
+            PORTFOLIO
+          </motion.h1>
+        </div>
+
+        {/* ── LEFT COLUMN: Typography, Name, Bio, Badges & CTAs ── */}
+        <div className="lg:col-span-4 flex flex-col justify-center gap-3.5 z-20 py-4 lg:py-0 order-2 lg:order-1">
+          {/* 1. "Hello, I'm" */}
+          <motion.div
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.08, ease: 'easeOut' }}
+            className="font-serif italic text-2xl sm:text-3xl text-cyan-300 flex items-center gap-2"
+          >
+            <span>Hello, I'm</span>
           </motion.div>
 
-          {/* "Hi there" & Main Name (Cinematic Staggered Letters) */}
-          <div className="flex flex-col gap-2">
-            <motion.p
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-              className="text-secondary text-xl font-medium"
-            >
-              Hi there 👋, I'm
-            </motion.p>
-            <h1
-              className="font-extrabold tracking-tight leading-[1.05] flex flex-nowrap whitespace-nowrap"
-              style={{
-                fontSize: 'clamp(1.85rem, 3.8vw, 3.75rem)',
-                filter: 'drop-shadow(0 0 32px rgba(88,166,255,0.4))',
-              }}
-              aria-label={headingName}
-            >
-              {nameLetters.map((char, index) => (
-                <motion.span
-                  key={index}
-                  initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 22, filter: 'blur(5px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.15 + index * 0.042,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="inline-block gradient-text"
-                >
-                  {char}
-                </motion.span>
-              ))}
-            </h1>
-          </div>
-
-          {/* Role/title */}
+          {/* 2. Name */}
           <motion.div
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.55, delay: 0.75, ease: 'easeOut' }}
-            className="flex items-center gap-3 h-9"
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.18, ease: 'easeOut' }}
+            className="flex flex-col tracking-tight leading-[0.88]"
           >
-            <div className="w-8 h-0.5 rounded-full bg-blue-500 flex-shrink-0" />
+            <span
+              className="font-black uppercase text-white tracking-tight"
+              style={{
+                fontFamily: "'Impact', 'Arial Black', 'Helvetica Neue', sans-serif",
+                fontSize: 'clamp(2.6rem, 4.8vw, 5.2rem)',
+                letterSpacing: '-0.02em',
+                textShadow: '0 4px 20px rgba(0,0,0,0.6)',
+              }}
+            >
+              RUTHRA
+            </span>
+            <span
+              className="font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 tracking-tight"
+              style={{
+                fontFamily: "'Impact', 'Arial Black', 'Helvetica Neue', sans-serif",
+                fontSize: 'clamp(2.6rem, 4.8vw, 5.2rem)',
+                letterSpacing: '-0.02em',
+                filter: 'drop-shadow(0 0 25px rgba(56,189,248,0.35))',
+              }}
+            >
+              GURUBARAN
+            </span>
+          </motion.div>
+
+          {/* Role subtitle with Animated Switcher */}
+          <motion.div
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.24, ease: 'easeOut' }}
+            className="flex items-center gap-2 font-mono text-xs sm:text-sm font-bold text-cyan-400 tracking-wider uppercase mt-1"
+          >
+            <span className="text-secondary">//</span>
             <AnimatePresence mode="wait">
               <motion.span
                 key={roleIndex}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.22 }}
-                className="text-xl font-bold text-blue-400 whitespace-nowrap"
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.25 }}
+                className="text-cyan-300"
               >
                 {roles[roleIndex]}
               </motion.span>
             </AnimatePresence>
           </motion.div>
 
-          {/* Description */}
+          {/* 3. Description */}
           <motion.p
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.55, delay: 0.85, ease: 'easeOut' }}
-            className="text-secondary text-lg leading-[1.85]"
-            style={{ maxWidth: 480 }}
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.28, ease: 'easeOut' }}
+            className="text-secondary text-xs sm:text-sm leading-relaxed max-w-sm"
           >
-            Building scalable full-stack applications with clean architecture
-            and performance-first thinking — from high-throughput REST APIs with
-            Spring Boot to polished React interfaces.
+            I architect and engineer robust full-stack applications with clean code,
+            high-throughput Spring Boot REST APIs, and performant React user interfaces.
           </motion.p>
 
-          {/* Tech pills with hover polish */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.95, ease: 'easeOut' }}
-            className="flex flex-wrap gap-2.5"
-          >
-            {techStack.map(t => (
+          {/* 4. Technology Badges (small stagger) */}
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {techPills.map((t, idx) => (
               <motion.span
-                key={t.label}
-                whileHover={shouldReduceMotion ? {} : { y: -2.5, scale: 1.03 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                className={`px-4 py-2 rounded-xl border text-sm font-semibold
-                  hover:brightness-125 hover:shadow-[0_4px_14px_rgba(88,166,255,0.18)] transition-colors duration-200 cursor-default
-                  ${t.color} ${t.border} ${t.bg}`}
+                key={t}
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.36 + idx * 0.035, ease: 'easeOut' }}
+                whileHover={shouldReduceMotion ? {} : {
+                  y: -2,
+                  borderColor: 'rgba(56, 189, 248, 0.45)',
+                  backgroundColor: 'rgba(26, 34, 51, 0.95)',
+                  boxShadow: '0 4px 12px rgba(56, 189, 248, 0.15)',
+                }}
+                className="px-2.5 py-1 rounded-md bg-[#11151c]/90 border border-white/10 text-xs font-mono font-semibold text-white/80 cursor-default transition-colors duration-200"
               >
-                {t.label}
+                {t}
               </motion.span>
             ))}
-          </motion.div>
+          </div>
 
-          {/* Magnetic CTA Buttons */}
+          {/* 5. Buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 1.05, ease: 'easeOut' }}
-            className="flex flex-col gap-3 mt-2"
+            transition={{ duration: 0.4, delay: 0.52, ease: 'easeOut' }}
+            className="flex flex-wrap items-center gap-2.5 pt-2"
           >
-            <div className="flex flex-wrap items-center gap-3">
-              <MagneticButton>
-                <Link
-                  to="/projects"
-                  className="group inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500
-                    text-white font-semibold px-5 py-3 rounded-xl text-sm
-                    shadow-[0_4px_15px_rgba(88,166,255,0.25)] hover:shadow-[0_8px_22px_rgba(88,166,255,0.4)]
-                    transition-all duration-300"
-                >
-                  View Projects
-                  <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </MagneticButton>
+            <MagneticButton>
+              <Link
+                to="/projects"
+                className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500
+                  text-white font-bold px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm
+                  shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:shadow-[0_0_25px_rgba(56,189,248,0.55)] transition-all duration-300 border border-cyan-400/30"
+              >
+                View Projects
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </MagneticButton>
 
-              <MagneticButton>
-                <Link
-                  to="/contact"
-                  className="group inline-flex items-center gap-2 bg-[#11151c] text-heading font-semibold
-                    px-5 py-3 rounded-xl text-sm border border-white/5
-                    hover:border-white/15 hover:bg-[#1a202c] transition-all duration-300 shadow-lg"
-                >
-                  Contact Me <Mail size={15} />
-                </Link>
-              </MagneticButton>
+            <MagneticButton>
+              <Link
+                to="/contact"
+                className="group inline-flex items-center gap-2 bg-[#11151c]/90 text-heading font-semibold
+                  px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-white/15
+                  hover:border-white/30 hover:bg-[#1a2233] transition-all duration-300 shadow-md backdrop-blur-md"
+              >
+                Contact Me <Mail size={14} className="text-cyan-400" />
+              </Link>
+            </MagneticButton>
 
-              <MagneticButton>
-                <button
-                  onClick={() => setResumeOpen(true)}
-                  className="group inline-flex items-center gap-2 bg-[#11151c] text-secondary hover:text-heading font-semibold
-                    px-5 py-3 rounded-xl text-sm border border-white/5
-                    hover:border-white/15 hover:bg-[#1a202c] hover:text-white transition-all duration-300 shadow-lg cursor-pointer"
-                >
-                  Resume <Download size={15} className="group-hover:translate-y-0.5 transition-transform" />
-                </button>
-              </MagneticButton>
-            </div>
-            
-            <div className="flex">
-              <MagneticButton>
-                <Link
-                  to="/profiles"
-                  className="group inline-flex items-center gap-2 bg-[#11151c] text-secondary hover:text-heading font-semibold
-                    px-5 py-3 rounded-xl text-sm border border-white/5
-                    hover:border-white/15 hover:bg-[#1a202c] hover:text-white transition-all duration-300 shadow-lg"
-                >
-                  Coding Profiles <Code2 size={15} className="text-orange-400 group-hover:text-green-400 transition-colors duration-500" />
-                </Link>
-              </MagneticButton>
-            </div>
+            <MagneticButton>
+              <button
+                onClick={() => setResumeOpen(true)}
+                className="group inline-flex items-center gap-2 bg-[#11151c]/90 text-secondary hover:text-heading font-semibold
+                  px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-white/15
+                  hover:border-white/30 hover:bg-[#1a2233] hover:text-white transition-all duration-300 shadow-md backdrop-blur-md cursor-pointer"
+              >
+                Resume <Download size={14} className="group-hover:translate-y-0.5 transition-transform text-amber-400" />
+              </button>
+            </MagneticButton>
           </motion.div>
         </div>
 
-        {/* ── RIGHT: Photo + 3D Tilt + Neon Ring + horizontal stats below ── */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-          className="relative flex flex-col items-center justify-center gap-5 lg:gap-6 py-6 w-full lg:w-[46vw] flex-shrink-0 z-10"
-        >
-          {/* Layered Depth: Profile Photo with 3D Parallax Tilt + Animated Neon Ring */}
+        {/* ── 6. CENTER COLUMN: Profile (opacity: 0 -> 1, scale: 0.98 -> 1, static & sharp) ── */}
+        <div className="lg:col-span-4 flex items-center justify-center relative z-20 py-4 lg:py-0 order-1 lg:order-2 mx-auto w-full">
           <motion.div
             ref={photoContainerRef}
+            initial={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.45, delay: 0.60, ease: 'easeOut' }}
             style={{
-              x: shouldReduceMotion ? 0 : photoX,
-              y: shouldReduceMotion ? 0 : photoY,
+              x: shouldReduceMotion ? 0 : photoParallaxX,
+              y: shouldReduceMotion ? 0 : photoParallaxY,
               rotateX: shouldReduceMotion ? 0 : rotateX,
               rotateY: shouldReduceMotion ? 0 : rotateY,
               transformPerspective: 1000,
               transformStyle: 'preserve-3d',
             }}
-            className="relative will-change-transform"
+            className="relative flex items-center justify-center will-change-transform"
           >
-            <div
-              className="relative"
-              style={{
-                width:  'min(380px, calc(100vw - 48px))',
-                height: 'min(380px, calc(100vw - 48px))',
-              }}
-            >
-              {/* Dynamic Aura Glow (reacts to proximity) */}
-              <motion.div
+            {/* Maximized Portrait Studio Framing with Original Siri Ring */}
+            <div className="relative w-[300px] h-[370px] sm:w-[370px] sm:h-[450px] md:w-[420px] md:h-[500px] lg:w-[450px] lg:h-[540px] flex items-center justify-center mx-auto">
+
+              {/* 0. Wide Scattered Cosmic Stardust Aura */}
+              <div
                 style={{
-                  x: shouldReduceMotion ? 0 : ringX,
-                  y: shouldReduceMotion ? 0 : ringY,
-                  scale: shouldReduceMotion ? 1 : ringGlowScale,
-                  opacity: shouldReduceMotion ? 0.4 : ringGlowOpacity,
+                  background: 'radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.35) 0%, rgba(129, 140, 248, 0.22) 32%, rgba(168, 85, 247, 0.18) 50%, rgba(236, 72, 153, 0.1) 68%, transparent 80%)',
                 }}
-                className="absolute -inset-10 rounded-full bg-gradient-to-br from-blue-500/40 via-cyan-400/25 to-purple-600/35 blur-3xl pointer-events-none transition-opacity duration-300"
+                className="absolute top-[8%] sm:top-[10%] md:top-[11%] lg:top-[12%] left-[53%] -translate-x-1/2 w-[480px] h-[480px] sm:w-[560px] sm:h-[560px] md:w-[640px] md:h-[640px] lg:w-[700px] lg:h-[700px] rounded-full pointer-events-none z-0 blur-[75px] opacity-85"
               />
 
-              {/* Animated Neon Ring (Slow, elegant 8.5s rotation with cool color transitions) */}
-              <motion.div
-                animate={shouldReduceMotion ? {} : { rotate: 360 }}
-                transition={{ duration: 8.5, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-0 rounded-full"
+              {/* 1. Ambient Pulsing Neon Glow (Scattered Diffusion) */}
+              <div
                 style={{
-                  background: 'conic-gradient(from 0deg, #38bdf8 0%, #58a6ff 25%, #bc8cff 55%, #0d1117 72%, #38bdf8 100%)',
-                  padding: 4,
-                  boxShadow: '0 0 25px rgba(88, 166, 255, 0.25), inset 0 0 15px rgba(188, 140, 255, 0.2)',
+                  background: 'conic-gradient(from 180deg at 50% 50%, #00f0ff 0%, #38bdf8 20%, #818cf8 40%, #a855f7 60%, #ec4899 80%, #00f0ff 100%)',
+                }}
+                className="absolute top-[10%] sm:top-[12%] md:top-[13%] lg:top-[14%] left-[53%] -translate-x-1/2 w-[390px] h-[390px] sm:w-[460px] sm:h-[460px] md:w-[530px] md:h-[530px] lg:w-[590px] lg:h-[590px] rounded-full pointer-events-none z-0 blur-[50px] opacity-85"
+              />
+
+              {/* 2. Full Multi-Hue Neon Ring */}
+              <div
+                className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-0"
+                style={{
+                  background: 'conic-gradient(from 0deg, #00f0ff 0%, #38bdf8 18%, #818cf8 38%, #a855f7 58%, #ec4899 78%, #00f0ff 100%)',
+                  padding: '4px',
+                  boxShadow: '0 0 60px rgba(56, 189, 248, 0.55), 0 0 45px rgba(168, 85, 247, 0.4), inset 0 0 35px rgba(56, 189, 248, 0.35)',
                 }}
               >
-                <div className="w-full h-full rounded-full bg-[#0d1117]" />
-              </motion.div>
-
-              {/* Photo */}
-              <div className="absolute inset-[4px] rounded-full overflow-hidden z-10 border-4 border-[#0d1117] shadow-inner">
-                <img
-                  src="/profile.jpg"
-                  alt="Ruthragurubaran"
-                  className="w-full h-full object-cover object-top transition-transform duration-500"
-                  onError={e => {
-                    e.target.src = 'https://ui-avatars.com/api/?name=Ruthragurubaran&size=600&background=0D8ABC&color=fff';
+                <div
+                  className="w-full h-full rounded-full"
+                  style={{
+                    background: 'radial-gradient(circle at 50% 35%, rgba(56, 189, 248, 0.4) 0%, rgba(129, 140, 248, 0.28) 28%, rgba(168, 85, 247, 0.16) 52%, rgba(13, 17, 23, 0.94) 75%, #090d14 100%)',
                   }}
                 />
               </div>
 
-              {/* Open to Work badge */}
-              <motion.div
-                animate={shouldReduceMotion ? {} : { y: [0, -7, 0] }}
-                transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap z-20
-                  bg-[#11151c] border border-green-500/30 rounded-full px-6 py-2.5
-                  flex items-center gap-2.5 shadow-xl hover:border-green-400/50 transition-colors"
-              >
-                <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.9)]" />
-                <span className="text-sm font-bold text-green-300">Open to Work</span>
-              </motion.div>
+              {/* 3. Maximized Silhouette Portrait (Strictly sharp & stable) */}
+              <div className="relative z-10 w-full h-full flex items-end justify-center pointer-events-none select-none overflow-visible mx-auto">
+                <img
+                  src="/hero-portrait.png"
+                  alt="Ruthragurubaran"
+                  className="w-auto h-[125%] sm:h-[128%] md:h-[131%] lg:h-[133%] max-w-none object-contain scale-[1.10] sm:scale-[1.14] md:scale-[1.18] lg:scale-[1.20] translate-y-1 mx-auto"
+                  style={{
+                    filter: 'drop-shadow(0 0 35px rgba(56,189,248,0.3)) drop-shadow(0 20px 40px rgba(0,0,0,0.8))',
+                    maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.8) 78%, rgba(0,0,0,0.4) 86%, rgba(0,0,0,0) 96%)',
+                    WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.8) 78%, rgba(0,0,0,0.4) 86%, rgba(0,0,0,0) 96%)',
+                  }}
+                  onError={e => {
+                    e.target.src = '/profile.png';
+                  }}
+                />
+              </div>
+
             </div>
           </motion.div>
+        </div>
 
-          {/* Stats Card: Layered Depth Parallax (4-6px subtle movement) */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.65, duration: 0.5 }}
-            style={{
-              width: 'min(380px, calc(100vw - 48px))',
-              x: shouldReduceMotion ? 0 : statsX,
-              y: shouldReduceMotion ? 0 : statsY,
-            }}
-            className="flex flex-row items-stretch w-full bg-[#11151c] border border-white/5 shadow-xl rounded-2xl overflow-hidden will-change-transform mt-3"
-          >
-            {stats.map((s, i) => {
-              const Icon = s.icon;
-              return (
-                <motion.div
-                  key={s.label}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7 + i * 0.08 }}
-                  whileHover={{ backgroundColor: 'rgba(255,255,255,0.04)' }}
-                  className={`flex-1 flex flex-col items-center justify-center gap-2 py-5 px-3
-                    cursor-default transition-colors duration-200 group
-                    ${i < stats.length - 1 ? 'border-r border-white/8' : ''}`}
-                >
-                  <div className={`p-2 rounded-xl ${s.bg} border ${s.border} group-hover:scale-110 transition-transform duration-200`}>
-                    <Icon size={16} className={s.iconColor} />
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-baseline justify-center gap-0.5 leading-none">
-                      <span className="text-xl font-black text-heading">{s.value}</span>
-                      {s.unit && <span className="text-[10px] font-bold text-secondary ml-0.5">{s.unit}</span>}
-                    </div>
-                    <p className="text-[9px] font-semibold text-secondary uppercase tracking-widest mt-1.5 leading-tight">
-                      {s.label}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+        {/* ── 7. RIGHT COLUMN: HUD (opacity: 0 -> 1, translateY: 10px -> 0, static) ── */}
+        <motion.div
+          initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.70, ease: 'easeOut' }}
+          style={shouldReduceMotion ? {} : { x: floatBadgeX, y: floatBadgeY }}
+          className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center z-20 py-4 lg:py-0 order-3 w-full"
+        >
+          <SpatialGlassDeck3D />
         </motion.div>
+
       </div>
+
+      {/* ════════════════════════════════════════
+          4. BOTTOM STATUS FOOTER BAR
+      ════════════════════════════════════════ */}
+      <motion.div
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 0.80, ease: 'easeOut' }}
+        className="w-full flex items-center justify-between z-10 border-t border-white/10 pt-3 font-mono text-xs text-secondary"
+      >
+        <div className="flex items-center gap-2">
+          <Globe size={13} className="text-cyan-400" />
+          <span>AVAILABLE WORLDWIDE & REMOTE</span>
+        </div>
+        <div className="flex items-center gap-2 text-cyan-400/80">
+          <span>COIMBATORE, INDIA</span>
+          <span>•</span>
+          <span className="text-green-400">IST (UTC +5:30)</span>
+        </div>
+      </motion.div>
 
       {/* Resume Modal */}
       <ResumeModal isOpen={resumeOpen} onClose={() => setResumeOpen(false)} />

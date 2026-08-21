@@ -29,23 +29,22 @@ const Navbar = () => {
   }, []);
 
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed w-full top-0 z-40 transition-all duration-300 ${
-        scrolled ? 'glass py-2.5 shadow-md' : 'bg-transparent py-4'
-      }`}
+      className={`fixed w-full top-0 z-40 transition-all duration-300 ${scrolled ? 'glass py-2.5 shadow-md' : 'bg-transparent py-4'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           onClick={() => setIsOpen(false)}
           className="flex items-center gap-3 text-xl md:text-2xl font-bold tracking-tighter gradient-text group"
         >
-          <img 
-            src="/profile.jpg" 
-            alt="Logo" 
+          <img
+            src="/profile.jpg"
+            alt="Logo"
             className="w-10 h-10 rounded-full border-2 border-blue-500/50 object-cover group-hover:border-blue-400 transition-colors"
             onError={(e) => {
               e.target.src = "https://ui-avatars.com/api/?name=Ruthragurubaran&size=100&background=0D8ABC&color=fff";
@@ -60,18 +59,16 @@ const Navbar = () => {
             <NavLink
               key={link.name}
               to={link.path}
-              className={({ isActive }) => 
-                `text-sm font-medium transition-colors relative group ${
-                  isActive ? 'text-heading font-semibold' : 'text-secondary hover:text-heading'
+              className={({ isActive }) =>
+                `text-sm font-medium transition-colors relative group ${isActive ? 'text-heading font-semibold' : 'text-secondary hover:text-heading'
                 }`
               }
             >
               {({ isActive }) => (
                 <>
                   {link.name}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
-                    isActive ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}></span>
+                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}></span>
                 </>
               )}
             </NavLink>
@@ -90,7 +87,7 @@ const Navbar = () => {
         {/* Mobile Nav Toggle */}
         <div className="md:hidden flex items-center gap-4">
           <ThemeToggle />
-          <button 
+          <button
             onClick={() => setIsOpen(!isOpen)}
             className="text-gray-300 hover:text-white transition-colors cursor-pointer"
           >
@@ -115,8 +112,7 @@ const Navbar = () => {
                   to={link.path}
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
-                    `text-lg font-medium transition-colors w-full text-center py-2 block ${
-                      isActive ? 'text-heading font-semibold bg-white/5' : 'text-secondary hover:text-heading'
+                    `text-lg font-medium transition-colors w-full text-center py-2 block ${isActive ? 'text-heading font-semibold bg-white/5' : 'text-secondary hover:text-heading'
                     }`
                   }
                 >
