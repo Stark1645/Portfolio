@@ -1,7 +1,75 @@
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Github, Code2, Trophy, Flame, Calendar, Activity, X, RefreshCw, Star, BookOpen, CheckCircle2, Award, Zap, ShieldCheck } from 'lucide-react';
 import axios from 'axios';
+
+// =========================================================================
+// 3D Spatial Holographic Tilt Card with Specular Reflection & Glow
+// =========================================================================
+const Tilt3DCard = ({ children, className = '', glowColor = 'rgba(56, 189, 248, 0.4)', delay = 0 }) => {
+  const cardRef = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const glareX = useMotionValue(50);
+  const glareY = useMotionValue(50);
+  const glareOpacity = useMotionValue(0);
+
+  const springConfig = { damping: 22, stiffness: 260, mass: 0.12 };
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), springConfig);
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), springConfig);
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const xPos = (e.clientX - rect.left) / rect.width;
+    const yPos = (e.clientY - rect.top) / rect.height;
+    
+    x.set(xPos - 0.5);
+    y.set(yPos - 0.5);
+    glareX.set(xPos * 100);
+    glareY.set(yPos * 100);
+    glareOpacity.set(0.22);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+    glareOpacity.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 35, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: 'preserve-3d',
+        perspective: 1000,
+      }}
+      whileHover={{ scale: 1.025, zIndex: 30 }}
+      className={`relative rounded-2xl transition-shadow duration-300 flex flex-col ${className}`}
+    >
+      {/* Dynamic Specular Glare Reflection */}
+      <motion.div
+        style={{
+          background: useTransform(
+            [glareX, glareY],
+            ([gx, gy]) => `radial-gradient(circle 240px at ${gx}% ${gy}%, rgba(255, 255, 255, 0.18), transparent 70%)`
+          ),
+          opacity: glareOpacity,
+        }}
+        className="absolute inset-0 rounded-2xl pointer-events-none z-30 transition-opacity duration-300"
+      />
+      {children}
+    </motion.div>
+  );
+};
 
 const fallbackCalendar = (() => {
   const calendar = {};
@@ -580,455 +648,439 @@ const CodingProfiles = () => {
         </p>
       </motion.div>
 
-      {/* ── 4 Main Profile Cards Grid ── */}
+      {/* ── 4 Main Profile Cards Grid with 3D Spatial Holographic Tilt ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 relative z-10 mb-16">
         
         {/* ── 1. GitHub Card ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-blue-500/30 transition-all shadow-xl"
-        >
-          <div className="absolute -top-16 -left-16 w-48 h-48 bg-blue-600/10 rounded-full blur-[50px] group-hover:bg-blue-600/25 transition-colors duration-500" />
+        <Tilt3DCard glowColor="rgba(56, 189, 248, 0.4)" delay={0}>
+          <div className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/10 hover:border-blue-400/50 transition-all shadow-xl h-full bg-[#0d121c]/80 backdrop-blur-xl">
+            <div className="absolute -top-16 -left-16 w-48 h-48 bg-blue-600/15 rounded-full blur-[50px] group-hover:bg-blue-600/35 transition-colors duration-500 pointer-events-none" />
 
-          <div className="z-10 flex flex-col h-full gap-5">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/40 shadow-[0_0_16px_rgba(88,166,255,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                  <img 
-                    src={ghData?.avatar_url || "https://avatars.githubusercontent.com/u/224800156"} 
-                    alt="GitHub Avatar" 
-                    className="w-full h-full object-cover" 
-                    onError={e => { e.target.src = '/assets/avatars/github_avatar.png'; }}
-                  />
+            <div className="z-10 flex flex-col h-full gap-5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/50 shadow-[0_0_20px_rgba(88,166,255,0.4)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                    <img 
+                      src={ghData?.avatar_url || "https://avatars.githubusercontent.com/u/224800156"} 
+                      alt="GitHub Avatar" 
+                      className="w-full h-full object-cover" 
+                      onError={e => { e.target.src = '/assets/avatars/github_avatar.png'; }}
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white leading-tight">GitHub</h3>
+                    <a href="https://github.com/Stark1645" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:underline">
+                      @Stark1645
+                    </a>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white leading-tight">GitHub</h3>
-                  <a href="https://github.com/Stark1645" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:underline">
-                    @Stark1645
-                  </a>
+
+                <button
+                  onClick={fetchGitHub}
+                  disabled={ghFetching}
+                  className="p-2 rounded-lg glass border border-white/10 hover:border-blue-500/30 transition-all cursor-pointer"
+                  title="Refresh GitHub Stats"
+                >
+                  <RefreshCw size={14} className={`text-blue-400 ${ghFetching ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { label: 'Repos',     value: ghData?.repoCount   ?? ghData?.public_repos ?? '18' },
+                  { label: 'Followers', value: ghData?.followers   ?? '2' },
+                  { label: 'Stars',     value: ghData?.totalStars  ?? '0' },
+                ].map(s => (
+                  <div key={s.label} className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/5">
+                    <span className="text-xl font-black text-white leading-none">{s.value}</span>
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wider mt-1">{s.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {ghData?.topLangs?.length > 0 && (
+                <div className="space-y-2.5">
+                  {ghData.topLangs.map(([lang, count]) => {
+                    const total = ghData.topLangs.reduce((s,[,c]) => s + c, 0);
+                    const pct = Math.round((count / total) * 100);
+                    const colors = { Java: 'bg-orange-500', JavaScript: 'bg-yellow-400', Python: 'bg-blue-400', TypeScript: 'bg-blue-500', HTML: 'bg-red-400', CSS: 'bg-purple-400' };
+                    const bar = colors[lang] || 'bg-gray-400';
+                    return (
+                      <div key={lang}>
+                        <div className="flex justify-between text-xs mb-1 font-medium">
+                          <span className="text-gray-300">{lang}</span>
+                          <span className="text-gray-500">{pct}%</span>
+                        </div>
+                        <div className="w-full bg-gray-800/50 rounded-full h-2 overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${pct}%` }}
+                            transition={{ duration: 1, ease: 'easeOut' }}
+                            className={`h-2 rounded-full ${bar}`}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="flex items-center gap-2 mt-auto">
+                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+                <span className="text-[10px] text-gray-400 font-medium">
+                  Live · Auto-refreshes every 60s
+                </span>
+              </div>
+
+              <a
+                href="https://github.com/Stark1645"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-blue-500/25 w-full justify-center text-sm"
+              >
+                <Github size={14} /> View GitHub Profile
+              </a>
+            </div>
+          </div>
+        </Tilt3DCard>
+
+        {/* ── 2. LeetCode Card ── */}
+        <Tilt3DCard glowColor="rgba(249, 115, 22, 0.4)" delay={0.12}>
+          <div className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/10 hover:border-orange-500/50 transition-all shadow-xl h-full bg-[#0d121c]/80 backdrop-blur-xl">
+            <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-orange-600/20 rounded-full blur-[50px] group-hover:bg-orange-600/40 transition-colors duration-500 pointer-events-none" />
+            
+            <div className="z-10 flex flex-col h-full">
+              <div className="flex items-center justify-between mb-4 gap-2">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-orange-500/60 shadow-[0_0_20px_rgba(249,115,22,0.4)] group-hover:scale-110 group-hover:border-orange-400 transition-all duration-300 flex-shrink-0">
+                      <img 
+                        src={lcProfile?.avatar || "/assets/avatars/leetcode_avatar.png"} 
+                        alt="LeetCode Avatar" 
+                        className="w-full h-full object-cover" 
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <span className="absolute -bottom-1 -right-1 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-full p-1 border-2 border-[#0d1117] shadow-lg animate-pulse">
+                      <Flame size={12} className="text-yellow-300" />
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-bold text-white leading-tight flex items-center gap-1.5">
+                      LeetCode
+                    </h3>
+                    <a href="https://leetcode.com/u/Ruthragurubaran-J/" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-400 hover:underline block truncate max-w-[120px]">
+                      @Ruthragurubaran-J
+                    </a>
+                    <span className="inline-block text-[9px] font-bold px-2 py-0.5 mt-1 bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30 rounded text-orange-200">
+                      Rank #{lcData.ranking ? lcData.ranking.toLocaleString() : '736,876'}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={fetchLeetCode}
+                  disabled={lcFetching}
+                  className="p-2 rounded-lg glass border border-white/10 hover:border-orange-500/40 transition-all cursor-pointer"
+                  title="Refresh LeetCode Stats"
+                >
+                  <RefreshCw size={14} className={`text-orange-400 ${lcFetching ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+
+              <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-orange-500/15 via-amber-500/15 to-red-500/15 border border-orange-500/30 flex items-center justify-between shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-orange-500/25 border border-orange-500/40 flex items-center justify-center shadow-md">
+                    <Flame size={22} className="text-orange-400 animate-bounce" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-black text-white leading-none flex items-baseline gap-1">
+                      <span>{lcData.currentStreak || 225}</span>
+                      <span className="text-xs font-bold text-orange-300">Days</span>
+                    </div>
+                    <div className="text-[10px] font-extrabold text-orange-400 uppercase tracking-wider mt-0.5 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
+                      Active Daily Streak
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right pl-2 border-l border-white/10">
+                  <div className="text-2xl font-black text-white leading-none">{lcData.totalSolved || 255}</div>
+                  <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Problems</p>
+                  <p className="text-[8px] font-semibold text-green-400 mt-0.5">{lcBadges.length} Badges</p>
                 </div>
               </div>
 
-              <button
-                onClick={fetchGitHub}
-                disabled={ghFetching}
-                className="p-2 rounded-lg glass border border-white/10 hover:border-blue-500/30 transition-all cursor-pointer"
-                title="Refresh GitHub Stats"
-              >
-                <RefreshCw size={14} className={`text-blue-400 ${ghFetching ? 'animate-spin' : ''}`} />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { label: 'Repos',     value: ghData?.repoCount   ?? ghData?.public_repos ?? '18' },
-                { label: 'Followers', value: ghData?.followers   ?? '2' },
-                { label: 'Stars',     value: ghData?.totalStars  ?? '0' },
-              ].map(s => (
-                <div key={s.label} className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/5">
-                  <span className="text-xl font-black text-white leading-none">{s.value}</span>
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wider mt-1">{s.label}</span>
+              <div className="space-y-3 flex-grow">
+                <div>
+                  <div className="flex justify-between text-xs mb-1 font-semibold">
+                    <span className="text-green-400 flex items-center gap-1"><Zap size={12} /> Easy</span>
+                    <span className="text-gray-300 font-bold">{lcData.easySolved || 85} <span className="text-gray-500">/ {lcData.totalEasy || 958}</span></span>
+                  </div>
+                  <div className="w-full bg-gray-800/60 rounded-full h-2 overflow-hidden p-0.5 border border-white/5">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${((lcData.easySolved || 85) / (lcData.totalEasy || 958)) * 100}%` }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                      className="bg-gradient-to-r from-green-500 to-emerald-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"
+                    />
+                  </div>
                 </div>
-              ))}
-            </div>
 
-            {ghData?.topLangs?.length > 0 && (
-              <div className="space-y-2.5">
-                {ghData.topLangs.map(([lang, count]) => {
-                  const total = ghData.topLangs.reduce((s,[,c]) => s + c, 0);
-                  const pct = Math.round((count / total) * 100);
-                  const colors = { Java: 'bg-orange-500', JavaScript: 'bg-yellow-400', Python: 'bg-blue-400', TypeScript: 'bg-blue-500', HTML: 'bg-red-400', CSS: 'bg-purple-400' };
-                  const bar = colors[lang] || 'bg-gray-400';
+                <div>
+                  <div className="flex justify-between text-xs mb-1 font-semibold">
+                    <span className="text-yellow-400 flex items-center gap-1"><Trophy size={12} /> Medium</span>
+                    <span className="text-gray-300 font-bold">{lcData.mediumSolved || 117} <span className="text-gray-500">/ {lcData.totalMedium || 2089}</span></span>
+                  </div>
+                  <div className="w-full bg-gray-800/60 rounded-full h-2 overflow-hidden p-0.5 border border-white/5">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${((lcData.mediumSolved || 117) / (lcData.totalMedium || 2089)) * 100}%` }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                      className="bg-gradient-to-r from-yellow-500 to-amber-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(234,179,8,0.5)]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs mb-1 font-semibold">
+                    <span className="text-red-400 flex items-center gap-1"><Flame size={12} /> Hard</span>
+                    <span className="text-gray-300 font-bold">{lcData.hardSolved || 50} <span className="text-gray-500">/ {lcData.totalHard || 962}</span></span>
+                  </div>
+                  <div className="w-full bg-gray-800/60 rounded-full h-2 overflow-hidden p-0.5 border border-white/5">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${((lcData.hardSolved || 50) / (lcData.totalHard || 962)) * 100}%` }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                      className="bg-gradient-to-r from-red-500 to-rose-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.5)]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/5">
+                <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse shadow-[0_0_8px_rgba(249,115,22,0.8)]" />
+                <span className="text-[10px] text-gray-400 font-medium">
+                  {lcLastUpdated ? `Live · Updated ${lcLastUpdated.toLocaleTimeString()}` : 'Live · Auto-refreshes every 60s'}
+                </span>
+              </div>
+              
+              <div className="mt-3 flex flex-col gap-2 w-full">
+                <button 
+                  onClick={() => setShowLcModal(true)}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-orange-500/25 w-full justify-center cursor-pointer text-xs"
+                >
+                  <Activity size={14} /> Open Live Activity & Heatmap
+                </button>
+              </div>
+            </div>
+          </div>
+        </Tilt3DCard>
+
+        {/* ── 3. HackerRank Card ── */}
+        <Tilt3DCard glowColor="rgba(34, 197, 94, 0.4)" delay={0.24}>
+          <div className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/10 hover:border-green-500/50 transition-all shadow-xl h-full bg-[#0d121c]/80 backdrop-blur-xl">
+            <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-green-600/20 rounded-full blur-[50px] group-hover:bg-green-600/40 transition-colors duration-500 pointer-events-none" />
+            
+            <div className="z-10 flex flex-col h-full">
+              <div className="flex items-center justify-between mb-5 gap-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-green-500/60 shadow-[0_0_20px_rgba(34,197,94,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                    <img 
+                      src={hrData?.avatar || "/assets/avatars/hackerrank_avatar.png"} 
+                      alt="HackerRank Avatar" 
+                      className="w-full h-full object-cover" 
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white leading-tight flex items-center gap-1">
+                      HackerRank <CheckCircle2 size={14} className="text-green-400" />
+                    </h3>
+                    <a href="https://www.hackerrank.com/profile/gurudaya49" target="_blank" rel="noopener noreferrer" className="text-xs text-green-400 hover:underline block truncate max-w-[120px]">
+                      @gurudaya49
+                    </a>
+                    <span className="inline-block text-[9px] font-bold px-2 py-0.5 mt-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded text-green-300 uppercase tracking-wider">
+                      Gold Badge Verified
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={fetchHackerRank}
+                  disabled={hrFetching}
+                  className="p-2 rounded-lg glass border border-white/10 hover:border-green-500/40 transition-all cursor-pointer"
+                  title="Refresh HackerRank Badges"
+                >
+                  <RefreshCw size={14} className={`text-green-400 ${hrFetching ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+
+              <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-teal-500/10 border border-green-500/20 flex items-center justify-between shadow-inner">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-xl bg-green-500/20 border border-green-500/40 flex items-center justify-center">
+                    <Award size={20} className="text-green-400" />
+                  </div>
+                  <div>
+                    <div className="text-xl font-black text-white leading-none">
+                      4-Star Gold
+                    </div>
+                    <div className="text-[10px] font-bold text-green-300 uppercase tracking-wider mt-0.5">
+                      Java Proficiency
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-2xl font-extrabold text-white leading-none">
+                    {hrBadges.reduce((acc, curr) => acc + (curr.solved || 0), 0) || "38+"}
+                  </span>
+                  <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Solved</p>
+                </div>
+              </div>
+
+              <div className="space-y-3.5 flex-grow">
+                {hrBadges.map((badge, idx) => {
+                  const badgeStars = badge.stars || 4;
                   return (
-                    <div key={lang}>
-                      <div className="flex justify-between text-xs mb-1 font-medium">
-                        <span className="text-gray-300">{lang}</span>
-                        <span className="text-gray-500">{pct}%</span>
+                    <div key={idx} className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:border-green-500/30 transition-all">
+                      <div className="flex justify-between items-center text-xs mb-1.5 font-bold">
+                        <span className="text-green-300 flex items-center gap-1.5">
+                          <Trophy size={13} className="text-yellow-400" />
+                          {badge.badge_name || badge.name || "Java"}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          {[...Array(5)].map((_, starIdx) => (
+                            <Star
+                              key={starIdx}
+                              size={12}
+                              className={starIdx < badgeStars ? "text-yellow-400 fill-yellow-400" : "text-gray-600"}
+                            />
+                          ))}
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-800/50 rounded-full h-2 overflow-hidden">
+
+                      <div className="w-full bg-gray-800/60 rounded-full h-1.5 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
-                          whileInView={{ width: `${pct}%` }}
+                          whileInView={{ width: `${(badgeStars / 5) * 100}%` }}
                           transition={{ duration: 1, ease: 'easeOut' }}
-                          className={`h-2 rounded-full ${bar}`}
+                          className="bg-gradient-to-r from-green-500 to-emerald-400 h-1.5 rounded-full"
                         />
                       </div>
                     </div>
                   );
                 })}
               </div>
-            )}
 
-            <div className="flex items-center gap-2 mt-auto">
-              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
-              <span className="text-[10px] text-gray-400 font-medium">
-                Live · Auto-refreshes every 60s
-              </span>
-            </div>
-
-            <a
-              href="https://github.com/Stark1645"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold transition-transform transform hover:-translate-y-1 shadow-lg shadow-blue-500/25 w-full justify-center text-sm"
-            >
-              <Github size={14} /> View GitHub Profile
-            </a>
-          </div>
-        </motion.div>
-
-        {/* ── 2. LeetCode Card ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-orange-500/40 transition-all shadow-xl"
-        >
-          <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-orange-600/15 rounded-full blur-[50px] group-hover:bg-orange-600/30 transition-colors duration-500" />
-          
-          <div className="z-10 flex flex-col h-full">
-            <div className="flex items-center justify-between mb-4 gap-2">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-orange-500/60 shadow-[0_0_20px_rgba(249,115,22,0.4)] group-hover:scale-110 group-hover:border-orange-400 transition-all duration-300 flex-shrink-0">
-                    <img 
-                      src={lcProfile?.avatar || "/assets/avatars/leetcode_avatar.png"} 
-                      alt="LeetCode Avatar" 
-                      className="w-full h-full object-cover" 
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                  <span className="absolute -bottom-1 -right-1 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-full p-1 border-2 border-[#0d1117] shadow-lg animate-pulse">
-                    <Flame size={12} className="text-yellow-300" />
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-bold text-white leading-tight flex items-center gap-1.5">
-                    LeetCode
-                  </h3>
-                  <a href="https://leetcode.com/u/Ruthragurubaran-J/" target="_blank" rel="noopener noreferrer" className="text-xs text-orange-400 hover:underline block truncate max-w-[120px]">
-                    @Ruthragurubaran-J
-                  </a>
-                  <span className="inline-block text-[9px] font-bold px-2 py-0.5 mt-1 bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30 rounded text-orange-200">
-                    Rank #{lcData.ranking ? lcData.ranking.toLocaleString() : '736,876'}
-                  </span>
-                </div>
-              </div>
-
-              <button
-                onClick={fetchLeetCode}
-                disabled={lcFetching}
-                className="p-2 rounded-lg glass border border-white/10 hover:border-orange-500/40 transition-all cursor-pointer"
-                title="Refresh LeetCode Stats"
-              >
-                <RefreshCw size={14} className={`text-orange-400 ${lcFetching ? 'animate-spin' : ''}`} />
-              </button>
-            </div>
-
-            <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-orange-500/15 via-amber-500/15 to-red-500/15 border border-orange-500/30 flex items-center justify-between shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-orange-500/25 border border-orange-500/40 flex items-center justify-center shadow-md">
-                  <Flame size={22} className="text-orange-400 animate-bounce" />
-                </div>
-                <div>
-                  <div className="text-2xl font-black text-white leading-none flex items-baseline gap-1">
-                    <span>{lcData.currentStreak || 225}</span>
-                    <span className="text-xs font-bold text-orange-300">Days</span>
-                  </div>
-                  <div className="text-[10px] font-extrabold text-orange-400 uppercase tracking-wider mt-0.5 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
-                    Active Daily Streak
-                  </div>
-                </div>
-              </div>
-              <div className="text-right pl-2 border-l border-white/10">
-                <div className="text-2xl font-black text-white leading-none">{lcData.totalSolved || 255}</div>
-                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Problems</p>
-                <p className="text-[8px] font-semibold text-green-400 mt-0.5">{lcBadges.length} Badges</p>
-              </div>
-            </div>
-
-            <div className="space-y-3 flex-grow">
-              <div>
-                <div className="flex justify-between text-xs mb-1 font-semibold">
-                  <span className="text-green-400 flex items-center gap-1"><Zap size={12} /> Easy</span>
-                  <span className="text-gray-300 font-bold">{lcData.easySolved || 85} <span className="text-gray-500">/ {lcData.totalEasy || 958}</span></span>
-                </div>
-                <div className="w-full bg-gray-800/60 rounded-full h-2 overflow-hidden p-0.5 border border-white/5">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${((lcData.easySolved || 85) / (lcData.totalEasy || 958)) * 100}%` }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="bg-gradient-to-r from-green-500 to-emerald-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs mb-1 font-semibold">
-                  <span className="text-yellow-400 flex items-center gap-1"><Trophy size={12} /> Medium</span>
-                  <span className="text-gray-300 font-bold">{lcData.mediumSolved || 117} <span className="text-gray-500">/ {lcData.totalMedium || 2089}</span></span>
-                </div>
-                <div className="w-full bg-gray-800/60 rounded-full h-2 overflow-hidden p-0.5 border border-white/5">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${((lcData.mediumSolved || 117) / (lcData.totalMedium || 2089)) * 100}%` }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="bg-gradient-to-r from-yellow-500 to-amber-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(234,179,8,0.5)]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs mb-1 font-semibold">
-                  <span className="text-red-400 flex items-center gap-1"><Flame size={12} /> Hard</span>
-                  <span className="text-gray-300 font-bold">{lcData.hardSolved || 50} <span className="text-gray-500">/ {lcData.totalHard || 962}</span></span>
-                </div>
-                <div className="w-full bg-gray-800/60 rounded-full h-2 overflow-hidden p-0.5 border border-white/5">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${((lcData.hardSolved || 50) / (lcData.totalHard || 962)) * 100}%` }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="bg-gradient-to-r from-red-500 to-rose-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.5)]"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/5">
-              <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse shadow-[0_0_8px_rgba(249,115,22,0.8)]" />
-              <span className="text-[10px] text-gray-400 font-medium">
-                {lcLastUpdated ? `Live · Updated ${lcLastUpdated.toLocaleTimeString()}` : 'Live · Auto-refreshes every 60s'}
-              </span>
-            </div>
-            
-            <div className="mt-3 flex flex-col gap-2 w-full">
-              <button 
-                onClick={() => setShowLcModal(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-orange-500/25 w-full justify-center cursor-pointer text-xs"
-              >
-                <Activity size={14} /> Open Live Activity & Heatmap
-              </button>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* ── 3. HackerRank Card ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-green-500/40 transition-all shadow-xl"
-        >
-          <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-green-600/15 rounded-full blur-[50px] group-hover:bg-green-600/30 transition-colors duration-500" />
-          
-          <div className="z-10 flex flex-col h-full">
-            <div className="flex items-center justify-between mb-5 gap-2">
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-green-500/60 shadow-[0_0_20px_rgba(34,197,94,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                  <img 
-                    src={hrData?.avatar || "/assets/avatars/hackerrank_avatar.png"} 
-                    alt="HackerRank Avatar" 
-                    className="w-full h-full object-cover" 
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white leading-tight flex items-center gap-1">
-                    HackerRank <CheckCircle2 size={14} className="text-green-400" />
-                  </h3>
-                  <a href="https://www.hackerrank.com/profile/gurudaya49" target="_blank" rel="noopener noreferrer" className="text-xs text-green-400 hover:underline block truncate max-w-[120px]">
-                    @gurudaya49
-                  </a>
-                  <span className="inline-block text-[9px] font-bold px-2 py-0.5 mt-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded text-green-300 uppercase tracking-wider">
-                    Gold Badge Verified
-                  </span>
-                </div>
-              </div>
-
-              <button
-                onClick={fetchHackerRank}
-                disabled={hrFetching}
-                className="p-2 rounded-lg glass border border-white/10 hover:border-green-500/40 transition-all cursor-pointer"
-                title="Refresh HackerRank Badges"
-              >
-                <RefreshCw size={14} className={`text-green-400 ${hrFetching ? 'animate-spin' : ''}`} />
-              </button>
-            </div>
-
-            <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-teal-500/10 border border-green-500/20 flex items-center justify-between shadow-inner">
-              <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-xl bg-green-500/20 border border-green-500/40 flex items-center justify-center">
-                  <Award size={20} className="text-green-400" />
-                </div>
-                <div>
-                  <div className="text-xl font-black text-white leading-none">
-                    4-Star Gold
-                  </div>
-                  <div className="text-[10px] font-bold text-green-300 uppercase tracking-wider mt-0.5">
-                    Java Proficiency
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <span className="text-2xl font-extrabold text-white leading-none">
-                  {hrBadges.reduce((acc, curr) => acc + (curr.solved || 0), 0) || "38+"}
+              <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/5">
+                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+                <span className="text-[10px] text-gray-400 font-medium">
+                  {hrLastUpdated ? `Live · Updated ${hrLastUpdated.toLocaleTimeString()}` : 'Live · Auto-refreshes every 60s'}
                 </span>
-                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Solved</p>
               </div>
+
+              <a 
+                href="https://www.hackerrank.com/profile/gurudaya49" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-green-500/25 w-full justify-center text-xs"
+              >
+                <Award size={14} /> View HackerRank Profile
+              </a>
             </div>
-
-            <div className="space-y-3.5 flex-grow">
-              {hrBadges.map((badge, idx) => {
-                const badgeStars = badge.stars || 4;
-                return (
-                  <div key={idx} className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:border-green-500/30 transition-all">
-                    <div className="flex justify-between items-center text-xs mb-1.5 font-bold">
-                      <span className="text-green-300 flex items-center gap-1.5">
-                        <Trophy size={13} className="text-yellow-400" />
-                        {badge.badge_name || badge.name || "Java"}
-                      </span>
-                      <div className="flex items-center gap-1">
-                        {[...Array(5)].map((_, starIdx) => (
-                          <Star
-                            key={starIdx}
-                            size={12}
-                            className={starIdx < badgeStars ? "text-yellow-400 fill-yellow-400" : "text-gray-600"}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="w-full bg-gray-800/60 rounded-full h-1.5 overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${(badgeStars / 5) * 100}%` }}
-                        transition={{ duration: 1, ease: 'easeOut' }}
-                        className="bg-gradient-to-r from-green-500 to-emerald-400 h-1.5 rounded-full"
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/5">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
-              <span className="text-[10px] text-gray-400 font-medium">
-                {hrLastUpdated ? `Live · Updated ${hrLastUpdated.toLocaleTimeString()}` : 'Live · Auto-refreshes every 60s'}
-              </span>
-            </div>
-
-            <a 
-              href="https://www.hackerrank.com/profile/gurudaya49" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-green-500/25 w-full justify-center text-xs"
-            >
-              <Award size={14} /> View HackerRank Profile
-            </a>
           </div>
-        </motion.div>
+        </Tilt3DCard>
 
         {/* ── 4. Google Skills Card ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.45 }}
-          className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/5 hover:border-blue-400/30 transition-all shadow-xl"
-        >
-          <div
-            className="absolute -top-16 -right-16 w-56 h-56 rounded-full blur-[60px] transition-all duration-500 opacity-60 group-hover:opacity-100"
-            style={{ background: `radial-gradient(circle, ${leagueColor.glow}, transparent 70%)` }}
-          />
+        <Tilt3DCard glowColor="rgba(56, 189, 248, 0.4)" delay={0.36}>
+          <div className="glass p-6 md:p-7 rounded-2xl flex flex-col relative overflow-hidden group border border-white/10 hover:border-blue-400/50 transition-all shadow-xl h-full bg-[#0d121c]/80 backdrop-blur-xl">
+            <div
+              className="absolute -top-16 -right-16 w-56 h-56 rounded-full blur-[60px] transition-all duration-500 opacity-60 group-hover:opacity-100 pointer-events-none"
+              style={{ background: `radial-gradient(circle, ${leagueColor.glow}, transparent 70%)` }}
+            />
 
-          <div className="z-10 flex flex-col h-full gap-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/40 shadow-[0_0_16px_rgba(88,166,255,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                  <img
-                    src={gsData.avatar || "/assets/avatars/google_skills_avatar.png"}
-                    alt="Google Skills Avatar"
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                    crossOrigin="anonymous"
-                    onError={e => { 
-                      e.target.src = '/assets/avatars/google_skills_avatar.png';
-                    }}
-                  />
+            <div className="z-10 flex flex-col h-full gap-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/40 shadow-[0_0_16px_rgba(88,166,255,0.3)] group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                    <img
+                      src={gsData.avatar || "/assets/avatars/google_skills_avatar.png"}
+                      alt="Google Skills Avatar"
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                      crossOrigin="anonymous"
+                      onError={e => { 
+                        e.target.src = '/assets/avatars/google_skills_avatar.png';
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white leading-tight">Google Skills</h3>
+                    <a
+                      href={GOOGLE_SKILLS_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-400 hover:underline"
+                    >
+                      @Ruthragurubaran J
+                    </a>
+                  </div>
                 </div>
+
+                <button
+                  onClick={fetchGoogleSkills}
+                  disabled={gsFetching}
+                  className="p-2 rounded-lg glass border border-white/10 hover:border-blue-500/30 transition-all cursor-pointer"
+                  title="Refresh Google Skills"
+                >
+                  <RefreshCw size={14} className={`text-blue-400 ${gsFetching ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+
+              <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${leagueColor.border} ${leagueColor.bg}`}>
+                <Trophy size={20} className={leagueColor.text} />
                 <div>
-                  <h3 className="text-xl font-bold text-white leading-tight">Google Skills</h3>
-                  <a
-                    href={GOOGLE_SKILLS_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-blue-400 hover:underline"
-                  >
-                    @Ruthragurubaran J
-                  </a>
+                  <p className={`font-bold text-sm ${leagueColor.text}`}>{gsData.league}</p>
+                  <p className="text-xs text-gray-400">Member since {gsData.memberSince}</p>
+                </div>
+                <div className="ml-auto text-right">
+                  <p className="font-black text-white text-lg leading-none">{gsData.points}</p>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-wider">XP Points</p>
                 </div>
               </div>
 
-              <button
-                onClick={fetchGoogleSkills}
-                disabled={gsFetching}
-                className="p-2 rounded-lg glass border border-white/10 hover:border-blue-500/30 transition-all cursor-pointer"
-                title="Refresh Google Skills"
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/5">
+                  <Star size={16} className="text-yellow-400 mb-1" />
+                  <span className="text-xl font-black text-white">{gsData.badges}</span>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Badges</span>
+                </div>
+                <div className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/5">
+                  <BookOpen size={16} className="text-blue-400 mb-1" />
+                  <span className="text-xl font-black text-white">{gsData.points}</span>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">XP Earned</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 mt-auto pt-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+                <span className="text-[10px] text-gray-400 font-medium">
+                  {gsData.lastFetched ? `Live · Updated ${gsData.lastFetched.toLocaleTimeString()}` : 'Live · Auto-refreshes every 60s'}
+                </span>
+              </div>
+
+              <a
+                href={GOOGLE_SKILLS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-blue-500/25 w-full justify-center text-xs"
               >
-                <RefreshCw size={14} className={`text-blue-400 ${gsFetching ? 'animate-spin' : ''}`} />
-              </button>
+                <BookOpen size={14} /> View Google Skills Profile
+              </a>
             </div>
-
-            <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${leagueColor.border} ${leagueColor.bg}`}>
-              <Trophy size={20} className={leagueColor.text} />
-              <div>
-                <p className={`font-bold text-sm ${leagueColor.text}`}>{gsData.league}</p>
-                <p className="text-xs text-gray-400">Member since {gsData.memberSince}</p>
-              </div>
-              <div className="ml-auto text-right">
-                <p className="font-black text-white text-lg leading-none">{gsData.points}</p>
-                <p className="text-[10px] text-gray-400 uppercase tracking-wider">XP Points</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/5">
-                <Star size={16} className="text-yellow-400 mb-1" />
-                <span className="text-xl font-black text-white">{gsData.badges}</span>
-                <span className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Badges</span>
-              </div>
-              <div className="flex flex-col items-center p-3 rounded-xl bg-white/5 border border-white/5">
-                <BookOpen size={16} className="text-blue-400 mb-1" />
-                <span className="text-xl font-black text-white">{gsData.points}</span>
-                <span className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">XP Earned</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 mt-auto pt-2">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
-              <span className="text-[10px] text-gray-400 font-medium">
-                {gsData.lastFetched ? `Live · Updated ${gsData.lastFetched.toLocaleTimeString()}` : 'Live · Auto-refreshes every 60s'}
-              </span>
-            </div>
-
-            <a
-              href={GOOGLE_SKILLS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-blue-500/25 w-full justify-center text-xs"
-            >
-              <BookOpen size={14} /> View Google Skills Profile
-            </a>
           </div>
-        </motion.div>
+        </Tilt3DCard>
       </div>
 
       {/* ══════════════════════════════════════════════════════════
@@ -1075,36 +1127,47 @@ const CodingProfiles = () => {
           </div>
         </div>
 
-        {/* Badges Grid */}
+        {/* Badges Grid with 3D Holographic Tilt & Specular Shine */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {filteredBadges.map((badge, index) => (
             <motion.div
               key={badge.id || index}
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.88, y: 30 }}
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05, duration: 0.4 }}
-              whileHover={{ y: -6, scale: 1.03 }}
-              className="group relative glass p-5 rounded-2xl flex flex-col items-center text-center border border-white/5 hover:border-blue-500/40 transition-all duration-300 shadow-xl overflow-hidden cursor-default"
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ delay: index * 0.04, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -8, scale: 1.05, zIndex: 20 }}
+              className="group relative glass p-5 rounded-2xl flex flex-col items-center text-center border border-white/10 hover:border-cyan-400/50 transition-all duration-300 shadow-xl overflow-hidden cursor-pointer bg-[#0d121c]/80 backdrop-blur-xl"
+              style={{
+                transformStyle: 'preserve-3d',
+                perspective: 800,
+              }}
             >
+              {/* Dynamic Specular Glare Reflection on Hover */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/0 via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-20" />
+
               {/* Top Issuer Tag */}
-              <div className="absolute top-3 left-3 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold text-gray-300">
-                <ShieldCheck size={10} className="text-blue-400" />
+              <div className="absolute top-3 left-3 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold text-gray-300 group-hover:border-cyan-400/30 group-hover:text-cyan-300 transition-colors">
+                <ShieldCheck size={10} className="text-cyan-400" />
                 {badge.issuer}
               </div>
 
-              {/* Glowing Background Ring */}
-              <div className="absolute inset-0 bg-gradient-to-b from-blue-600/5 via-transparent to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              {/* Glowing Background Pulse Halo */}
+              <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 via-blue-600/5 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none blur-xl" />
 
-              {/* Badge Icon Container */}
-              <div className="relative my-4 w-24 h-24 flex items-center justify-center">
-                <div className="absolute inset-0 bg-blue-500/10 rounded-full blur-xl group-hover:bg-blue-500/25 transition-all duration-500" />
+              {/* Badge Icon Container with Floating 3D Breathing Motion */}
+              <motion.div
+                animate={{ y: [0, -4, 0] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: index * 0.15 }}
+                className="relative my-4 w-24 h-24 flex items-center justify-center"
+              >
+                <div className="absolute inset-0 bg-cyan-500/15 rounded-full blur-xl group-hover:bg-cyan-400/35 group-hover:scale-125 transition-all duration-500" />
                 
                 {badge.icon ? (
                   <img
                     src={badge.icon}
                     alt={badge.name}
-                    className="w-20 h-20 object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] group-hover:scale-110 transition-transform duration-500 z-10"
+                    className="w-20 h-20 object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.7)] group-hover:scale-115 group-hover:rotate-1 transition-transform duration-500 z-10"
                     referrerPolicy="no-referrer"
                     crossOrigin="anonymous"
                     onError={e => {
@@ -1123,15 +1186,17 @@ const CodingProfiles = () => {
                 >
                   <Trophy size={32} className="text-yellow-400" />
                 </div>
-              </div>
+              </motion.div>
 
               {/* Title & Category */}
-              <h4 className="text-sm font-bold text-white leading-tight mb-1 group-hover:text-blue-300 transition-colors line-clamp-2">
-                {badge.name}
-              </h4>
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mt-auto pt-2 border-t border-white/5 w-full">
-                {badge.category}
-              </p>
+              <div className="z-10 w-full mt-auto pt-2 border-t border-white/5">
+                <h4 className="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors line-clamp-1">
+                  {badge.name}
+                </h4>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mt-1">
+                  {badge.category}
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>

@@ -11,14 +11,14 @@ const Hero3DCanvas = ({ className = '' }) => {
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || window.innerHeight;
     const isMobile = width < 768;
-    const particleCount = isMobile ? 80 : 180;
+    const particleCount = isMobile ? 110 : 240;
 
     // 1. Perspective Camera
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.set(0, 0, 24);
 
-    // 2. High-Performance Alpha WebGL Renderer (100% transparent, background layer)
+    // 2. High-Performance Alpha WebGL Renderer
     let renderer;
     try {
       renderer = new THREE.WebGLRenderer({
@@ -32,14 +32,14 @@ const Hero3DCanvas = ({ className = '' }) => {
     }
 
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
     const group = new THREE.Group();
     scene.add(group);
 
-    // 3. Mathematical Coordinate & Float State Arrays
+    // 3. Coordinate, Color & Floating Motion Arrays
     const startPositions = new Float32Array(particleCount * 3);
     const targetPositions = new Float32Array(particleCount * 3);
     const currentPositions = new Float32Array(particleCount * 3);
@@ -48,25 +48,26 @@ const Hero3DCanvas = ({ className = '' }) => {
     const floatSpeeds = new Float32Array(particleCount);
     const floatRadii = new Float32Array(particleCount);
 
-    // Subtle, low-opacity cosmic color palette with soft tint
+    // Vibrant Luminous Palette
     const palette = [
-      [0.0, 0.85, 0.95],  // Soft Cyan
-      [0.2, 0.65, 0.9],   // Soft Sky Blue
-      [0.45, 0.5, 0.9],   // Soft Indigo
-      [0.85, 0.92, 1.0],  // Soft White Spark
+      [0.0, 0.95, 1.0],   // Bright Cyan
+      [0.2, 0.75, 1.0],   // Azure Neon
+      [0.55, 0.6, 1.0],   // Electric Indigo
+      [1.0, 1.0, 1.0],    // Pure White Spark
+      [0.38, 0.9, 1.0],   // Sky Glow
     ];
 
     const targetRadius = isMobile ? 4.3 : 5.05;
-    const ringCount = Math.floor(particleCount * 0.45); // 45% form profile circle, 55% free flowing background
+    const ringCount = Math.floor(particleCount * 0.4); // 40% form profile halo, 60% free-flowing background
 
     for (let i = 0; i < particleCount; i++) {
       let tx, ty, tz;
       let sx, sy, sz;
 
       floatPhases[i] = Math.random() * Math.PI * 2;
-      // Very slow, calm drift speed
-      floatSpeeds[i] = 0.15 + Math.random() * 0.3;
-      floatRadii[i] = 0.3 + Math.random() * 0.6;
+      // Gentle floating speed
+      floatSpeeds[i] = 0.12 + Math.random() * 0.22;
+      floatRadii[i] = 0.4 + Math.random() * 0.8;
 
       if (i < ringCount) {
         // ── PROFILE CIRCLE CONVERGENCE ──
@@ -77,15 +78,15 @@ const Hero3DCanvas = ({ className = '' }) => {
         tz = (Math.random() - 0.5) * 0.5 - 1.0;
 
         const scatterAngle = Math.random() * Math.PI * 2;
-        const scatterDist = 7.0 + Math.random() * 10.0;
+        const scatterDist = 7.0 + Math.random() * 12.0;
         sx = Math.cos(scatterAngle) * scatterDist + (Math.random() - 0.5) * 6.0;
         sy = Math.sin(scatterAngle) * scatterDist + (Math.random() - 0.5) * 5.0;
         sz = tz;
       } else {
-        // ── FREE-FLOWING BACKGROUND PARTICLES (Spread broadly across hero) ──
-        tx = (Math.random() - 0.5) * 40;
-        ty = (Math.random() - 0.5) * 24;
-        tz = (Math.random() - 0.5) * 8 - 2; // Deep in background
+        // ── GLOBAL FREE-FLOWING BACKGROUND PARTICLES (Broad coverage across viewport) ──
+        tx = (Math.random() - 0.5) * 44;
+        ty = (Math.random() - 0.5) * 28;
+        tz = (Math.random() - 0.5) * 12 - 2;
 
         sx = tx + (Math.random() - 0.5) * 5.0;
         sy = ty + (Math.random() - 0.5) * 5.0;
@@ -104,9 +105,9 @@ const Hero3DCanvas = ({ className = '' }) => {
       currentPositions[i * 3 + 1] = sy;
       currentPositions[i * 3 + 2] = sz;
 
-      // Soft varied brightness for depth
+      // Soft, balanced brightness
       const c = palette[Math.floor(Math.random() * palette.length)];
-      const dimFactor = 0.55 + Math.random() * 0.45; // Subtle varied brightness
+      const dimFactor = 0.5 + Math.random() * 0.35;
       colors[i * 3] = c[0] * dimFactor;
       colors[i * 3 + 1] = c[1] * dimFactor;
       colors[i * 3 + 2] = c[2] * dimFactor;
@@ -116,29 +117,31 @@ const Hero3DCanvas = ({ className = '' }) => {
     geometry.setAttribute('position', new THREE.BufferAttribute(currentPositions, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-    // Soft, diffused circular particle texture
+    // Clear, glowing circular particle sprite texture
     const particleCanvas = document.createElement('canvas');
-    particleCanvas.width = 32;
-    particleCanvas.height = 32;
+    particleCanvas.width = 64;
+    particleCanvas.height = 64;
     const ctx = particleCanvas.getContext('2d');
     if (ctx) {
-      const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+      const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
       grad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
-      grad.addColorStop(0.2, 'rgba(0, 240, 255, 0.7)');
-      grad.addColorStop(0.55, 'rgba(56, 189, 248, 0.25)');
+      grad.addColorStop(0.25, 'rgba(0, 240, 255, 0.75)');
+      grad.addColorStop(0.55, 'rgba(56, 189, 248, 0.3)');
+      grad.addColorStop(0.8, 'rgba(129, 140, 248, 0.1)');
       grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 32, 32);
+      ctx.fillRect(0, 0, 64, 64);
     }
     const texture = new THREE.CanvasTexture(particleCanvas);
 
-    const baseSize = isMobile ? 0.38 : 0.46;
+    // Visible, delicate particle sizing with soft opacity
+    const baseSize = isMobile ? 0.48 : 0.62;
     const material = new THREE.PointsMaterial({
       size: baseSize,
       map: texture,
       vertexColors: true,
       transparent: true,
-      opacity: 0.5, // Soft, non-intrusive background opacity
+      opacity: 0.52, // Soft, non-intrusive opacity
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
@@ -146,17 +149,26 @@ const Hero3DCanvas = ({ className = '' }) => {
     const particles = new THREE.Points(geometry, material);
     group.add(particles);
 
-    // Mouse parallax tracking
+    // Mouse & Scroll Parallax Tracking
     let targetMouseX = 0;
     let targetMouseY = 0;
     let currentMouseX = 0;
     let currentMouseY = 0;
+
+    let targetScrollProgress = 0;
+    let currentScrollProgress = 0;
 
     const handleMouseMove = (e) => {
       targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
       targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
     };
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    const handleScroll = () => {
+      const heroHeight = window.innerHeight || 800;
+      targetScrollProgress = Math.min(Math.max(window.scrollY / heroHeight, 0), 2.5);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     const handleResize = () => {
       if (!container) return;
@@ -176,15 +188,22 @@ const Hero3DCanvas = ({ className = '' }) => {
       const elapsed = currentTime - startTime;
       const timeSec = elapsed * 0.001;
 
-      // Circle assembly (0ms -> 1100ms for slightly slower, majestic pacing)
+      // Circle assembly (0ms -> 1100ms)
       const p = Math.min(elapsed / 1100, 1.0);
-      const ease = 1 - Math.pow(1 - p, 3); // Smooth cubic ease-out
+      const ease = 1 - Math.pow(1 - p, 3);
+
+      // Smooth scroll lerp
+      currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.05;
+
+      // Camera depth response across entire home page scroll
+      camera.position.z = 24 - currentScrollProgress * 8;
+      camera.position.y = -currentScrollProgress * 2.0;
 
       const pos = geometry.attributes.position.array;
       for (let i = 0; i < particleCount; i++) {
         const idx = i * 3;
 
-        // Slow, gentle undulating floating movement
+        // Slow, gentle floating movement
         const fSpeed = floatSpeeds[i];
         const fPhase = floatPhases[i];
         const fRadius = floatRadii[i];
@@ -203,12 +222,12 @@ const Hero3DCanvas = ({ className = '' }) => {
       }
       geometry.attributes.position.needsUpdate = true;
 
-      // Gentle parallax and very slow celestial drift
-      currentMouseX += (targetMouseX - currentMouseX) * 0.025;
-      currentMouseY += (targetMouseY - currentMouseY) * 0.025;
+      // Subtle mouse parallax & drift
+      currentMouseX += (targetMouseX - currentMouseX) * 0.02;
+      currentMouseY += (targetMouseY - currentMouseY) * 0.02;
 
-      group.rotation.y = timeSec * 0.003 + currentMouseX * 0.025;
-      group.rotation.x = Math.sin(timeSec * 0.06) * 0.005 + currentMouseY * 0.018;
+      group.rotation.y = timeSec * 0.002 + currentMouseX * 0.02;
+      group.rotation.x = -currentScrollProgress * 0.12 + Math.sin(timeSec * 0.05) * 0.004 + currentMouseY * 0.015;
 
       renderer.render(scene, camera);
     };
@@ -218,6 +237,7 @@ const Hero3DCanvas = ({ className = '' }) => {
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
       if (container && renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
@@ -232,7 +252,7 @@ const Hero3DCanvas = ({ className = '' }) => {
   return (
     <div
       ref={containerRef}
-      className={`absolute inset-0 w-full h-full overflow-hidden pointer-events-none -z-10 ${className}`}
+      className={`fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0 ${className}`}
       aria-hidden="true"
     />
   );

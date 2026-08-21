@@ -1,9 +1,8 @@
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
-import { Mail, Download, ArrowRight, Globe } from 'lucide-react';
+import { motion, useMotionValue, useSpring, useTransform, useScroll, useReducedMotion } from 'framer-motion';
+import { Mail, Download, ArrowRight, Globe, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useRef, useCallback } from 'react';
 import ResumeModal from './ResumeModal';
-import Hero3DCanvas from './Hero3DCanvas';
 import SpatialGlassDeck3D from './SpatialGlassDeck3D';
 
 const techPills = ['Java', 'Spring Boot', 'React', 'MySQL', 'Python', 'Docker'];
@@ -74,6 +73,16 @@ const Hero = () => {
   const heroRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
 
+  // Scroll Parallax Driver
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.75], [1, 0.92]);
+  const heroY = useTransform(scrollYProgress, [0, 0.75], [0, -80]);
+
   // Mark booted after initial frame
   const isBooted = hasHeroBooted || shouldReduceMotion;
   if (!hasHeroBooted) {
@@ -112,339 +121,342 @@ const Hero = () => {
     cursorY.set(0);
   }, [cursorX, cursorY]);
 
+  const scrollToAbout = () => {
+    const aboutElem = document.getElementById('about-section') || document.getElementById('about');
+    if (aboutElem) {
+      aboutElem.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section
       ref={heroRef}
       id="home"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-between overflow-hidden px-4 sm:px-6 lg:px-12 py-4 lg:py-6 select-none"
+      className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-between px-4 sm:px-6 lg:px-12 py-4 lg:py-6 select-none overflow-visible"
     >
       {/* ════════════════════════════════════════
-          THREE.JS WEBGL BACKGROUND FLOATING PARTICLES
-      ════════════════════════════════════════ */}
-      <Hero3DCanvas className="absolute inset-0 w-full h-full -z-10 pointer-events-none" />
-
-      {/* ════════════════════════════════════════
-          TOP HEADER METADATA BAR (1250ms)
+          SCROLL PARALLAX HERO CONTAINER
       ════════════════════════════════════════ */}
       <motion.div
-        initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: -6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, delay: isBooted ? 0 : 1.25, ease: 'easeOut' }}
-        className="w-full flex items-center justify-between z-10 border-b border-white/10 pb-3 pt-1"
+        style={shouldReduceMotion ? {} : { opacity: heroOpacity, scale: heroScale, y: heroY }}
+        className="w-full flex-1 flex flex-col justify-between"
       >
-        {/* Left Subhead */}
-        <div className="flex items-center gap-2 font-mono text-xs text-secondary tracking-widest uppercase">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-cyan-400 font-bold">FULL-STACK DEVELOPER</span>
-          <span className="text-white/30 hidden sm:inline">•</span>
-          <span className="hidden sm:inline text-white/70">BACKEND SYSTEMS ARCHITECT</span>
-        </div>
-
-        {/* Right Availability Badge */}
-        <div className="flex items-center gap-2 font-mono text-xs tracking-wider">
-          <div className="relative flex items-center justify-center w-2.5 h-2.5">
-            <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_#4ade80]" />
-          </div>
-          <span className="text-green-400 font-bold uppercase">AVAILABLE FOR OPPORTUNITIES</span>
-          <span className="text-amber-400 font-bold hidden sm:inline">✦</span>
-        </div>
-      </motion.div>
-
-      {/* ════════════════════════════════════════
-          MAIN HERO COMPOSITION (Symmetrical 3-Column Grid)
-      ════════════════════════════════════════ */}
-      <div className="relative w-full flex-1 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-4 my-2 lg:my-0 z-10">
-
-        {/* ── GIANT BACKGROUND WORDMARK ("PORTFOLIO") (1350ms) ── */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
-          <motion.h1
-            initial={isBooted ? { opacity: 0.14 } : { opacity: 0 }}
-            animate={{ opacity: 0.14 }}
-            transition={{ duration: 0.6, delay: isBooted ? 0 : 1.35, ease: 'easeOut' }}
-            style={{
-              ...(shouldReduceMotion ? {} : { x: textWatermarkX, y: textWatermarkY }),
-              fontFamily: "'Impact', 'Arial Black', sans-serif",
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(56,189,248,0.3) 60%, rgba(13,17,23,0) 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-            className="font-black tracking-tighter uppercase text-[clamp(4.5rem,18vw,19rem)] leading-none text-center whitespace-nowrap opacity-[0.14] dark:opacity-[0.12]"
-          >
-            PORTFOLIO
-          </motion.h1>
-        </div>
-
-        {/* ── LEFT COLUMN: Typography, Name, Bio, Badges & CTAs ── */}
-        <div className="lg:col-span-4 flex flex-col justify-center gap-3.5 z-20 py-4 lg:py-0 order-2 lg:order-1">
-          {/* "Hello, I'm" (1450ms) */}
-          <motion.div
-            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: isBooted ? 0 : 1.45, ease: 'easeOut' }}
-            className="font-serif italic text-2xl sm:text-3xl text-cyan-300 flex items-center gap-2"
-          >
-            <span>Hello, I'm</span>
-          </motion.div>
-
-          {/* Name (1600ms - strongest visual reveal) */}
-          <motion.div
-            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: isBooted ? 0 : 1.6, ease: 'easeOut' }}
-            className="flex flex-col tracking-tight leading-[0.88]"
-          >
-            <span
-              className="font-black uppercase text-white tracking-tight"
-              style={{
-                fontFamily: "'Impact', 'Arial Black', 'Helvetica Neue', sans-serif",
-                fontSize: 'clamp(2.6rem, 4.8vw, 5.2rem)',
-                letterSpacing: '-0.02em',
-                textShadow: '0 4px 20px rgba(0,0,0,0.6)',
-              }}
-            >
-              RUTHRA
-            </span>
-            <span
-              className="font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 tracking-tight"
-              style={{
-                fontFamily: "'Impact', 'Arial Black', 'Helvetica Neue', sans-serif",
-                fontSize: 'clamp(2.6rem, 4.8vw, 5.2rem)',
-                letterSpacing: '-0.02em',
-                filter: 'drop-shadow(0 0 25px rgba(56,189,248,0.35))',
-              }}
-            >
-              GURUBARAN
-            </span>
-          </motion.div>
-
-          {/* Role subtitle (1700ms) */}
-          <motion.div
-            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: isBooted ? 0 : 1.7, ease: 'easeOut' }}
-            className="flex items-center gap-2 font-mono text-xs sm:text-sm font-bold text-cyan-400 tracking-wider uppercase mt-1"
-          >
-            <span className="text-secondary">//</span>
-            <span className="text-cyan-300">Full-Stack Developer</span>
-          </motion.div>
-
-          {/* Description (1850ms) */}
-          <motion.p
-            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: isBooted ? 0 : 1.85, ease: 'easeOut' }}
-            className="text-secondary text-xs sm:text-sm leading-relaxed max-w-sm"
-          >
-            I architect and engineer robust full-stack applications with clean code,
-            high-throughput Spring Boot REST APIs, and performant React user interfaces.
-          </motion.p>
-
-          {/* Technology Badges (2000ms) */}
-          <motion.div
-            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: isBooted ? 0 : 2.0, ease: 'easeOut' }}
-            className="flex flex-wrap gap-1.5 pt-1"
-          >
-            {techPills.map((t) => (
-              <span
-                key={t}
-                className="px-2.5 py-1 rounded-md bg-[#11151c]/90 border border-white/10 text-xs font-mono font-semibold text-white/80 cursor-default transition-colors duration-200 hover:border-cyan-400/40 hover:bg-[#1a2233]"
-              >
-                {t}
-              </span>
-            ))}
-          </motion.div>
-
-          {/* Buttons (2150ms) */}
-          <motion.div
-            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: isBooted ? 0 : 2.15, ease: 'easeOut' }}
-            className="flex flex-wrap items-center gap-2.5 pt-2"
-          >
-            <MagneticButton>
-              <Link
-                to="/projects"
-                className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500
-                  text-white font-bold px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm
-                  shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:shadow-[0_0_25px_rgba(56,189,248,0.55)] transition-all duration-300 border border-cyan-400/30"
-              >
-                View Projects
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </MagneticButton>
-
-            <MagneticButton>
-              <Link
-                to="/contact"
-                className="group inline-flex items-center gap-2 bg-[#11151c]/90 text-heading font-semibold
-                  px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-white/15
-                  hover:border-white/30 hover:bg-[#1a2233] transition-all duration-300 shadow-md backdrop-blur-md"
-              >
-                Contact Me <Mail size={14} className="text-cyan-400" />
-              </Link>
-            </MagneticButton>
-
-            <MagneticButton>
-              <button
-                onClick={() => setResumeOpen(true)}
-                className="group inline-flex items-center gap-2 bg-[#11151c]/90 text-secondary hover:text-heading font-semibold
-                  px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-white/15
-                  hover:border-white/30 hover:bg-[#1a2233] hover:text-white transition-all duration-300 shadow-md backdrop-blur-md cursor-pointer"
-              >
-                Resume <Download size={14} className="group-hover:translate-y-0.5 transition-transform text-amber-400" />
-              </button>
-            </MagneticButton>
-          </motion.div>
-        </div>
-
-        {/* ── 5. CENTER COLUMN: Digital Core, Pure Soft Pulse & Profile Reveal ── */}
-        <div className="lg:col-span-4 flex items-center justify-center relative z-20 py-4 lg:py-0 order-1 lg:order-2 mx-auto w-full">
-          <div className="relative flex items-center justify-center">
-
-            {/* Maximized Portrait Studio Framing */}
-            <div className="relative w-[300px] h-[370px] sm:w-[370px] sm:h-[450px] md:w-[420px] md:h-[500px] lg:w-[450px] lg:h-[540px] flex items-center justify-center mx-auto">
-
-              {/* ════════════════════════════════════════
-                  PURE SOFT RADIAL ENERGY PULSE (1100ms)
-                  Initial soft radial glow pulse as circle finishes forming
-              ════════════════════════════════════════ */}
-              {!isBooted && (
-                <motion.div
-                  initial={{ scale: 0.75, opacity: 0 }}
-                  animate={{
-                    scale: [0.75, 1.35, 1.0],
-                    opacity: [0, 0.9, 0],
-                  }}
-                  transition={{ duration: 0.65, delay: 1.1, ease: 'easeOut' }}
-                  className="absolute top-[12%] sm:top-[14%] md:top-[15%] lg:top-[16%] left-[53%] -translate-x-1/2 w-[380px] h-[380px] sm:w-[460px] sm:h-[460px] md:w-[530px] md:h-[530px] lg:w-[600px] lg:h-[600px] rounded-full pointer-events-none z-10 blur-[30px]"
-                  style={{
-                    background: 'radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.8) 0%, rgba(56, 189, 248, 0.45) 40%, rgba(129, 140, 248, 0.2) 65%, transparent 80%)',
-                  }}
-                />
-              )}
-
-              {/* ════════════════════════════════════════
-                  FINAL SYSTEM RING BLINK (After everything reveals: 2450ms)
-                  Thin, luminous cyan ring blink expanding outward
-              ════════════════════════════════════════ */}
-              {!isBooted && (
-                <motion.div
-                  initial={{ scale: 0.94, opacity: 0 }}
-                  animate={{
-                    scale: [0.94, 1.26],
-                    opacity: [0, 1, 0],
-                  }}
-                  transition={{ duration: 0.5, delay: 2.45, ease: 'easeOut' }}
-                  className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-10 border-[1.5px] border-cyan-400/90 shadow-[0_0_15px_rgba(0,240,255,0.8),inset_0_0_10px_rgba(0,240,255,0.4)]"
-                />
-              )}
-
-              {/* 0. Wide Scattered Cosmic Stardust Aura (Ambient Base Glow) */}
-              <motion.div
-                initial={isBooted ? { opacity: 0.85 } : { opacity: 0 }}
-                animate={{ opacity: 0.85 }}
-                transition={{ duration: 0.6, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
-                style={{
-                  background: 'radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.35) 0%, rgba(129, 140, 248, 0.22) 32%, rgba(168, 85, 247, 0.18) 50%, rgba(236, 72, 153, 0.1) 68%, transparent 80%)',
-                }}
-                className="absolute top-[8%] sm:top-[10%] md:top-[11%] lg:top-[12%] left-[53%] -translate-x-1/2 w-[480px] h-[480px] sm:w-[560px] sm:h-[560px] md:w-[640px] md:h-[640px] lg:w-[700px] lg:h-[700px] rounded-full pointer-events-none z-0 blur-[75px]"
-              />
-
-              {/* 1. Ambient Pulsing Neon Glow */}
-              <motion.div
-                initial={isBooted ? { opacity: 0.85 } : { opacity: 0 }}
-                animate={{ opacity: 0.85 }}
-                transition={{ duration: 0.6, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
-                style={{
-                  background: 'conic-gradient(from 180deg at 50% 50%, #00f0ff 0%, #38bdf8 20%, #818cf8 40%, #a855f7 60%, #ec4899 80%, #00f0ff 100%)',
-                }}
-                className="absolute top-[10%] sm:top-[12%] md:top-[13%] lg:top-[14%] left-[53%] -translate-x-1/2 w-[390px] h-[390px] sm:w-[460px] sm:h-[460px] md:w-[530px] md:h-[530px] lg:w-[590px] lg:h-[590px] rounded-full pointer-events-none z-0 blur-[50px]"
-              />
-
-              {/* 2. Full Multi-Hue Neon Ring */}
-              <motion.div
-                initial={isBooted ? { opacity: 1 } : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
-                className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-0"
-                style={{
-                  background: 'conic-gradient(from 0deg, #00f0ff 0%, #38bdf8 18%, #818cf8 38%, #a855f7 58%, #ec4899 78%, #00f0ff 100%)',
-                  padding: '4px',
-                  boxShadow: '0 0 60px rgba(56, 189, 248, 0.55), 0 0 45px rgba(168, 85, 247, 0.4), inset 0 0 35px rgba(56, 189, 248, 0.35)',
-                }}
-              >
-                <div
-                  className="w-full h-full rounded-full"
-                  style={{
-                    background: 'radial-gradient(circle at 50% 35%, rgba(56, 189, 248, 0.4) 0%, rgba(129, 140, 248, 0.28) 28%, rgba(168, 85, 247, 0.16) 52%, rgba(13, 17, 23, 0.94) 75%, #090d14 100%)',
-                  }}
-                />
-              </motion.div>
-
-              {/* ── PROFILE MATERIALIZATION (1100ms) ── */}
-              <motion.div
-                initial={isBooted ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.94, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
-                style={{
-                  ...(shouldReduceMotion ? {} : { x: photoParallaxX, y: photoParallaxY }),
-                }}
-                className="relative z-10 w-full h-full flex items-end justify-center pointer-events-none select-none overflow-visible mx-auto"
-              >
-                <img
-                  src="/hero-portrait.png"
-                  alt="Ruthragurubaran"
-                  className="w-auto h-[125%] sm:h-[128%] md:h-[131%] lg:h-[133%] max-w-none object-contain scale-[1.10] sm:scale-[1.14] md:scale-[1.18] lg:scale-[1.20] translate-y-1 mx-auto"
-                  style={{
-                    filter: 'drop-shadow(0 0 35px rgba(56,189,248,0.3)) drop-shadow(0 20px 40px rgba(0,0,0,0.8))',
-                    maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.8) 78%, rgba(0,0,0,0.4) 86%, rgba(0,0,0,0) 96%)',
-                    WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.8) 78%, rgba(0,0,0,0.4) 86%, rgba(0,0,0,0) 96%)',
-                  }}
-                  onError={e => {
-                    e.target.src = '/profile.png';
-                  }}
-                />
-              </motion.div>
-
-            </div>
-          </div>
-        </div>
-
-        {/* ── 6. RIGHT COLUMN: HUD (Reveals at 2300ms) ── */}
+        {/* ── TOP HEADER METADATA BAR (1250ms) ── */}
         <motion.div
-          initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+          initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: isBooted ? 0 : 2.3, ease: 'easeOut' }}
-          style={shouldReduceMotion ? {} : { x: floatBadgeX, y: floatBadgeY }}
-          className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center z-20 py-4 lg:py-0 order-3 w-full"
+          transition={{ duration: 0.45, delay: isBooted ? 0 : 1.25, ease: 'easeOut' }}
+          className="w-full flex items-center justify-between z-10 border-b border-white/10 pb-3 pt-1"
         >
-          <SpatialGlassDeck3D />
+          {/* Left Subhead */}
+          <div className="flex items-center gap-2 font-mono text-xs text-secondary tracking-widest uppercase">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <span className="text-cyan-400 font-bold">FULL-STACK DEVELOPER</span>
+            <span className="text-white/30 hidden sm:inline">•</span>
+            <span className="hidden sm:inline text-white/70">BACKEND SYSTEMS ARCHITECT</span>
+          </div>
+
+          {/* Right Availability Badge */}
+          <div className="flex items-center gap-2 font-mono text-xs tracking-wider">
+            <div className="relative flex items-center justify-center w-2.5 h-2.5">
+              <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_#4ade80]" />
+            </div>
+            <span className="text-green-400 font-bold uppercase">AVAILABLE FOR OPPORTUNITIES</span>
+            <span className="text-amber-400 font-bold hidden sm:inline">✦</span>
+          </div>
         </motion.div>
 
-      </div>
+        {/* ── MAIN HERO COMPOSITION (Symmetrical 3-Column Grid) ── */}
+        <div className="relative w-full flex-1 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-4 my-2 lg:my-0 z-10">
 
-      {/* ════════════════════════════════════════
-          BOTTOM STATUS FOOTER BAR (2500ms)
-      ════════════════════════════════════════ */}
-      <motion.div
-        initial={isBooted ? { opacity: 1 } : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: isBooted ? 0 : 2.5, ease: 'easeOut' }}
-        className="w-full flex items-center justify-between z-10 border-t border-white/10 pt-3 font-mono text-xs text-secondary"
-      >
-        <div className="flex items-center gap-2">
-          <Globe size={13} className="text-cyan-400" />
-          <span>AVAILABLE WORLDWIDE & REMOTE</span>
+          {/* ── GIANT BACKGROUND WORDMARK ("PORTFOLIO") (1350ms) ── */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
+            <motion.h1
+              initial={isBooted ? { opacity: 0.14 } : { opacity: 0 }}
+              animate={{ opacity: 0.14 }}
+              transition={{ duration: 0.6, delay: isBooted ? 0 : 1.35, ease: 'easeOut' }}
+              style={{
+                ...(shouldReduceMotion ? {} : { x: textWatermarkX, y: textWatermarkY }),
+                fontFamily: "'Impact', 'Arial Black', sans-serif",
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(56,189,248,0.3) 60%, rgba(13,17,23,0) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+              className="font-black tracking-tighter uppercase text-[clamp(4.5rem,18vw,19rem)] leading-none text-center whitespace-nowrap opacity-[0.14] dark:opacity-[0.12]"
+            >
+              PORTFOLIO
+            </motion.h1>
+          </div>
+
+          {/* ── LEFT COLUMN: Typography, Name, Bio, Badges & CTAs ── */}
+          <div className="lg:col-span-4 flex flex-col justify-center gap-3.5 z-20 py-4 lg:py-0 order-2 lg:order-1">
+            {/* "Hello, I'm" (1450ms) */}
+            <motion.div
+              initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: isBooted ? 0 : 1.45, ease: 'easeOut' }}
+              className="font-serif italic text-2xl sm:text-3xl text-cyan-300 flex items-center gap-2"
+            >
+              <span>Hello, I'm</span>
+            </motion.div>
+
+            {/* Name (1600ms - strongest visual reveal) */}
+            <motion.div
+              initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: isBooted ? 0 : 1.6, ease: 'easeOut' }}
+              className="flex flex-col tracking-tight leading-[0.88]"
+            >
+              <span
+                className="font-black uppercase text-white tracking-tight"
+                style={{
+                  fontFamily: "'Impact', 'Arial Black', 'Helvetica Neue', sans-serif",
+                  fontSize: 'clamp(2.6rem, 4.8vw, 5.2rem)',
+                  letterSpacing: '-0.02em',
+                  textShadow: '0 4px 20px rgba(0,0,0,0.6)',
+                }}
+              >
+                RUTHRA
+              </span>
+              <span
+                className="font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 tracking-tight"
+                style={{
+                  fontFamily: "'Impact', 'Arial Black', 'Helvetica Neue', sans-serif",
+                  fontSize: 'clamp(2.6rem, 4.8vw, 5.2rem)',
+                  letterSpacing: '-0.02em',
+                  filter: 'drop-shadow(0 0 25px rgba(56,189,248,0.35))',
+                }}
+              >
+                GURUBARAN
+              </span>
+            </motion.div>
+
+            {/* Role subtitle (1700ms) */}
+            <motion.div
+              initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: isBooted ? 0 : 1.7, ease: 'easeOut' }}
+              className="flex items-center gap-2 font-mono text-xs sm:text-sm font-bold text-cyan-400 tracking-wider uppercase mt-1"
+            >
+              <span className="text-secondary">//</span>
+              <span className="text-cyan-300">Full-Stack Developer</span>
+            </motion.div>
+
+            {/* Description (1850ms) */}
+            <motion.p
+              initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: isBooted ? 0 : 1.85, ease: 'easeOut' }}
+              className="text-secondary text-xs sm:text-sm leading-relaxed max-w-sm"
+            >
+              I architect and engineer robust full-stack applications with clean code,
+              high-throughput Spring Boot REST APIs, and performant React user interfaces.
+            </motion.p>
+
+            {/* Technology Badges (2000ms) */}
+            <motion.div
+              initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: isBooted ? 0 : 2.0, ease: 'easeOut' }}
+              className="flex flex-wrap gap-1.5 pt-1"
+            >
+              {techPills.map((t) => (
+                <span
+                  key={t}
+                  className="px-2.5 py-1 rounded-md bg-[#11151c]/90 border border-white/10 text-xs font-mono font-semibold text-white/80 cursor-default transition-colors duration-200 hover:border-cyan-400/40 hover:bg-[#1a2233]"
+                >
+                  {t}
+                </span>
+              ))}
+            </motion.div>
+
+            {/* Buttons (2150ms) */}
+            <motion.div
+              initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: isBooted ? 0 : 2.15, ease: 'easeOut' }}
+              className="flex flex-wrap items-center gap-2.5 pt-2"
+            >
+              <MagneticButton>
+                <Link
+                  to="/projects"
+                  className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500
+                    text-white font-bold px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm
+                    shadow-[0_0_20px_rgba(56,189,248,0.35)] hover:shadow-[0_0_25px_rgba(56,189,248,0.55)] transition-all duration-300 border border-cyan-400/30"
+                >
+                  View Projects
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </MagneticButton>
+
+              <MagneticButton>
+                <Link
+                  to="/contact"
+                  className="group inline-flex items-center gap-2 bg-[#11151c]/90 text-heading font-semibold
+                    px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-white/15
+                    hover:border-white/30 hover:bg-[#1a2233] transition-all duration-300 shadow-md backdrop-blur-md"
+                >
+                  Contact Me <Mail size={14} className="text-cyan-400" />
+                </Link>
+              </MagneticButton>
+
+              <MagneticButton>
+                <button
+                  onClick={() => setResumeOpen(true)}
+                  className="group inline-flex items-center gap-2 bg-[#11151c]/90 text-secondary hover:text-heading font-semibold
+                    px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm border border-white/15
+                    hover:border-white/30 hover:bg-[#1a2233] hover:text-white transition-all duration-300 shadow-md backdrop-blur-md cursor-pointer"
+                >
+                  Resume <Download size={14} className="group-hover:translate-y-0.5 transition-transform text-amber-400" />
+                </button>
+              </MagneticButton>
+            </motion.div>
+          </div>
+
+          {/* ── 5. CENTER COLUMN: Digital Core, Pure Soft Pulse & Profile Reveal ── */}
+          <div className="lg:col-span-4 flex items-center justify-center relative z-20 py-4 lg:py-0 order-1 lg:order-2 mx-auto w-full">
+            <div className="relative flex items-center justify-center">
+
+              {/* Maximized Portrait Studio Framing */}
+              <div className="relative w-[300px] h-[370px] sm:w-[370px] sm:h-[450px] md:w-[420px] md:h-[500px] lg:w-[450px] lg:h-[540px] flex items-center justify-center mx-auto">
+
+                {/* ════════════════════════════════════════
+                    PURE SOFT RADIAL ENERGY PULSE (1100ms)
+                ════════════════════════════════════════ */}
+                {!isBooted && (
+                  <motion.div
+                    initial={{ scale: 0.75, opacity: 0 }}
+                    animate={{
+                      scale: [0.75, 1.35, 1.0],
+                      opacity: [0, 0.9, 0],
+                    }}
+                    transition={{ duration: 0.65, delay: 1.1, ease: 'easeOut' }}
+                    className="absolute top-[12%] sm:top-[14%] md:top-[15%] lg:top-[16%] left-[53%] -translate-x-1/2 w-[380px] h-[380px] sm:w-[460px] sm:h-[460px] md:w-[530px] md:h-[530px] lg:w-[600px] lg:h-[600px] rounded-full pointer-events-none z-10 blur-[30px]"
+                    style={{
+                      background: 'radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.8) 0%, rgba(56, 189, 248, 0.45) 40%, rgba(129, 140, 248, 0.2) 65%, transparent 80%)',
+                    }}
+                  />
+                )}
+
+                {/* ════════════════════════════════════════
+                    FINAL SYSTEM RING BLINK (2450ms)
+                ════════════════════════════════════════ */}
+                {!isBooted && (
+                  <motion.div
+                    initial={{ scale: 0.94, opacity: 0 }}
+                    animate={{
+                      scale: [0.94, 1.26],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{ duration: 0.5, delay: 2.45, ease: 'easeOut' }}
+                    className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-10 border-[1.5px] border-cyan-400/90 shadow-[0_0_15px_rgba(0,240,255,0.8),inset_0_0_10px_rgba(0,240,255,0.4)]"
+                  />
+                )}
+
+                {/* 0. Wide Scattered Cosmic Stardust Aura */}
+                <motion.div
+                  initial={isBooted ? { opacity: 0.85 } : { opacity: 0 }}
+                  animate={{ opacity: 0.85 }}
+                  transition={{ duration: 0.6, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
+                  style={{
+                    background: 'radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.32) 0%, rgba(129, 140, 248, 0.2) 28%, rgba(168, 85, 247, 0.12) 46%, rgba(236, 72, 153, 0.05) 58%, transparent 70%)',
+                  }}
+                  className="absolute top-[8%] sm:top-[10%] md:top-[11%] lg:top-[12%] left-[53%] -translate-x-1/2 w-[440px] h-[440px] sm:w-[500px] sm:h-[500px] md:w-[560px] md:h-[560px] lg:w-[620px] lg:h-[620px] rounded-full pointer-events-none z-0 blur-[60px]"
+                />
+
+                {/* 1. Ambient Pulsing Neon Glow */}
+                <motion.div
+                  initial={isBooted ? { opacity: 0.85 } : { opacity: 0 }}
+                  animate={{ opacity: 0.85 }}
+                  transition={{ duration: 0.6, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
+                  style={{
+                    background: 'conic-gradient(from 180deg at 50% 50%, #00f0ff 0%, #38bdf8 20%, #818cf8 40%, #a855f7 60%, #ec4899 80%, #00f0ff 100%)',
+                  }}
+                  className="absolute top-[10%] sm:top-[12%] md:top-[13%] lg:top-[14%] left-[53%] -translate-x-1/2 w-[390px] h-[390px] sm:w-[460px] sm:h-[460px] md:w-[530px] md:h-[530px] lg:w-[590px] lg:h-[590px] rounded-full pointer-events-none z-0 blur-[50px]"
+                />
+
+                {/* 2. Full Multi-Hue Neon Ring */}
+                <motion.div
+                  initial={isBooted ? { opacity: 1 } : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
+                  className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-0"
+                  style={{
+                    background: 'conic-gradient(from 0deg, #00f0ff 0%, #38bdf8 18%, #818cf8 38%, #a855f7 58%, #ec4899 78%, #00f0ff 100%)',
+                    padding: '4px',
+                    boxShadow: '0 0 60px rgba(56, 189, 248, 0.55), 0 0 45px rgba(168, 85, 247, 0.4), inset 0 0 35px rgba(56, 189, 248, 0.35)',
+                  }}
+                >
+                  <div
+                    className="w-full h-full rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle at 50% 35%, rgba(56, 189, 248, 0.4) 0%, rgba(129, 140, 248, 0.28) 28%, rgba(168, 85, 247, 0.16) 52%, rgba(13, 17, 23, 0.94) 75%, #090d14 100%)',
+                    }}
+                  />
+                </motion.div>
+
+                {/* ── PROFILE MATERIALIZATION (1100ms) ── */}
+                <motion.div
+                  initial={isBooted ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.94, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
+                  style={{
+                    ...(shouldReduceMotion ? {} : { x: photoParallaxX, y: photoParallaxY }),
+                  }}
+                  className="relative z-10 w-full h-full flex items-end justify-center pointer-events-none select-none overflow-visible mx-auto"
+                >
+                  <img
+                    src="/hero-portrait.png"
+                    alt="Ruthragurubaran"
+                    className="w-auto h-[125%] sm:h-[128%] md:h-[131%] lg:h-[133%] max-w-none object-contain scale-[1.10] sm:scale-[1.14] md:scale-[1.18] lg:scale-[1.20] translate-y-1 mx-auto"
+                    style={{
+                      filter: 'drop-shadow(0 0 35px rgba(56,189,248,0.3)) drop-shadow(0 20px 40px rgba(0,0,0,0.8))',
+                      maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.8) 78%, rgba(0,0,0,0.4) 86%, rgba(0,0,0,0) 96%)',
+                      WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.8) 78%, rgba(0,0,0,0.4) 86%, rgba(0,0,0,0) 96%)',
+                    }}
+                    onError={e => {
+                      e.target.src = '/profile.png';
+                    }}
+                  />
+                </motion.div>
+
+              </div>
+            </div>
+          </div>
+
+          {/* ── 6. RIGHT COLUMN: HUD (Reveals at 2300ms) ── */}
+          <motion.div
+            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: isBooted ? 0 : 2.3, ease: 'easeOut' }}
+            style={shouldReduceMotion ? {} : { x: floatBadgeX, y: floatBadgeY }}
+            className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center z-20 py-4 lg:py-0 order-3 w-full"
+          >
+            <SpatialGlassDeck3D />
+          </motion.div>
+
         </div>
-        <div className="flex items-center gap-2 text-cyan-400/80">
-          <span>COIMBATORE, INDIA</span>
-          <span>•</span>
-          <span className="text-green-400">IST (UTC +5:30)</span>
-        </div>
+
+        {/* ── BOTTOM STATUS FOOTER BAR (2500ms) ── */}
+        <motion.div
+          initial={isBooted ? { opacity: 1 } : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: isBooted ? 0 : 2.5, ease: 'easeOut' }}
+          className="w-full flex items-center justify-between z-10 pt-4 font-mono text-xs text-secondary"
+        >
+          <div className="flex items-center gap-2">
+            <Globe size={13} className="text-cyan-400" />
+            <span>AVAILABLE WORLDWIDE & REMOTE</span>
+          </div>
+
+          <div className="flex items-center gap-2 text-cyan-400/80">
+            <span>COIMBATORE, INDIA</span>
+            <span>•</span>
+            <span className="text-green-400">IST (UTC +5:30)</span>
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* Resume Modal */}
