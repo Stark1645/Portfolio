@@ -46,7 +46,7 @@ function AppContent() {
       <main className="flex-grow pt-20">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<AnimatedPage><Home /></AnimatedPage>} />
+            <Route path="/" element={<Home />} />
             <Route path="/about" element={
               <AnimatedPage>
                 <div className="flex flex-col gap-6 py-6">

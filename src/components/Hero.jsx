@@ -1,19 +1,15 @@
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
 import { Mail, Download, ArrowRight, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import ResumeModal from './ResumeModal';
 import Hero3DCanvas from './Hero3DCanvas';
 import SpatialGlassDeck3D from './SpatialGlassDeck3D';
 
-const roles = [
-  'Full-Stack Developer',
-  'Java & Spring Boot Engineer',
-  'React UI Craftsman',
-  'Backend Systems Builder',
-];
-
 const techPills = ['Java', 'Spring Boot', 'React', 'MySQL', 'Python', 'Docker'];
+
+// Global lifecycle flag to ensure boot sequence runs only once
+let hasHeroBooted = false;
 
 // ==========================================
 // Magnetic CTA Button Wrapper
@@ -60,9 +56,9 @@ const MagneticButton = ({ children, className = '', maxDistance = 6 }) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ x: smoothX, y: smoothY }}
-      whileHover={shouldReduceMotion ? {} : { scale: 1.015, y: -2 }}
+      whileHover={shouldReduceMotion ? {} : { scale: 1.02, y: -2 }}
       whileTap={shouldReduceMotion ? {} : { scale: 0.98, y: 1 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+      transition={{ duration: 0.15, ease: 'easeOut' }}
       className={`inline-block ${className}`}
     >
       {children}
@@ -74,58 +70,47 @@ const MagneticButton = ({ children, className = '', maxDistance = 6 }) => {
 // Main Editorial Magazine Hero Component
 // ==========================================
 const Hero = () => {
-  const [roleIndex, setRoleIndex] = useState(0);
   const [resumeOpen, setResumeOpen] = useState(false);
   const heroRef = useRef(null);
-  const photoContainerRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
+
+  // Mark booted after initial frame
+  const isBooted = hasHeroBooted || shouldReduceMotion;
+  if (!hasHeroBooted) {
+    setTimeout(() => {
+      hasHeroBooted = true;
+    }, 1600);
+  }
 
   // Normalized cursor coordinates (-1 to 1) for subtle hover response
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
 
-  // Smooth springs for multi-layered mouse parallax
   const springConfig = { damping: 30, stiffness: 100, mass: 0.6 };
   const smoothCursorX = useSpring(cursorX, springConfig);
   const smoothCursorY = useSpring(cursorY, springConfig);
 
-  // Layer Mouse Parallax Transforms
-  const textWatermarkX = useTransform(smoothCursorX, [-1, 1], [-25, 25]);
-  const textWatermarkY = useTransform(smoothCursorY, [-1, 1], [-15, 15]);
+  // Parallax transforms
+  const textWatermarkX = useTransform(smoothCursorX, [-1, 1], [-20, 20]);
+  const textWatermarkY = useTransform(smoothCursorY, [-1, 1], [-12, 12]);
+  const photoParallaxX = useTransform(smoothCursorX, [-1, 1], [-12, 12]);
+  const photoParallaxY = useTransform(smoothCursorY, [-1, 1], [-8, 8]);
+  const floatBadgeX = useTransform(smoothCursorX, [-1, 1], [14, -14]);
+  const floatBadgeY = useTransform(smoothCursorY, [-1, 1], [10, -10]);
 
-  const photoParallaxX = useTransform(smoothCursorX, [-1, 1], [-14, 14]);
-  const photoParallaxY = useTransform(smoothCursorY, [-1, 1], [-10, 10]);
-  const rotateX = useTransform(smoothCursorY, [-1, 1], [3, -3]);
-  const rotateY = useTransform(smoothCursorX, [-1, 1], [-3, 3]);
-
-  const floatBadgeX = useTransform(smoothCursorX, [-1, 1], [18, -18]);
-  const floatBadgeY = useTransform(smoothCursorY, [-1, 1], [12, -12]);
-
-  const ringGlowScale = useTransform(smoothCursorY, [-1, 1], [0.96, 1.06]);
-  const ringGlowOpacity = useTransform(smoothCursorX, [-1, 1], [0.45, 0.75]);
-
-  // Handle Hero mouse movement
   const handleMouseMove = useCallback((e) => {
     if (shouldReduceMotion || !heroRef.current) return;
     const rect = heroRef.current.getBoundingClientRect();
     const xRel = (e.clientX - rect.left) / rect.width;
     const yRel = (e.clientY - rect.top) / rect.height;
-
-    const normX = (xRel - 0.5) * 2;
-    const normY = (yRel - 0.5) * 2;
-    cursorX.set(Math.max(-1, Math.min(1, normX)));
-    cursorY.set(Math.max(-1, Math.min(1, normY)));
+    cursorX.set(Math.max(-1, Math.min(1, (xRel - 0.5) * 2)));
+    cursorY.set(Math.max(-1, Math.min(1, (yRel - 0.5) * 2)));
   }, [shouldReduceMotion, cursorX, cursorY]);
 
   const handleMouseLeave = useCallback(() => {
     cursorX.set(0);
     cursorY.set(0);
   }, [cursorX, cursorY]);
-
-  useEffect(() => {
-    const id = setInterval(() => setRoleIndex(i => (i + 1) % roles.length), 2800);
-    return () => clearInterval(id);
-  }, []);
 
   return (
     <section
@@ -136,19 +121,17 @@ const Hero = () => {
       className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-between overflow-hidden px-4 sm:px-6 lg:px-12 py-4 lg:py-6 select-none"
     >
       {/* ════════════════════════════════════════
-          1. 3D WEBGL ASSETS (LIGHTWEIGHT ATMOSPHERIC BACKGROUND)
+          THREE.JS WEBGL BACKGROUND FLOATING PARTICLES
       ════════════════════════════════════════ */}
-      {!shouldReduceMotion && (
-        <Hero3DCanvas className="opacity-80 z-0 pointer-events-none" />
-      )}
+      <Hero3DCanvas className="absolute inset-0 w-full h-full -z-10 pointer-events-none" />
 
       {/* ════════════════════════════════════════
-          2. TOP HEADER METADATA BAR
+          TOP HEADER METADATA BAR (300ms)
       ════════════════════════════════════════ */}
       <motion.div
-        initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
+        initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.05, ease: 'easeOut' }}
+        transition={{ duration: 0.35, delay: isBooted ? 0 : 0.3, ease: 'easeOut' }}
         className="w-full flex items-center justify-between z-10 border-b border-white/10 pb-3 pt-1"
       >
         {/* Left Subhead */}
@@ -170,16 +153,16 @@ const Hero = () => {
       </motion.div>
 
       {/* ════════════════════════════════════════
-          3. MAIN HERO COMPOSITION (Symmetrical 3-Column Grid)
+          MAIN HERO COMPOSITION (Symmetrical 3-Column Grid)
       ════════════════════════════════════════ */}
       <div className="relative w-full flex-1 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-4 my-2 lg:my-0 z-10">
 
-        {/* ── GIANT BACKGROUND WORDMARK ("PORTFOLIO") ── */}
+        {/* ── GIANT BACKGROUND WORDMARK ("PORTFOLIO") (250ms) ── */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
           <motion.h1
-            initial={shouldReduceMotion ? { opacity: 0.14 } : { opacity: 0 }}
+            initial={isBooted ? { opacity: 0.14 } : { opacity: 0 }}
             animate={{ opacity: 0.14 }}
-            transition={{ duration: 0.6, delay: 0.05, ease: 'easeOut' }}
+            transition={{ duration: 0.5, delay: isBooted ? 0 : 0.25, ease: 'easeOut' }}
             style={{
               ...(shouldReduceMotion ? {} : { x: textWatermarkX, y: textWatermarkY }),
               fontFamily: "'Impact', 'Arial Black', sans-serif",
@@ -187,7 +170,7 @@ const Hero = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
-            className="font-black tracking-tighter uppercase text-[clamp(4.5rem,18vw,19rem)] leading-none text-center whitespace-nowrap opacity-[0.14] dark:opacity-[0.12] transition-transform duration-300"
+            className="font-black tracking-tighter uppercase text-[clamp(4.5rem,18vw,19rem)] leading-none text-center whitespace-nowrap opacity-[0.14] dark:opacity-[0.12]"
           >
             PORTFOLIO
           </motion.h1>
@@ -195,21 +178,21 @@ const Hero = () => {
 
         {/* ── LEFT COLUMN: Typography, Name, Bio, Badges & CTAs ── */}
         <div className="lg:col-span-4 flex flex-col justify-center gap-3.5 z-20 py-4 lg:py-0 order-2 lg:order-1">
-          {/* 1. "Hello, I'm" */}
+          {/* PHASE 5: "Hello, I'm" (500ms) */}
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.08, ease: 'easeOut' }}
+            transition={{ duration: 0.35, delay: isBooted ? 0 : 0.5, ease: 'easeOut' }}
             className="font-serif italic text-2xl sm:text-3xl text-cyan-300 flex items-center gap-2"
           >
             <span>Hello, I'm</span>
           </motion.div>
 
-          {/* 2. Name */}
+          {/* PHASE 5: Name (600ms - strongest visual reveal) */}
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.18, ease: 'easeOut' }}
+            transition={{ duration: 0.4, delay: isBooted ? 0 : 0.6, ease: 'easeOut' }}
             className="flex flex-col tracking-tight leading-[0.88]"
           >
             <span
@@ -236,65 +219,50 @@ const Hero = () => {
             </span>
           </motion.div>
 
-          {/* Role subtitle with Animated Switcher */}
+          {/* Role subtitle (650ms) */}
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.24, ease: 'easeOut' }}
+            transition={{ duration: 0.35, delay: isBooted ? 0 : 0.65, ease: 'easeOut' }}
             className="flex items-center gap-2 font-mono text-xs sm:text-sm font-bold text-cyan-400 tracking-wider uppercase mt-1"
           >
             <span className="text-secondary">//</span>
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={roleIndex}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25 }}
-                className="text-cyan-300"
-              >
-                {roles[roleIndex]}
-              </motion.span>
-            </AnimatePresence>
+            <span className="text-cyan-300">Full-Stack Developer</span>
           </motion.div>
 
-          {/* 3. Description */}
+          {/* PHASE 5: Description (700ms) */}
           <motion.p
-            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.28, ease: 'easeOut' }}
+            transition={{ duration: 0.35, delay: isBooted ? 0 : 0.7, ease: 'easeOut' }}
             className="text-secondary text-xs sm:text-sm leading-relaxed max-w-sm"
           >
             I architect and engineer robust full-stack applications with clean code,
             high-throughput Spring Boot REST APIs, and performant React user interfaces.
           </motion.p>
 
-          {/* 4. Technology Badges (small stagger) */}
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {techPills.map((t, idx) => (
-              <motion.span
+          {/* PHASE 5: Technology Badges (800ms) */}
+          <motion.div
+            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: isBooted ? 0 : 0.8, ease: 'easeOut' }}
+            className="flex flex-wrap gap-1.5 pt-1"
+          >
+            {techPills.map((t) => (
+              <span
                 key={t}
-                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.36 + idx * 0.035, ease: 'easeOut' }}
-                whileHover={shouldReduceMotion ? {} : {
-                  y: -2,
-                  borderColor: 'rgba(56, 189, 248, 0.45)',
-                  backgroundColor: 'rgba(26, 34, 51, 0.95)',
-                  boxShadow: '0 4px 12px rgba(56, 189, 248, 0.15)',
-                }}
-                className="px-2.5 py-1 rounded-md bg-[#11151c]/90 border border-white/10 text-xs font-mono font-semibold text-white/80 cursor-default transition-colors duration-200"
+                className="px-2.5 py-1 rounded-md bg-[#11151c]/90 border border-white/10 text-xs font-mono font-semibold text-white/80 cursor-default transition-colors duration-200 hover:border-cyan-400/40 hover:bg-[#1a2233]"
               >
                 {t}
-              </motion.span>
+              </span>
             ))}
-          </div>
+          </motion.div>
 
-          {/* 5. Buttons */}
+          {/* PHASE 5: Buttons (900ms) */}
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.52, ease: 'easeOut' }}
+            transition={{ duration: 0.35, delay: isBooted ? 0 : 0.9, ease: 'easeOut' }}
             className="flex flex-wrap items-center gap-2.5 pt-2"
           >
             <MagneticButton>
@@ -333,44 +301,91 @@ const Hero = () => {
           </motion.div>
         </div>
 
-        {/* ── 6. CENTER COLUMN: Profile (opacity: 0 -> 1, scale: 0.98 -> 1, static & sharp) ── */}
+        {/* ── 5. CENTER COLUMN: Digital Core & Profile Materialization ── */}
         <div className="lg:col-span-4 flex items-center justify-center relative z-20 py-4 lg:py-0 order-1 lg:order-2 mx-auto w-full">
-          <motion.div
-            ref={photoContainerRef}
-            initial={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.45, delay: 0.60, ease: 'easeOut' }}
-            style={{
-              x: shouldReduceMotion ? 0 : photoParallaxX,
-              y: shouldReduceMotion ? 0 : photoParallaxY,
-              rotateX: shouldReduceMotion ? 0 : rotateX,
-              rotateY: shouldReduceMotion ? 0 : rotateY,
-              transformPerspective: 1000,
-              transformStyle: 'preserve-3d',
-            }}
-            className="relative flex items-center justify-center will-change-transform"
-          >
-            {/* Maximized Portrait Studio Framing with Original Siri Ring */}
+          <div className="relative flex items-center justify-center">
+
+            {/* Maximized Portrait Studio Framing */}
             <div className="relative w-[300px] h-[370px] sm:w-[370px] sm:h-[450px] md:w-[420px] md:h-[500px] lg:w-[450px] lg:h-[540px] flex items-center justify-center mx-auto">
 
-              {/* 0. Wide Scattered Cosmic Stardust Aura */}
-              <div
+              {/* ════════════════════════════════════════
+                  PHASE 2: DIGITAL CORE PULSE (~350ms -> 850ms)
+                  scale: 0.65 -> 1.15 -> 1, opacity: 0 -> 1 -> 0
+              ════════════════════════════════════════ */}
+              {!isBooted && (
+                <motion.div
+                  initial={{ scale: 0.65, opacity: 0 }}
+                  animate={{
+                    scale: [0.65, 1.15, 1],
+                    opacity: [0, 0.95, 0],
+                  }}
+                  transition={{ duration: 0.5, delay: 0.35, ease: 'easeOut' }}
+                  className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[320px] h-[320px] sm:w-[385px] sm:h-[385px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] rounded-full pointer-events-none z-10 blur-[15px]"
+                  style={{
+                    background: 'radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.8) 0%, rgba(56, 189, 248, 0.5) 45%, rgba(129, 140, 248, 0.2) 70%, transparent 85%)',
+                  }}
+                />
+              )}
+
+              {/* ════════════════════════════════════════
+                  PHASE 3: THIN LUMINOUS ENERGY RING (~500ms -> 950ms)
+                  scale: 0.85 -> 1.12, opacity: 1 -> 0
+              ════════════════════════════════════════ */}
+              {!isBooted && (
+                <motion.div
+                  initial={{ scale: 0.85, opacity: 0 }}
+                  animate={{
+                    scale: [0.85, 1.12],
+                    opacity: [1, 0],
+                  }}
+                  transition={{ duration: 0.45, delay: 0.5, ease: 'easeOut' }}
+                  className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-10 border-[1.5px] border-cyan-400 shadow-[0_0_15px_#00f0ff,inset_0_0_15px_#00f0ff]"
+                />
+              )}
+
+              {/* ════════════════════════════════════════
+                  PHASE 7: FINAL SYSTEM PULSE (~1100ms -> 1450ms)
+                  scale: 1 -> 1.35, opacity: 0.75 -> 0
+              ════════════════════════════════════════ */}
+              {!isBooted && (
+                <motion.div
+                  initial={{ scale: 1, opacity: 0 }}
+                  animate={{
+                    scale: [1, 1.35],
+                    opacity: [0.75, 0],
+                  }}
+                  transition={{ duration: 0.35, delay: 1.1, ease: 'easeOut' }}
+                  className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-10 border border-sky-400/60 blur-[1px] shadow-[0_0_20px_rgba(56,189,248,0.5)]"
+                />
+              )}
+
+              {/* 0. Wide Scattered Cosmic Stardust Aura (Ambient Base Glow) */}
+              <motion.div
+                initial={isBooted ? { opacity: 0.85 } : { opacity: 0 }}
+                animate={{ opacity: 0.85 }}
+                transition={{ duration: 0.5, delay: isBooted ? 0 : 0.4, ease: 'easeOut' }}
                 style={{
                   background: 'radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.35) 0%, rgba(129, 140, 248, 0.22) 32%, rgba(168, 85, 247, 0.18) 50%, rgba(236, 72, 153, 0.1) 68%, transparent 80%)',
                 }}
-                className="absolute top-[8%] sm:top-[10%] md:top-[11%] lg:top-[12%] left-[53%] -translate-x-1/2 w-[480px] h-[480px] sm:w-[560px] sm:h-[560px] md:w-[640px] md:h-[640px] lg:w-[700px] lg:h-[700px] rounded-full pointer-events-none z-0 blur-[75px] opacity-85"
+                className="absolute top-[8%] sm:top-[10%] md:top-[11%] lg:top-[12%] left-[53%] -translate-x-1/2 w-[480px] h-[480px] sm:w-[560px] sm:h-[560px] md:w-[640px] md:h-[640px] lg:w-[700px] lg:h-[700px] rounded-full pointer-events-none z-0 blur-[75px]"
               />
 
-              {/* 1. Ambient Pulsing Neon Glow (Scattered Diffusion) */}
-              <div
+              {/* 1. Ambient Pulsing Neon Glow */}
+              <motion.div
+                initial={isBooted ? { opacity: 0.85 } : { opacity: 0 }}
+                animate={{ opacity: 0.85 }}
+                transition={{ duration: 0.5, delay: isBooted ? 0 : 0.45, ease: 'easeOut' }}
                 style={{
                   background: 'conic-gradient(from 180deg at 50% 50%, #00f0ff 0%, #38bdf8 20%, #818cf8 40%, #a855f7 60%, #ec4899 80%, #00f0ff 100%)',
                 }}
-                className="absolute top-[10%] sm:top-[12%] md:top-[13%] lg:top-[14%] left-[53%] -translate-x-1/2 w-[390px] h-[390px] sm:w-[460px] sm:h-[460px] md:w-[530px] md:h-[530px] lg:w-[590px] lg:h-[590px] rounded-full pointer-events-none z-0 blur-[50px] opacity-85"
+                className="absolute top-[10%] sm:top-[12%] md:top-[13%] lg:top-[14%] left-[53%] -translate-x-1/2 w-[390px] h-[390px] sm:w-[460px] sm:h-[460px] md:w-[530px] md:h-[530px] lg:w-[590px] lg:h-[590px] rounded-full pointer-events-none z-0 blur-[50px]"
               />
 
               {/* 2. Full Multi-Hue Neon Ring */}
-              <div
+              <motion.div
+                initial={isBooted ? { opacity: 1 } : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.45, delay: isBooted ? 0 : 0.45, ease: 'easeOut' }}
                 className="absolute top-[14%] sm:top-[16%] md:top-[17%] lg:top-[18%] left-[53%] -translate-x-1/2 w-[325px] h-[325px] sm:w-[390px] sm:h-[390px] md:w-[455px] md:h-[455px] lg:w-[510px] lg:h-[510px] rounded-full pointer-events-none z-0"
                 style={{
                   background: 'conic-gradient(from 0deg, #00f0ff 0%, #38bdf8 18%, #818cf8 38%, #a855f7 58%, #ec4899 78%, #00f0ff 100%)',
@@ -384,10 +399,21 @@ const Hero = () => {
                     background: 'radial-gradient(circle at 50% 35%, rgba(56, 189, 248, 0.4) 0%, rgba(129, 140, 248, 0.28) 28%, rgba(168, 85, 247, 0.16) 52%, rgba(13, 17, 23, 0.94) 75%, #090d14 100%)',
                   }}
                 />
-              </div>
+              </motion.div>
 
-              {/* 3. Maximized Silhouette Portrait (Strictly sharp & stable) */}
-              <div className="relative z-10 w-full h-full flex items-end justify-center pointer-events-none select-none overflow-visible mx-auto">
+              {/* ════════════════════════════════════════
+                  PHASE 4: PROFILE MATERIALIZATION (~400ms -> 1000ms)
+                  opacity: 0 -> 1, scale: 0.94 -> 1, y: 10 -> 0 (easeOut, 600ms)
+              ════════════════════════════════════════ */}
+              <motion.div
+                initial={isBooted ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.94, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: isBooted ? 0 : 0.4, ease: 'easeOut' }}
+                style={{
+                  ...(shouldReduceMotion ? {} : { x: photoParallaxX, y: photoParallaxY }),
+                }}
+                className="relative z-10 w-full h-full flex items-end justify-center pointer-events-none select-none overflow-visible mx-auto"
+              >
                 <img
                   src="/hero-portrait.png"
                   alt="Ruthragurubaran"
@@ -401,17 +427,17 @@ const Hero = () => {
                     e.target.src = '/profile.png';
                   }}
                 />
-              </div>
+              </motion.div>
 
             </div>
-          </motion.div>
+          </div>
         </div>
 
-        {/* ── 7. RIGHT COLUMN: HUD (opacity: 0 -> 1, translateY: 10px -> 0, static) ── */}
+        {/* ── 6. RIGHT COLUMN: HUD (PHASE 6: ~950ms activation: opacity 0 -> 1, y 8px -> 0) ── */}
         <motion.div
-          initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+          initial={isBooted ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.70, ease: 'easeOut' }}
+          transition={{ duration: 0.4, delay: isBooted ? 0 : 0.95, ease: 'easeOut' }}
           style={shouldReduceMotion ? {} : { x: floatBadgeX, y: floatBadgeY }}
           className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center z-20 py-4 lg:py-0 order-3 w-full"
         >
@@ -421,12 +447,12 @@ const Hero = () => {
       </div>
 
       {/* ════════════════════════════════════════
-          4. BOTTOM STATUS FOOTER BAR
+          BOTTOM STATUS FOOTER BAR (1100ms)
       ════════════════════════════════════════ */}
       <motion.div
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        initial={isBooted ? { opacity: 1 } : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.80, ease: 'easeOut' }}
+        transition={{ duration: 0.35, delay: isBooted ? 0 : 1.1, ease: 'easeOut' }}
         className="w-full flex items-center justify-between z-10 border-t border-white/10 pt-3 font-mono text-xs text-secondary"
       >
         <div className="flex items-center gap-2">

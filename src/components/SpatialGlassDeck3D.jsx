@@ -158,7 +158,7 @@ const SpatialGlassDeck3D = () => {
     };
   }, []);
 
-  // 2. Initial Count-Up Animation (runs once upon mount)
+  // 2. Initial Count-Up Animation (runs strictly once upon mount)
   useEffect(() => {
     if (shouldReduceMotion) {
       setCounts({ streak: liveStreak, projects: 10, hours: 1000, cgpa: 8.03 });
@@ -166,6 +166,7 @@ const SpatialGlassDeck3D = () => {
     }
     const duration = 1200;
     const startTime = performance.now();
+    const initialTargetStreak = liveStreak;
 
     const updateCounts = (now) => {
       const elapsed = now - startTime;
@@ -173,7 +174,7 @@ const SpatialGlassDeck3D = () => {
       const ease = 1 - Math.pow(1 - progress, 3);
 
       setCounts({
-        streak: Math.floor(ease * liveStreak),
+        streak: Math.floor(ease * initialTargetStreak),
         projects: Math.floor(ease * 10),
         hours: Math.floor(ease * 1000),
         cgpa: Number((ease * 8.03).toFixed(2)),
@@ -182,13 +183,17 @@ const SpatialGlassDeck3D = () => {
       if (progress < 1) {
         requestAnimationFrame(updateCounts);
       } else {
-        setCounts({ streak: liveStreak, projects: 10, hours: 1000, cgpa: 8.03 });
+        setCounts(prev => ({ ...prev, streak: initialTargetStreak, projects: 10, hours: 1000, cgpa: 8.03 }));
       }
     };
 
     const animFrame = requestAnimationFrame(updateCounts);
     return () => cancelAnimationFrame(animFrame);
-  }, [shouldReduceMotion, liveStreak]);
+  }, [shouldReduceMotion]);
+
+  useEffect(() => {
+    setCounts(prev => ({ ...prev, streak: liveStreak }));
+  }, [liveStreak]);
 
   // Container Mouse Parallax
   const handleMouseMove = (e) => {

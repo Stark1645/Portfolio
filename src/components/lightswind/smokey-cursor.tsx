@@ -170,7 +170,7 @@ export default function SmokeyCursor({
         );
       }
 
-      gl.clearColor(0, 0, 0, 1);
+      gl.clearColor(0, 0, 0, 0);
 
       const halfFloatTexType = isWebGL2
         ? (gl as WebGL2RenderingContext).HALF_FLOAT
