@@ -557,40 +557,18 @@ const CodingProfiles = () => {
     const signal = customSignal || controller.signal;
 
     try {
-      const hrRes = await axios.get('https://www.hackerrank.com/rest/contests/master/hackers/gurudaya49/profile', {
-        signal,
-        timeout: 4000
-      });
-      if (hrRes.data && hrRes.data.model) {
-        setHrData(hrRes.data.model);
-        setCachedProfile('cp_hr_data', hrRes.data.model);
+      const res = await axios.get('/api/hackerrank', { signal, timeout: 4000 });
+      if (res.data) {
+        if (res.data.model) {
+          setHrData(res.data.model);
+          setCachedProfile('cp_hr_data', res.data.model);
+        }
+        if (res.data.badges && res.data.badges.length > 0) {
+          setHrBadges(res.data.badges);
+          setCachedProfile('cp_hr_badges', res.data.badges);
+        }
+        setHrLastUpdated(new Date());
       }
-    } catch (err) {}
-
-    try {
-      const badgesRes = await axios.get('https://www.hackerrank.com/rest/hackers/gurudaya49/badges', {
-        signal,
-        timeout: 4000
-      });
-      if (badgesRes.data && badgesRes.data.models && badgesRes.data.models.length > 0) {
-        const formatted = badgesRes.data.models.map(m => {
-          const name = m.badge_name || "Java";
-          let icon = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg";
-          if (name.toLowerCase().includes("sql")) icon = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg";
-          else if (name.toLowerCase().includes("problem")) icon = "https://cdn.simpleicons.org/hackerrank/2EC866";
-          return {
-            id: m.badge_type || name,
-            name: name,
-            category: `${m.stars || 4}-Star Gold Badge`,
-            icon: icon,
-            issuer: 'HackerRank',
-            stars: m.stars || 4
-          };
-        });
-        setHrBadges(formatted);
-        setCachedProfile('cp_hr_badges', formatted);
-      }
-      setHrLastUpdated(new Date());
     } catch (err) {}
 
     setHrFetching(false);
