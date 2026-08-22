@@ -241,41 +241,64 @@ export const projectsData = [
 
 export const eventsData = [
   {
+    id: "ott-security",
     title: "OTT Content Security Presentation",
+    category: "Seminars & Talks",
+    date: "29 Jul 2026",
     location: "Kuniyamuthur, Coimbatore",
-    description: "Seminar presentation on how Netflix & Amazon Prime protect streaming content using AES encryption, block cipher modes, DRM, and secure delivery. (29.07.2026)",
-    image: "/events/ott_security_seminar.jpg"
+    description: "Seminar presentation on how Netflix & Amazon Prime protect streaming content using AES encryption, block cipher modes, DRM, and secure delivery.",
+    image: "/events/ott_security_seminar.jpg",
+    tag: "Shared with team"
   },
   {
+    id: "docker-containerization",
     title: "Containerization Using Docker Presentation",
+    category: "Seminars & Talks",
+    date: "07 Jul 2026",
     location: "Kuniyamuthur, Coimbatore",
-    description: "Delivering a technical presentation on Containerization using Docker, covering container management, isolated environments, and modern DevOps workflows. (07.07.2026)",
+    description: "Delivering a technical presentation on Containerization using Docker, covering container management, isolated environments, and modern DevOps workflows.",
     image: "/events/docker_containerization_seminar.png",
     tag: "Solo Presentation"
   },
   {
+    id: "gpt-workshop",
     title: "Build Your Own GPT Workshop",
+    category: "Hackathons & Workshops",
+    date: "05 Feb 2026",
     location: "Sri Eshwar College Of Engineering",
-    description: "Collaborated with team to build custom AI agents and GPT models at 'THIRAN 2026'. (05.02.2026)",
-    image: "/events/thiran_backdrop.jpg"
+    description: "Collaborated with team to build custom AI agents and GPT models at 'THIRAN 2026'.",
+    image: "/events/thiran_backdrop.jpg",
+    tag: "THIRAN 2026"
   },
   {
+    id: "app-showcase",
     title: "App & Web Showcase",
+    category: "Hackathons & Workshops",
+    date: "31 Jan 2026",
     location: "SKCT Incubation Center",
-    description: "Showcasing our full-stack application architecture and backend systems to mentors. (31.01.2026)",
-    image: "/events/workshop_thiran.jpg"
+    description: "Showcasing our full-stack application architecture and backend systems to mentors.",
+    image: "/events/workshop_thiran.jpg",
+    tag: "Incubation Showcase"
   },
   {
+    id: "byte-fyre",
     title: "Team Byte Fyre",
+    category: "Team & Labs",
+    date: "Innovation Sprint",
     location: "Innovation Lab",
-    description: "Intense brainstorming and development session with my team 'Byte Fyre'.",
-    image: "/events/bytefyre_lab.jpg"
+    description: "Intense brainstorming and development session with my team 'Byte Fyre' building scalable solutions.",
+    image: "/events/bytefyre_lab.jpg",
+    tag: "Byte Fyre Team"
   },
   {
-    title: "Project Review & Mentorship",
+    id: "sih-2025",
+    title: "Smart India Hackathon (SIH) 2025",
+    category: "Hackathons & Workshops",
+    date: "17 Sep 2025",
     location: "Kovaipudur, Tamil Nadu",
-    description: "Presenting project progress and receiving industry-expert feedback during a technical review. (17.09.2025)",
-    image: "/events/kovaipudur_event.jpg"
+    description: "Participated in Smart India Hackathon (SIH) 2025, presenting our solution architecture and receiving mentorship and technical evaluation from industry experts.",
+    image: "/events/kovaipudur_event.jpg",
+    tag: "SIH 2025 Participant"
   }
 ];
 

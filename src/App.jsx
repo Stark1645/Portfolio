@@ -29,13 +29,13 @@ function AppContent() {
       <ProfessionalBackground />
       <SmokeyCursor
         className="fixed inset-0 pointer-events-none z-0 opacity-60"
-        simulationResolution={96}
-        dyeResolution={512}
+        simulationResolution={64}
+        dyeResolution={256}
         splatRadius={0.18}
-        splatForce={4800}
+        splatForce={4600}
         densityDissipation={3.6}
         velocityDissipation={2.0}
-        pressureIterations={12}
+        pressureIterations={6}
         curl={2}
         enableShading={false}
         transparent={true}

@@ -1027,7 +1027,7 @@ export default function SmokeyCursor({
     }
 
     function scaleByPixelRatio(input: number) {
-      const pixelRatio = window.devicePixelRatio || 1;
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.25);
       return Math.floor(input * pixelRatio);
     }
 
@@ -1037,6 +1037,17 @@ export default function SmokeyCursor({
 
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;
+    let idleFrames = 0;
+    let isRunning = false;
+
+    function startLoop() {
+      if (!isRunning) {
+        isRunning = true;
+        idleFrames = 0;
+        lastUpdateTime = Date.now();
+        animationId = requestAnimationFrame(updateFrame);
+      }
+    }
 
     function updateFrame() {
       const dt = calcDeltaTime();
@@ -1045,6 +1056,21 @@ export default function SmokeyCursor({
       applyInputs();
       step(dt);
       render(null);
+
+      // Check if any pointers are moving/down
+      const hasActivePointer = pointers.some(p => p.down || p.moved);
+      if (hasActivePointer) {
+        idleFrames = 0;
+      } else {
+        idleFrames++;
+      }
+
+      // After ~100 frames (~1.6s) of no interaction and fluid dissipation, sleep
+      if (idleFrames > 100) {
+        isRunning = false;
+        return;
+      }
+
       animationId = requestAnimationFrame(updateFrame);
     }
 
@@ -1491,6 +1517,7 @@ export default function SmokeyCursor({
     };
 
     const handleMouseDown = (e: MouseEvent) => {
+      startLoop();
       const pointer = pointers[0];
       const { x: posX, y: posY } = getCoords(e.clientX, e.clientY);
       updatePointerDownData(pointer, -1, posX, posY);
@@ -1502,12 +1529,13 @@ export default function SmokeyCursor({
       const pointer = pointers[0];
       const { x: posX, y: posY } = getCoords(e.clientX, e.clientY);
       const color = generateColor();
-      updateFrame();
+      startLoop();
       updatePointerMoveData(pointer, posX, posY, color);
       document.body.removeEventListener("mousemove", handleFirstMouseMove);
     }
 
     const handleMouseMove = (e: MouseEvent) => {
+      startLoop();
       const pointer = pointers[0];
       const { x: posX, y: posY } = getCoords(e.clientX, e.clientY);
       const color = pointer.color;
@@ -1518,15 +1546,16 @@ export default function SmokeyCursor({
     function handleFirstTouchStart(e: TouchEvent) {
       const touches = e.targetTouches;
       const pointer = pointers[0];
+      startLoop();
       for (let i = 0; i < touches.length; i++) {
         const { x: posX, y: posY } = getCoords(touches[i].clientX, touches[i].clientY);
-        updateFrame();
         updatePointerDownData(pointer, touches[i].identifier, posX, posY);
       }
       document.body.removeEventListener("touchstart", handleFirstTouchStart);
     }
 
     const handleTouchStart = (e: TouchEvent) => {
+      startLoop();
       const touches = e.targetTouches;
       const pointer = pointers[0];
       for (let i = 0; i < touches.length; i++) {
@@ -1536,6 +1565,7 @@ export default function SmokeyCursor({
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      startLoop();
       const touches = e.targetTouches;
       const pointer = pointers[0];
       for (let i = 0; i < touches.length; i++) {

@@ -41,23 +41,24 @@ const ProfessionalBackground = () => {
 
       {/* 2. Animated Aurora Glows (Professional & Slower) */}
       <motion.div
-        style={shouldReduceMotion ? {} : { x: glow1X, y: glow1Y }}
-        className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-600/15 light:bg-blue-600/10 rounded-full blur-[130px]"
+        style={shouldReduceMotion ? {} : { x: glow1X, y: glow1Y, willChange: 'transform', transform: 'translateZ(0)' }}
+        className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-600/15 light:bg-blue-600/10 rounded-full blur-[110px]"
       />
       
       <motion.div
-        style={shouldReduceMotion ? {} : { x: glow2X, y: glow2Y }}
-        className="absolute bottom-[-10%] right-[-10%] w-[55%] h-[55%] bg-gradient-to-tl from-purple-600/12 via-amber-500/8 to-blue-600/10 rounded-full blur-[140px]"
+        style={shouldReduceMotion ? {} : { x: glow2X, y: glow2Y, willChange: 'transform', transform: 'translateZ(0)' }}
+        className="absolute bottom-[-10%] right-[-10%] w-[55%] h-[55%] bg-gradient-to-tl from-purple-600/12 via-amber-500/8 to-blue-600/10 rounded-full blur-[120px]"
       />
 
       {/* 3. Floating "Glass" Orbs */}
       <motion.div
         animate={shouldReduceMotion ? {} : {
-          y: [0, -40, 0],
-          opacity: [0.1, 0.3, 0.1],
+          y: [0, -35, 0],
+          opacity: [0.1, 0.25, 0.1],
         }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 left-1/3 w-64 h-64 bg-cyan-400/5 rounded-full blur-[80px]"
+        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+        className="absolute top-1/4 left-1/3 w-64 h-64 bg-cyan-400/5 rounded-full blur-[70px]"
       />
 
       {/* 4. The "Scanning" Line (Very subtle) */}
