@@ -73,15 +73,12 @@ const Hero = () => {
   const heroRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
 
-  // Scroll Parallax Driver
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  });
+  // Scroll Parallax Driver (tracks window scroll smoothly)
+  const { scrollY } = useScroll();
 
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.75], [1, 0.92]);
-  const heroY = useTransform(scrollYProgress, [0, 0.75], [0, -80]);
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const heroScale = useTransform(scrollY, [0, 500], [1, 0.92]);
+  const heroY = useTransform(scrollY, [0, 500], [0, -80]);
 
   // Mark booted after initial frame
   const isBooted = hasHeroBooted || shouldReduceMotion;

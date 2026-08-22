@@ -58,7 +58,7 @@ const SpatialGlassDeck3D = () => {
 
   // Live LeetCode Streak State
   const [liveStreak, setLiveStreak] = useState(() => {
-    return Number(localStorage.getItem('leetcode_live_streak')) || 225;
+    return Number(localStorage.getItem('leetcode_live_streak')) || 234;
   });
 
   // Real-Time Dynamic Live Telemetry Waveform Path State
@@ -107,10 +107,9 @@ const SpatialGlassDeck3D = () => {
 
       if (!user) {
         try {
-          const statsRes = await axios.get('https://leetcode-api-faisalshohag.vercel.app/Ruthragurubaran-J');
-          if (statsRes.data && statsRes.data.totalSolved) {
-            const streakInfo = calculateLeetCodeStreak(statsRes.data.submissionCalendar);
-            const val = Math.max(225, (statsRes.data.totalActiveDays || streakInfo.totalActiveDays || 222) + 3);
+          const statsRes = await axios.get('https://alfa-leetcode-api.onrender.com/userProfile/Ruthragurubaran-J', { timeout: 5000 });
+          if (statsRes.data && (statsRes.data.totalSolved || statsRes.data.ranking)) {
+            const val = Math.max(225, (statsRes.data.totalActiveDays || 222) + 3);
             if (isMounted) {
               setLiveStreak(val);
               localStorage.setItem('leetcode_live_streak', String(val));
@@ -340,8 +339,11 @@ const SpatialGlassDeck3D = () => {
 
             {/* 4. Tiny Cyan Data Point Traveling along Left Conduit Toward Center Spine */}
             <motion.circle
+              cx={80}
+              cy={24}
               r="2"
               fill="#00f0ff"
+              initial={{ cx: 80, cy: 24, opacity: 0 }}
               animate={shouldReduceMotion ? {} : {
                 cx: [80, 160],
                 cy: [24, 8],
@@ -353,8 +355,11 @@ const SpatialGlassDeck3D = () => {
 
             {/* 4. Tiny Cyan Data Point Traveling along Right Conduit Toward Center Spine */}
             <motion.circle
+              cx={240}
+              cy={24}
               r="2"
               fill="#00f0ff"
+              initial={{ cx: 240, cy: 24, opacity: 0 }}
               animate={shouldReduceMotion ? {} : {
                 cx: [240, 160],
                 cy: [24, 8],

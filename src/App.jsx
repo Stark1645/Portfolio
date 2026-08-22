@@ -43,7 +43,7 @@ function AppContent() {
       <ScrollProgress />
       <BackToTop />
       <Navbar />
-      <main className="flex-grow pt-20">
+      <main className="relative flex-grow pt-20">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Home />} />

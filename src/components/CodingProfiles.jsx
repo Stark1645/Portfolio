@@ -178,7 +178,7 @@ const fallbackHackerRankBadges = [
     id: "hr_java_4star",
     name: "Java Proficiency",
     category: "4-Star Gold Badge",
-    icon: "https://cdn.svgporn.com/logos/java.svg",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
     issuer: "HackerRank",
     stars: 4
   },
@@ -186,7 +186,7 @@ const fallbackHackerRankBadges = [
     id: "hr_problem_solving",
     name: "Problem Solving",
     category: "3-Star Badge",
-    icon: "https://cdn.svgporn.com/logos/hackerrank.svg",
+    icon: "https://cdn.simpleicons.org/hackerrank/2EC866",
     issuer: "HackerRank",
     stars: 3
   },
@@ -194,7 +194,7 @@ const fallbackHackerRankBadges = [
     id: "hr_sql",
     name: "SQL Database",
     category: "3-Star Badge",
-    icon: "https://cdn.svgporn.com/logos/mysql-icon.svg",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
     issuer: "HackerRank",
     stars: 3
   }
@@ -287,28 +287,57 @@ const fallbackGitHubData = {
   topLangs: [["Java", 12], ["JavaScript", 4], ["Python", 2]]
 };
 
+// SessionStorage Cache Helpers
+const getCachedProfile = (key, fallback) => {
+  try {
+    const item = sessionStorage.getItem(key);
+    if (item) return JSON.parse(item);
+  } catch (e) {}
+  return fallback;
+};
+
+const setCachedProfile = (key, data) => {
+  try {
+    sessionStorage.setItem(key, JSON.stringify(data));
+  } catch (e) {}
+};
+
+const defaultGsData = {
+  name: 'Ruthragurubaran J',
+  avatar: 'https://lh3.googleusercontent.com/a/ACg8ocLtv36dsRITxuTdhK9p8FQnjerBEkVoD3KEE9Syh_zcW0vK3Wo=s320-c',
+  league: 'Bronze League',
+  points: 100,
+  badges: 0,
+  memberSince: '2026',
+  lastFetched: null,
+};
+
+const defaultLcData = {
+  totalSolved: 264,
+  totalQuestions: 3822,
+  easySolved: 89,
+  totalEasy: 958,
+  mediumSolved: 122,
+  totalMedium: 2098,
+  hardSolved: 53,
+  totalHard: 962,
+  ranking: 593553,
+  currentStreak: 234,
+  totalActiveDays: 234,
+  submissionCalendar: fallbackCalendar
+};
+
 const CodingProfiles = () => {
-  // LeetCode State
-  const [lcData, setLcData] = useState({
-    totalSolved: 255,
-    easySolved: 85,
-    totalEasy: 958,
-    mediumSolved: 119,
-    totalMedium: 2098,
-    hardSolved: 51,
-    totalHard: 962,
-    ranking: 614421,
-    currentStreak: 225,
-    totalActiveDays: 225
-  });
-  const [lcProfile, setLcProfile] = useState(null);
-  const [lcBadges, setLcBadges] = useState(fallbackLeetCodeBadges);
+  // LeetCode State with Cache Init
+  const [lcData, setLcData] = useState(() => getCachedProfile('cp_lc_data', defaultLcData));
+  const [lcProfile, setLcProfile] = useState(() => getCachedProfile('cp_lc_profile', null));
+  const [lcBadges, setLcBadges] = useState(() => getCachedProfile('cp_lc_badges', fallbackLeetCodeBadges));
   const [lcFetching, setLcFetching] = useState(false);
   const [lcLastUpdated, setLcLastUpdated] = useState(null);
 
-  // HackerRank State
-  const [hrData, setHrData] = useState(null);
-  const [hrBadges, setHrBadges] = useState(fallbackHackerRankBadges);
+  // HackerRank State with Cache Init
+  const [hrData, setHrData] = useState(() => getCachedProfile('cp_hr_data', null));
+  const [hrBadges, setHrBadges] = useState(() => getCachedProfile('cp_hr_badges', fallbackHackerRankBadges));
   const [hrFetching, setHrFetching] = useState(false);
   const [hrLastUpdated, setHrLastUpdated] = useState(null);
 
@@ -316,41 +345,50 @@ const CodingProfiles = () => {
   const [showLcModal, setShowLcModal] = useState(false);
   const [badgeFilter, setBadgeFilter] = useState('all');
 
-  // GitHub State
-  const [ghData, setGhData] = useState(fallbackGitHubData);
+  // GitHub State with Cache Init
+  const [ghData, setGhData] = useState(() => getCachedProfile('cp_gh_data', fallbackGitHubData));
   const [ghFetching, setGhFetching] = useState(false);
 
-  // Google Skills State
-  const [gsData, setGsData] = useState({
-    name: 'Ruthragurubaran J',
-    avatar: 'https://lh3.googleusercontent.com/a/ACg8ocLtv36dsRITxuTdhK9p8FQnjerBEkVoD3KEE9Syh_zcW0vK3Wo=s320-c',
-    league: 'Bronze League',
-    points: 100,
-    badges: 0,
-    memberSince: '2026',
-    lastFetched: null,
-  });
+  // Google Skills State with Cache Init
+  const [gsData, setGsData] = useState(() => getCachedProfile('cp_gs_data', defaultGsData));
   const [gsFetching, setGsFetching] = useState(false);
 
   const GOOGLE_SKILLS_URL = 'https://www.skills.google/public_profiles/1714331c-0949-42cf-9021-c0438aa40b13';
 
+  // Request Locks & AbortControllers
+  const activeRequestsRef = useRef({
+    leetcode: false,
+    hackerrank: false,
+    github: false,
+    google: false,
+  });
+  const abortControllersRef = useRef({});
+
   // 1. Fetch LeetCode Data & Live Badges
-  const fetchLeetCode = useCallback(async () => {
+  const fetchLeetCode = useCallback(async (customSignal) => {
+    if (activeRequestsRef.current.leetcode) return;
+    activeRequestsRef.current.leetcode = true;
     setLcFetching(true);
+
+    if (abortControllersRef.current.leetcode) {
+      abortControllersRef.current.leetcode.abort();
+    }
+    const controller = new AbortController();
+    abortControllersRef.current.leetcode = controller;
+    const signal = customSignal || controller.signal;
+
     let user = null;
 
     // 1. Try Vercel Serverless Function (/api/leetcode)
     try {
-      const apiRes = await axios.get('/api/leetcode');
+      const apiRes = await axios.get('/api/leetcode', { signal, timeout: 4000 });
       if (apiRes.data?.data?.matchedUser) {
         user = apiRes.data.data.matchedUser;
       }
-    } catch (e) {
-      console.warn('Vercel API fetch failed, trying proxy fallback...', e);
-    }
+    } catch (e) {}
 
     // 2. Try CORS Proxy to LeetCode GraphQL
-    if (!user) {
+    if (!user && !signal.aborted) {
       try {
         const gqlQuery = {
           query: `query userProfileAndBadges($username: String!) {
@@ -366,47 +404,54 @@ const CodingProfiles = () => {
           variables: { username: "Ruthragurubaran-J" }
         };
         const gqlRes = await axios.post('https://corsproxy.io/?url=https://leetcode.com/graphql', gqlQuery, {
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json' },
+          signal,
+          timeout: 4000
         });
         if (gqlRes.data?.data?.matchedUser) {
           user = gqlRes.data.data.matchedUser;
         }
-      } catch (e) {
-        console.warn('CORS Proxy fetch failed:', e);
-      }
+      } catch (e) {}
     }
 
-    // 3. Fallback: Faisalshohag API
-    if (!user) {
+    // 3. Fallback: Alfa LeetCode API (max 1 fallback attempt)
+    if (!user && !signal.aborted) {
       try {
-        const statsRes = await axios.get('https://leetcode-api-faisalshohag.vercel.app/Ruthragurubaran-J');
-        if (statsRes.data && statsRes.data.totalSolved) {
-          const streakInfo = calculateLeetCodeStreak(statsRes.data.submissionCalendar);
-          setLcData(prev => ({
-            ...prev,
-            totalSolved: statsRes.data.totalSolved || prev.totalSolved,
-            easySolved: statsRes.data.easySolved || prev.easySolved,
-            mediumSolved: statsRes.data.mediumSolved || prev.mediumSolved,
-            hardSolved: statsRes.data.hardSolved || prev.hardSolved,
-            ranking: statsRes.data.ranking || prev.ranking,
-            submissionCalendar: statsRes.data.submissionCalendar || prev.submissionCalendar,
-            currentStreak: Math.max(225, (statsRes.data.totalActiveDays || streakInfo.totalActiveDays || 222) + 3),
-            totalActiveDays: Math.max(225, (statsRes.data.totalActiveDays || streakInfo.totalActiveDays || 222) + 3)
-          }));
+        const statsRes = await axios.get('https://alfa-leetcode-api.onrender.com/userProfile/Ruthragurubaran-J', {
+          signal,
+          timeout: 4000
+        });
+        if (statsRes.data && (statsRes.data.totalSolved || statsRes.data.ranking)) {
+          const updated = {
+            totalSolved: statsRes.data.totalSolved || 255,
+            totalQuestions: 3822,
+            easySolved: statsRes.data.easySolved || 85,
+            totalEasy: 958,
+            mediumSolved: statsRes.data.mediumSolved || 119,
+            totalMedium: 2098,
+            hardSolved: statsRes.data.hardSolved || 51,
+            totalHard: 962,
+            ranking: statsRes.data.ranking || 614421,
+            currentStreak: Math.max(225, (statsRes.data.totalActiveDays || 222) + 3),
+            totalActiveDays: Math.max(225, (statsRes.data.totalActiveDays || 222) + 3),
+            submissionCalendar: fallbackCalendar
+          };
+          setLcData(updated);
+          setCachedProfile('cp_lc_data', updated);
           setLcLastUpdated(new Date());
         }
-      } catch (err) {
-        console.warn('LeetCode API fetch fallback failed:', err);
-      } finally {
-        setLcFetching(false);
-      }
+      } catch (err) {}
+      setLcFetching(false);
+      activeRequestsRef.current.leetcode = false;
       return;
     }
 
     // Process matchedUser data if retrieved
-    if (user) {
+    if (user && !signal.aborted) {
       if (user.profile?.userAvatar) {
-        setLcProfile({ avatar: user.profile.userAvatar });
+        const p = { avatar: user.profile.userAvatar };
+        setLcProfile(p);
+        setCachedProfile('cp_lc_profile', p);
       }
 
       let totalSolved = 255;
@@ -438,22 +483,26 @@ const CodingProfiles = () => {
           const computedActiveDays = streakInfo.totalActiveDays ? streakInfo.totalActiveDays + streakOffset : totalActiveDays;
           totalActiveDays = Math.max(225, user.userCalendar.totalActiveDays ? user.userCalendar.totalActiveDays + streakOffset : computedActiveDays);
           currentStreak = totalActiveDays;
-        } catch (e) {
-          console.warn('Submission calendar parse error:', e);
-        }
+        } catch (e) {}
       }
 
-      setLcData(prev => ({
-        ...prev,
+      const newLcData = {
         totalSolved,
+        totalQuestions: 3822,
         easySolved,
+        totalEasy: 958,
         mediumSolved,
+        totalMedium: 2098,
         hardSolved,
-        ranking: user.profile?.ranking || prev.ranking || 614421,
+        totalHard: 962,
+        ranking: user.profile?.ranking || 614421,
         currentStreak,
         totalActiveDays,
-        submissionCalendar: calendarData || prev.submissionCalendar
-      }));
+        submissionCalendar: calendarData || fallbackCalendar
+      };
+
+      setLcData(newLcData);
+      setCachedProfile('cp_lc_data', newLcData);
 
       try {
         localStorage.setItem('leetcode_live_streak', String(currentStreak));
@@ -485,32 +534,50 @@ const CodingProfiles = () => {
           };
         });
         setLcBadges(formatted);
+        setCachedProfile('cp_lc_badges', formatted);
       }
       setLcLastUpdated(new Date());
     }
+
     setLcFetching(false);
+    activeRequestsRef.current.leetcode = false;
   }, []);
 
   // 2. Fetch HackerRank Data
-  const fetchHackerRank = useCallback(async () => {
+  const fetchHackerRank = useCallback(async (customSignal) => {
+    if (activeRequestsRef.current.hackerrank) return;
+    activeRequestsRef.current.hackerrank = true;
     setHrFetching(true);
-    try {
-      const hrRes = await axios.get('https://www.hackerrank.com/rest/contests/master/hackers/gurudaya49/profile');
-      if (hrRes.data && hrRes.data.model) {
-        setHrData(hrRes.data.model);
-      }
-    } catch (err) {
-      console.warn('HackerRank profile fallback:', err);
+
+    if (abortControllersRef.current.hackerrank) {
+      abortControllersRef.current.hackerrank.abort();
     }
+    const controller = new AbortController();
+    abortControllersRef.current.hackerrank = controller;
+    const signal = customSignal || controller.signal;
 
     try {
-      const badgesRes = await axios.get('https://www.hackerrank.com/rest/hackers/gurudaya49/badges');
+      const hrRes = await axios.get('https://www.hackerrank.com/rest/contests/master/hackers/gurudaya49/profile', {
+        signal,
+        timeout: 4000
+      });
+      if (hrRes.data && hrRes.data.model) {
+        setHrData(hrRes.data.model);
+        setCachedProfile('cp_hr_data', hrRes.data.model);
+      }
+    } catch (err) {}
+
+    try {
+      const badgesRes = await axios.get('https://www.hackerrank.com/rest/hackers/gurudaya49/badges', {
+        signal,
+        timeout: 4000
+      });
       if (badgesRes.data && badgesRes.data.models && badgesRes.data.models.length > 0) {
-        setHrBadges(badgesRes.data.models.map(m => {
+        const formatted = badgesRes.data.models.map(m => {
           const name = m.badge_name || "Java";
-          let icon = "https://cdn.svgporn.com/logos/java.svg";
-          if (name.toLowerCase().includes("sql")) icon = "https://cdn.svgporn.com/logos/mysql-icon.svg";
-          else if (name.toLowerCase().includes("problem")) icon = "https://cdn.svgporn.com/logos/hackerrank.svg";
+          let icon = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg";
+          if (name.toLowerCase().includes("sql")) icon = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg";
+          else if (name.toLowerCase().includes("problem")) icon = "https://cdn.simpleicons.org/hackerrank/2EC866";
           return {
             id: m.badge_type || name,
             name: name,
@@ -519,92 +586,108 @@ const CodingProfiles = () => {
             issuer: 'HackerRank',
             stars: m.stars || 4
           };
-        }));
+        });
+        setHrBadges(formatted);
+        setCachedProfile('cp_hr_badges', formatted);
       }
       setHrLastUpdated(new Date());
-    } catch (err) {
-      console.warn('HackerRank badges fallback:', err);
-    } finally {
-      setHrFetching(false);
-    }
+    } catch (err) {}
+
+    setHrFetching(false);
+    activeRequestsRef.current.hackerrank = false;
   }, []);
 
   // 3. Fetch GitHub Data
-  const fetchGitHub = useCallback(async () => {
+  const fetchGitHub = useCallback(async (customSignal) => {
+    if (activeRequestsRef.current.github) return;
+    activeRequestsRef.current.github = true;
     setGhFetching(true);
+
+    if (abortControllersRef.current.github) {
+      abortControllersRef.current.github.abort();
+    }
+    const controller = new AbortController();
+    abortControllersRef.current.github = controller;
+    const signal = customSignal || controller.signal;
+
     try {
-      const ghRes = await axios.get('https://api.github.com/users/Stark1645');
-      const ghReposRes = await axios.get('https://api.github.com/users/Stark1645/repos?per_page=100&sort=updated');
+      const ghRes = await axios.get('https://api.github.com/users/Stark1645', { signal, timeout: 4000 });
+      const ghReposRes = await axios.get('https://api.github.com/users/Stark1645/repos?per_page=100&sort=updated', { signal, timeout: 4000 });
       if (ghRes.data) {
         const repos = ghReposRes.data || [];
         const totalStars = repos.reduce((s, r) => s + r.stargazers_count, 0);
         const langCount = {};
         repos.forEach(r => { if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1; });
         const topLangs = Object.entries(langCount).sort((a,b) => b[1]-a[1]).slice(0,3);
-        setGhData({ 
+        const newGhData = { 
           ...ghRes.data, 
           avatar_url: ghRes.data.avatar_url || "https://avatars.githubusercontent.com/u/224800156",
           totalStars, 
           topLangs, 
           repoCount: repos.length 
-        });
+        };
+        setGhData(newGhData);
+        setCachedProfile('cp_gh_data', newGhData);
       }
-    } catch (err) {
-      console.warn('GitHub fetch fallback:', err);
-    } finally {
-      setGhFetching(false);
-    }
+    } catch (err) {}
+
+    setGhFetching(false);
+    activeRequestsRef.current.github = false;
   }, []);
 
   // 4. Fetch Google Skills
-  const fetchGoogleSkills = useCallback(async () => {
+  const fetchGoogleSkills = useCallback(async (customSignal) => {
+    if (activeRequestsRef.current.google) return;
+    activeRequestsRef.current.google = true;
     setGsFetching(true);
-    try {
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(GOOGLE_SKILLS_URL)}`;
-      const res = await fetch(proxyUrl);
-      const json = await res.json();
-      const html = json.contents || '';
 
-      const avatarMatch = html.match(/ql-avatar[^>]+src='([^']+)'/);
-      const avatar = avatarMatch ? avatarMatch[1] : gsData.avatar;
-
-      const leagueMatch = html.match(/ql-headline-medium[^>]*>([^<]+League[^<]*)</);
-      const league = leagueMatch ? leagueMatch[1].trim() : gsData.league;
-
-      const pointsMatch = html.match(/<strong>(\d+)\s*points<\/strong>/);
-      const points = pointsMatch ? parseInt(pointsMatch[1]) : gsData.points;
-
-      const badgesMatch = html.match(/hasn't earned any badges yet/);
-      const badgeCountMatch = html.match(/(\d+)\s+badge/);
-      const badges = badgesMatch ? 0 : badgeCountMatch ? parseInt(badgeCountMatch[1]) : gsData.badges;
-
-      const memberMatch = html.match(/Member since (\d{4})/);
-      const memberSince = memberMatch ? memberMatch[1] : gsData.memberSince;
-
-      setGsData({ name: 'Ruthragurubaran J', avatar, league, points, badges, memberSince, lastFetched: new Date() });
-    } catch (err) {
-      console.warn('Google Skills fetch fallback:', err);
-    } finally {
-      setGsFetching(false);
+    if (abortControllersRef.current.google) {
+      abortControllersRef.current.google.abort();
     }
+    const controller = new AbortController();
+    abortControllersRef.current.google = controller;
+    const signal = customSignal || controller.signal;
+
+    try {
+      const res = await fetch('/api/google-skills', { signal });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.name) {
+          const newGsData = {
+            name: data.name || 'Ruthragurubaran J',
+            avatar: data.avatar || defaultGsData.avatar,
+            league: data.league || defaultGsData.league,
+            points: data.points ?? defaultGsData.points,
+            badges: data.badges ?? defaultGsData.badges,
+            memberSince: data.memberSince || defaultGsData.memberSince,
+            lastFetched: new Date()
+          };
+          setGsData(newGsData);
+          setCachedProfile('cp_gs_data', newGsData);
+        }
+      }
+    } catch (err) {
+      // Safe fallback: keep existing data and stop
+    }
+
+    setGsFetching(false);
+    activeRequestsRef.current.google = false;
   }, []);
 
-  // Initial Fetch & Auto-Refresh Interval
+  // Initial Fetch: Runs ONCE on mount with empty dependency array
   useEffect(() => {
-    fetchLeetCode();
-    fetchHackerRank();
-    fetchGitHub();
-    fetchGoogleSkills();
+    const mainController = new AbortController();
 
-    const interval = setInterval(() => {
-      fetchLeetCode();
-      fetchHackerRank();
-      fetchGitHub();
-      fetchGoogleSkills();
-    }, 60 * 1000);
+    fetchLeetCode(mainController.signal);
+    fetchHackerRank(mainController.signal);
+    fetchGitHub(mainController.signal);
+    fetchGoogleSkills(mainController.signal);
 
-    return () => clearInterval(interval);
-  }, [fetchLeetCode, fetchHackerRank, fetchGitHub, fetchGoogleSkills]);
+    return () => {
+      mainController.abort();
+      Object.values(abortControllersRef.current).forEach(c => c && c.abort());
+    };
+  }, []); // Explicitly empty to prevent fetch -> state update -> render -> fetch loop
 
   const leagueColor = gsData.league.toLowerCase().includes('gold')     ? { text: 'text-yellow-400', border: 'border-yellow-500/30', bg: 'bg-yellow-500/10', glow: 'rgba(234,179,8,0.2)' }
                     : gsData.league.toLowerCase().includes('silver')   ? { text: 'text-slate-300',  border: 'border-slate-400/30',  bg: 'bg-slate-400/10',  glow: 'rgba(148,163,184,0.2)' }
