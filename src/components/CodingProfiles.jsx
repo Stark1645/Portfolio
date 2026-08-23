@@ -302,6 +302,16 @@ const setCachedProfile = (key, data) => {
   } catch (e) {}
 };
 
+const formatLastUpdated = (time) => {
+  if (!time) return null;
+  try {
+    const d = new Date(time);
+    return isNaN(d.getTime()) ? null : d.toLocaleTimeString();
+  } catch (e) {
+    return null;
+  }
+};
+
 const defaultGsData = {
   name: 'Ruthragurubaran J',
   avatar: 'https://lh3.googleusercontent.com/a/ACg8ocLtv36dsRITxuTdhK9p8FQnjerBEkVoD3KEE9Syh_zcW0vK3Wo=s320-c',
@@ -923,7 +933,7 @@ const CodingProfiles = () => {
               <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/5">
                 <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse shadow-[0_0_8px_rgba(249,115,22,0.8)]" />
                 <span className="text-[10px] text-gray-400 font-medium">
-                  {lcLastUpdated ? `Live · Updated ${lcLastUpdated.toLocaleTimeString()}` : 'Live · Auto-refreshes every 60s'}
+                  {formatLastUpdated(lcLastUpdated) ? `Live · Updated ${formatLastUpdated(lcLastUpdated)}` : 'Live · Auto-refreshes every 60s'}
                 </span>
               </div>
               
@@ -1037,7 +1047,7 @@ const CodingProfiles = () => {
               <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/5">
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
                 <span className="text-[10px] text-gray-400 font-medium">
-                  {hrLastUpdated ? `Live · Updated ${hrLastUpdated.toLocaleTimeString()}` : 'Live · Auto-refreshes every 60s'}
+                  {formatLastUpdated(hrLastUpdated) ? `Live · Updated ${formatLastUpdated(hrLastUpdated)}` : 'Live · Auto-refreshes every 60s'}
                 </span>
               </div>
 
@@ -1127,7 +1137,7 @@ const CodingProfiles = () => {
               <div className="flex items-center gap-2 mt-auto pt-2">
                 <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
                 <span className="text-[10px] text-gray-400 font-medium">
-                  {gsData.lastFetched ? `Live · Updated ${gsData.lastFetched.toLocaleTimeString()}` : 'Live · Auto-refreshes every 60s'}
+                  {formatLastUpdated(gsData?.lastFetched) ? `Live · Updated ${formatLastUpdated(gsData.lastFetched)}` : 'Live · Auto-refreshes every 60s'}
                 </span>
               </div>
 
